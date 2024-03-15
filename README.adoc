@@ -1,0 +1,10 @@
+= docs-master-pub
+
+Repository for central storage of public, reusable https://en.wikipedia.org/wiki/AsciiDoc[AsciiDoc] documentation snippets.
+
+This repository can be included as a Git submodule by other repositories and the snippets included via AsciiDoc `include`.
+
+.Example
+----
+\include::docs-master/general/project structure/docker-compose.adoc[]
+----
