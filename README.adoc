@@ -1,4 +1,4 @@
-= docs-master-pub
+= gesinn-it-docs-master-pub
 
 Repository for central storage of public, reusable https://en.wikipedia.org/wiki/AsciiDoc[AsciiDoc] documentation snippets.
 
