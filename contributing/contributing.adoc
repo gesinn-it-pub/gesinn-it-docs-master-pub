@@ -1,2 +1,6 @@
 == Contributing
 We welcome contributions from the community to help make {project_name} better! Whether you're fixing bugs, adding new features, improving documentation, or anything else, your efforts are valuable.
+
+We try to follow the https://www.conventionalcommits.org/[Conventional Commits specification] for issues and commit messages to create good and meaningful change logs.
+
+For detailed information, see our xref:contributing guidelines[Contributing Guidelines].
