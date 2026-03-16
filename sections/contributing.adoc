@@ -1,7 +1,7 @@
 == Contributing
 We welcome contributions from the community to help make {project_name} better! Whether you're fixing bugs, adding new features, improving documentation, or anything else, your efforts are valuable.
 
-We try to follow the https://www.conventionalcommits.org/[Conventional Commits specification] for issues and commit messages to create good and meaningful change logs.
+include::../snippets/conventional-commits.adoc[]
 
 include::../snippets/note-contains-submodule.adoc[]
 
@@ -60,7 +60,7 @@ make ci
 
 *Step 5: Commit your changes*
 
-Make sure your commits are well-documented. Try to follow the https://www.conventionalcommits.org/[Conventional Commits specification] to help us writing good and meaningful change logs.
+include::../snippets/conventional-commits-policy.adoc[]
 
 [source,console]
 ----
@@ -68,6 +68,7 @@ git commit -m "Description of your changes"
 ----
 
 *Step 6: Push!*
+
 Push your branch and open a pull request.
 
 [source,console]
