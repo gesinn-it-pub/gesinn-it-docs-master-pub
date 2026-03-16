@@ -3,7 +3,7 @@ We welcome contributions from the community to help make {project_name} better! 
 
 We try to follow the https://www.conventionalcommits.org/[Conventional Commits specification] for issues and commit messages to create good and meaningful change logs.
 
-include::../general/contains submodule note.adoc[]
+include::../snippets/note-contains-submodule.adoc[]
 
 .Click to see detailed *Contributing Guidelines*
 [%collapsible]
