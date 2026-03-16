@@ -60,7 +60,7 @@ make ci
 
 *Step 5: Commit your changes*
 
-include::../snippets/conventional-commits-policy.adoc[]
+include::../sections/conventional-commits-policy.adoc[]
 
 [source,console]
 ----
