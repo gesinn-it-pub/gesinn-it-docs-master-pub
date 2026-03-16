@@ -1,0 +1,33 @@
+== Test Workflow
+
+=== Test-first approach
+
+Before making any code changes to fix a bug or implement a feature:
+
+. Check whether an existing test already covers the described behavior.
+. If not, write or adapt a test that reproduces the issue — it must fail first.
+. Only after a failing test exists, make the code changes.
+. Re-run the test to confirm it passes (green).
+
+=== Test environment
+
+include::../snippets/docker-compose-ci-install.adoc[]
+
+=== PHPUnit tests
+
+include::../snippets/docker-compose-ci-phpunit.adoc[]
+
+=== Node QUnit tests
+
+include::../snippets/docker-compose-ci-npm.adoc[]
+
+=== Pre-commit validation gate
+
+Before every commit, run the full CI suite to confirm nothing is broken:
+
+[source,console]
+----
+make ci
+----
+
+This runs: `install` → `composer-test` (lint + phpcs + phpunit) → `npm-test`.

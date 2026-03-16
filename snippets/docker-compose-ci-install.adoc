@@ -1,0 +1,14 @@
+*Test-first approach*
+
+All tests run inside a containerized MediaWiki environment managed via
+https://github.com/gesinn-it-pub/docker-compose-ci[docker-compose-ci] (the `build/` submodule).
+Never run tests directly against a local PHP or Node.js installation.
+
+Always run `make install` before executing tests to ensure that the latest file
+changes are copied into the container. Changes to source or test files on the
+host are *not* automatically reflected in a running container.
+
+[source,console]
+----
+make install
+----

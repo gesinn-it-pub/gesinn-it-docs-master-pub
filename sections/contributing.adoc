@@ -17,6 +17,8 @@ Fork and clone our repo to your local machine:
 git clone https://github.com/username/projectname.git --recursive
 ----
 
+---
+
 *Step 2: Ensure test container is running*
 
 This repository supports https://github.com/gesinn-it-pub/docker-compose-ci[_"docker-compose-ci"_ based CI and testing for MediaWiki extensions].
@@ -38,6 +40,8 @@ Run lint, phpcs and tests:
 make ci
 ----
 
+---
+
 *Step 3: Start coding*
 
 Make sure there is an issue that describes your changes. Create a new branch and start working on your changes. In _issue-1234_ replace _1234_ with your issue number:
@@ -47,16 +51,21 @@ Make sure there is an issue that describes your changes. Create a new branch and
 git checkout -b issue-1234
 ----
 
+---
+
 *Step 4: Test your changes*
 
-Ensure that your changes include adequate testing where applicable.
+include::../snippets/test-first-approach.adoc[]
 
-Run lint, phpcs and tests:
+include::../snippets/docker-compose-ci-install.adoc[]
 
-[source,console]
-----
-make ci
-----
+include::../snippets/docker-compose-ci-phpunit.adoc[]
+
+include::../snippets/docker-compose-ci-npm.adoc[]
+
+include::../snippets/docker-compose-ci-pre-commit-validation-gate.adoc[]
+
+---
 
 *Step 5: Commit your changes*
 
@@ -66,6 +75,8 @@ include::../sections/conventional-commits-policy.adoc[]
 ----
 git commit -m "Description of your changes"
 ----
+
+---
 
 *Step 6: Push!*
 
