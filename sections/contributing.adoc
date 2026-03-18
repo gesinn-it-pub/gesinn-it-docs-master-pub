@@ -1,10 +1,6 @@
 == Contributing
 We welcome contributions from the community to help make {project_name} better! Whether you're fixing bugs, adding new features, improving documentation, or anything else, your efforts are valuable.
 
-include::../snippets/conventional-commits.adoc[]
-
-include::../snippets/note-contains-submodule.adoc[]
-
 .Click to see detailed *Contributing Guidelines*
 [%collapsible]
 ====
