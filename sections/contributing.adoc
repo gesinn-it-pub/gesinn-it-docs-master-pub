@@ -47,6 +47,10 @@ Make sure there is an issue that describes your changes. Create a new branch and
 git checkout -b issue-1234
 ----
 
+ifdef::project_type[]
+include::../snippets/coding-conventions-{project_type}.adoc[]
+endif::project_type[]
+
 ---
 
 *Step 4: Test your changes*
