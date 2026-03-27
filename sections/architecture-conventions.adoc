@@ -1,0 +1,180 @@
+=== Architecture Documentation
+
+Architecture documentation lives in the `docs/architecture/` directory of each repository.
+It follows an adapted, lightweight subset of the https://arc42.org[arc42] template, focused on what is most relevant for MediaWiki extensions and similar projects.
+
+---
+
+==== Directory Structure
+
+[source]
+----
+docs/architecture/
+├── ARCHITECTURE-source.adoc      <-- source file; edit this only
+├── ARCHITECTURE.adoc             <-- generated (auto); never edit manually
+├── introduction-goals.adoc
+├── context-scope.adoc
+├── building-blocks.adoc
+├── decisions.adoc
+└── glossary.adoc                 <-- optional
+----
+
+`ARCHITECTURE-source.adoc` ties all sections together via `include::` directives.
+It is flattened by a GitHub Workflow into `ARCHITECTURE.adoc` — a self-contained file without `include::` directives that renders correctly on GitHub.
+`ARCHITECTURE.adoc` must never be edited manually.
+
+---
+
+==== Sections
+
+We use the following subset of https://arc42.org[arc42]. Sections with low value for typical MediaWiki extensions (Runtime View, Deployment View, Risks, etc.) may be omitted.
+
+[cols="1,1,4", options="header"]
+|===
+| # | File | Purpose
+
+| 1 | `introduction-goals.adoc`
+| Short system description. Top 3–5 quality goals. Key stakeholders and their expectations.
+
+| 2 | `context-scope.adoc`
+| The system boundary. External systems, users, and interfaces (what is _outside_ the box). Context diagram.
+
+| 3 | `building-blocks.adoc`
+| Static internal structure: components, hooks, extension points, modules. Building block diagram.
+
+| 4 | `decisions.adoc`
+| Architectural Decision Records (ADRs) — important non-trivial decisions with rationale.
+
+| 5 | `glossary.adoc`
+| Domain and technical terms used in the project.
+|===
+
+---
+
+==== Diagrams
+
+UML tools are not required.
+Use *ASCII art* inside AsciiDoc literal blocks (`....`).
+This renders correctly everywhere (GitHub, asciidoctor, editors) without any additional tooling.
+
+===== Context Diagram
+
+Shows the system boundary: what is _inside_ (the extension), what is _outside_ (users, MediaWiki core, databases, external services).
+
+.Example: Context diagram
+[source,asciidoc]
+-----
+.Context: PageForms Extension
+....
+  +----------------+          +------------------------------+          +---------------+
+  |  Wiki Editor   |  form     |  MediaWiki Core              |          |  MySQL        |
+  |  (Browser)     +---------> |                              +--------> |  (Database)   |
+  +----------------+  submit   |  +------------------------+  |          +---------------+
+                               |  |  PageForms Extension   |  |
+  +----------------+  Special  |  |                        |  |
+  |  Wiki Admin    +---------> |  |  Special Pages         |  |
+  |  (Browser)     |  Pages    |  |  API (action=pfautoedit|  |
+  +----------------+           |  |        pf_submit, ...) |  |
+                               |  +------------------------+  |
+  +----------------+  REST/    |                              |
+  |  External App  +---------> |                              |
+  |  / Bot         |  API      +------------------------------+
+  +----------------+
+....
+-----
+
+===== Building Block View
+
+Shows the static internal structure of the extension: its main components and how they relate.
+
+.Example: Building block diagram
+[source,asciidoc]
+-----
+.Building Blocks: PageForms Extension
+....
+  +----------------------------------------------------------+
+  |  PageForms Extension                                     |
+  |                                                          |
+  |  +------------------+    +----------------------------+  |
+  |  |  Special Pages   |    |  Form Definition Parser    |  |
+  |  |  (RunQuery,      |    |  (PF_FormPrinter,          |  |
+  |  |   FormEdit, ...) |    |   PF_TemplateField, ...)   |  |
+  |  +--------+---------+    +-------------+--------------+  |
+  |           |                            |                  |
+  |           v                            v                  |
+  |  +------------------+    +----------------------------+  |
+  |  |  Form HTML       |    |  Storage Layer             |  |
+  |  |  Renderer        |    |  (Page save via MW API)    |  |
+  |  +------------------+    +----------------------------+  |
+  |                                                          |
+  +----------------------------------------------------------+
+....
+-----
+
+===== Sequence / Flow Diagram
+
+Shows a key runtime interaction between components or actors step by step.
+
+.Example: Form submission flow
+[source,asciidoc]
+-----
+.Sequence: Form Submission
+....
+  Browser          Special:FormEdit      PageForms         MediaWiki API
+     |                    |                  |                   |
+     |  POST /FormEdit    |                  |                   |
+     +------------------>+                  |                   |
+     |                    | parseFormData()  |                   |
+     |                    +---------------->+                   |
+     |                    |                  | savePage()        |
+     |                    |                  +----------------->+|
+     |                    |                  |                   |
+     |                    |                  |    page saved     |
+     |                    |                  +<-----------------+|
+     |                    |    redirect      |                   |
+     |<-------------------+                  |                   |
+....
+-----
+
+---
+
+==== Architectural Decision Records (ADRs)
+
+ADRs document important architectural decisions that are non-trivial, costly to reverse, or affect multiple components.
+Trivial implementation choices do not need an ADR.
+
+Each ADR is a section in `04-decisions.adoc`, using the following structure:
+
+[source,asciidoc]
+-----
+===== ADR-001: <Short title of the decision>
+
+*Status:* accepted | proposed | deprecated | superseded by ADR-XXX
+
+*Context:* +
+Describe the situation and forces at play. Why was a decision needed?
+
+*Decision:* +
+State the decision that was made, clearly and directly.
+
+*Consequences:* +
+What becomes easier, harder, or must be accepted as a result?
+-----
+
+.Example ADR
+====
+===== ADR-001: Use asciidoctor-reducer to flatten README
+
+*Status:* accepted
+
+*Context:* +
+The README was growing large and duplicating content that is centrally maintained in `gesinn-it-docs-master-pub`.
+Direct `include::` directives in a GitHub-rendered `.adoc` file are not resolved by GitHub.
+
+*Decision:* +
+Use `asciidoctor-reducer` in a GitHub Workflow to flatten `README-source.adoc` (which uses `include::`) into a self-contained `README.adoc` that renders correctly on GitHub.
+
+*Consequences:* +
+`README.adoc` must never be edited manually. All changes go into `README-source.adoc`.
+The workflow runs automatically on every push that touches the source file.
+====
