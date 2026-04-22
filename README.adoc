@@ -1,83 +1,151 @@
 = gesinn-it-docs-master-pub
 
-Repository for centrally maintained, reusable https://en.wikipedia.org/wiki/AsciiDoc[AsciiDoc] documentation snippets.
-
-The snippets stored in this repository can be reused across multiple repositories (e.g. MediaWiki extensions) to ensure consistent documentation and avoid duplication.
-
-Typically this repository is included as a Git submodule and the snippets are referenced using AsciiDoc `include` directives.
+Centrally maintained, reusable https://en.wikipedia.org/wiki/AsciiDoc[AsciiDoc] building blocks for consistent documentation across repositories.
+Included as a Git submodule; content is referenced via AsciiDoc `include::` directives and assembled by CI into generated output files.
 
 == Concept
 
-This repository implements a lightweight documentation reuse pattern based on:
+Three content levels:
 
-* AsciiDoc `include` directives
-* Git submodules
-* optional CI-based README generation
+* `snippets/` — atomic blocks, *no heading*, inline-embeddable
+* `sections/` — standalone sections with a `==` heading (Level 2)
+* `documents/` — full document templates that assemble sections and snippets
 
-Typical workflow:
+Each level is organized by scope:
 
-----
-docs-master (submodule)
-        ↓
-include:: directives in README-source.adoc
-        ↓
-CI resolves includes
-        ↓
-generated README.adoc
-----
+* `universal/` — technology-agnostic content (SemVer, Conventional Commits, admonitions)
+* `mediawiki/` — MediaWiki extension repositories
+* `ansible/` — Ansible role repositories
 
-This allows common documentation sections to be maintained in a single place and reused across many repositories.
+Heading convention: all sections and documents use `==` (Level 2).
+Consumers control embedding depth via `[leveloffset=+1]` at the `include::` site.
 
-== Adding the repository as a submodule
+== Components
 
-To use the documentation snippets in another repository, add this repository as a Git submodule.
+=== snippets/universal/
+
+[cols="2,4"]
+|===
+| File | Content
+
+| `note-generated-file.adoc`
+| Admonition: file is auto-generated, do not edit manually
+
+| `note-contains-submodule.adoc`
+| Admonition: repository contains Git submodules, clone with `--recursive`
+|===
+
+=== sections/universal/
+
+[cols="2,4"]
+|===
+| File | Content
+
+| `semver.adoc`
+| One-line versioning statement ("We use SemVer…")
+
+| `semver-policy.adoc`
+| Full SemVer policy with increment rules and breaking-change definition
+
+| `conventional-commits.adoc`
+| One-paragraph Conventional Commits reference
+
+| `conventional-commits-policy.adoc`
+| Full Conventional Commits policy with types, scopes, examples
+|===
+
+=== snippets/mediawiki/
+
+[cols="2,4"]
+|===
+| File | Content
+
+| `coding-conventions.adoc`
+| Aggregator — includes general, PHP, JS, CSS conventions
+
+| `coding-conventions-general.adoc`
+| Baseline rules (encoding, line endings, indentation)
+
+| `coding-conventions-php.adoc`
+| PHP conventions (PHPCS, namespaces, types, modern PHP)
+
+| `coding-conventions-js.adoc`
+| JavaScript conventions (ESLint, ResourceLoader, jQuery)
+
+| `coding-conventions-css.adoc`
+| CSS/LESS conventions (stylelint, naming, anti-patterns)
+
+| `test-first-approach.adoc`
+| Test-first workflow (write failing test before code)
+
+| `ci-install.adoc`
+| How to run `make install` before tests
+
+| `ci-phpunit.adoc`
+| PHPUnit test commands and filtering
+
+| `ci-npm.adoc`
+| Node QUnit test commands and filtering
+
+| `ci-pre-commit.adoc`
+| Pre-commit validation gate (`make ci`)
+|===
+
+=== sections/mediawiki/
+
+[cols="2,4"]
+|===
+| File | Content
+
+| `architecture-conventions.adoc`
+| arc42-based architecture documentation conventions
+
+| `documentation-conventions.adoc`
+| Generated file conventions, toolchain, source file header
+|===
+
+=== documents/mediawiki/
+
+[cols="2,4"]
+|===
+| File | Content
+
+| `contributing.adoc`
+| Full CONTRIBUTING document template (assembles CI snippets + commit policy)
+|===
+
+== Setup
+
+Add as a submodule in the `docs/` directory of the consuming repository:
 
 [source,bash]
 ----
-git submodule add https://github.com/gesinn-it-pub/gesinn-it-docs-master-pub docs-master
+git submodule add https://github.com/gesinn-it-pub/gesinn-it-docs-master-pub docs/gesinn-it-docs-master-pub
 git submodule update --init
 ----
 
-This will add the snippets under:
+Reference content in source files:
 
+[source,asciidoc]
 ----
-docs-master/
-----
+\include::docs/gesinn-it-docs-master-pub/sections/universal/semver-policy.adoc[]
 
-The path `docs-master/` is the typical convention used in repositories that depend on these snippets.
+\include::docs/gesinn-it-docs-master-pub/snippets/mediawiki/coding-conventions-php.adoc[]
 
-== Using documentation snippets
-
-Snippets can be included in AsciiDoc documents using the standard `include` directive.
-
-.Example
-[source,adoc]
-----
-\include::docs-master/general/project-structure/docker-compose.adoc[]
+// embed a section one level deeper:
+\include::docs/gesinn-it-docs-master-pub/sections/mediawiki/architecture-conventions.adoc[leveloffset=+1]
 ----
 
-Repositories typically include snippets inside `README-source.adoc`.
-
-== Updating the submodule
-
-To update the documentation snippets to the latest version:
+Update to the latest version:
 
 [source,bash]
 ----
-git submodule update --init --remote
+git submodule update --remote docs/gesinn-it-docs-master-pub
+git add docs/gesinn-it-docs-master-pub
+git commit -m "deps(docs-master): update submodule"
 ----
 
-After updating the submodule, commit the updated reference:
-
-[source,bash]
-----
-git add docs-master
-git commit -m "Update documentation snippets"
-----
-
-Repositories may also automate this process via CI.
-
-== Generating the README
+== Generating output files
 
 Repositories using shared documentation snippets often maintain two README files:
 

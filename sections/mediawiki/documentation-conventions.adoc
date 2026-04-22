@@ -1,4 +1,4 @@
-=== Generated Documentation Files
+== Generated Documentation Files
 
 Certain documentation files are *auto-generated* from corresponding source files and *must never be edited manually*.
 

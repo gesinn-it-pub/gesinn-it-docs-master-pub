@@ -1,0 +1,77 @@
+= Contributing
+
+We welcome contributions from the community to help make {project_name} better!
+Whether you're fixing bugs, adding new features, improving documentation, or anything else, your efforts are valuable.
+
+== Step 1: Clone the Repository
+
+Fork and clone the repository to your local machine:
+
+[source,console]
+----
+git clone https://github.com/username/projectname.git --recursive
+----
+
+== Step 2: Ensure the test container is running
+
+This repository supports https://github.com/gesinn-it-pub/docker-compose-ci[_docker-compose-ci_-based CI and testing for MediaWiki extensions].
+
+The _docker-compose-ci_ repository is integrated as a Git submodule (`build/`).
+It uses https://en.wikipedia.org/wiki/Make_(software)[Make] as the main entry point.
+
+Ensure `Make` and `Docker` are installed:
+
+[source,console]
+----
+make --version
+docker --version
+----
+
+Run lint, phpcs, and tests:
+
+[source,console]
+----
+make ci
+----
+
+== Step 3: Start coding
+
+Make sure there is an issue describing your changes.
+Create a new branch (replace _1234_ with your issue number):
+
+[source,console]
+----
+git checkout -b issue-1234
+----
+
+ifdef::project_type[]
+include::../../snippets/{project_type}/coding-conventions.adoc[]
+endif::project_type[]
+
+== Step 4: Test your changes
+
+include::../../snippets/mediawiki/test-first-approach.adoc[]
+
+include::../../snippets/mediawiki/ci-install.adoc[]
+
+include::../../snippets/mediawiki/ci-phpunit.adoc[]
+
+include::../../snippets/mediawiki/ci-npm.adoc[]
+
+include::../../snippets/mediawiki/ci-pre-commit.adoc[]
+
+== Step 5: Commit your changes
+
+include::../../sections/universal/conventional-commits-policy.adoc[]
+
+[source,console]
+----
+git commit -m "type(scope): description"
+----
+
+== Step 6: Push and open a Pull Request
+
+[source,console]
+----
+git push origin issue-1234
+----

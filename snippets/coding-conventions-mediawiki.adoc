@@ -1,7 +1,0 @@
-include::coding-conventions-mediawiki-general.adoc[]
-
-include::coding-conventions-mediawiki-php.adoc[]
-
-include::coding-conventions-mediawiki-js.adoc[]
-
-include::coding-conventions-mediawiki-css.adoc[]

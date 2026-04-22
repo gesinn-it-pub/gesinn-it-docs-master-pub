@@ -1,4 +1,4 @@
-=== Architecture Documentation
+== Architecture Documentation
 
 Architecture documentation lives in the `docs/architecture/` directory of each repository.
 It follows an adapted, lightweight subset of the https://arc42.org[arc42] template, focused on what is most relevant for MediaWiki extensions and similar projects.
