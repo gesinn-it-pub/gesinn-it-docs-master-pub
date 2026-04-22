@@ -1,3 +1,5 @@
+'''
+
 *Coding Conventions — JavaScript*
 
 Tooling: https://eslint.org/[ESLint] with https://github.com/wikimedia/eslint-config-wikimedia[eslint-config-wikimedia].

@@ -1,3 +1,5 @@
+'''
+
 *Coding Conventions — PHP*
 
 Tooling: https://github.com/wikimedia/mediawiki-tools-codesniffer[mediawiki-codesniffer] via PHPCS.
