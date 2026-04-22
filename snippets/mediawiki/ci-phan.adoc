@@ -17,8 +17,11 @@ make composer-phan
 +
 [source,console]
 ----
-composer phan -- --save-baseline=.phan/baseline.php
+make composer-phan-update-baseline
 ----
++
+This target re-generates the baseline and post-processes it with `unexpand` to convert Phan's hardcoded 4-space indentation to tabs.
+Never run `--save-baseline` directly — the unprocessed output fails MediaWiki PHPCS.
 * When `@suppress` is unavoidable, add an explanatory comment directly above it
 
 *Baseline updates*
