@@ -49,6 +49,7 @@ Every repository must have a `.eslintrc.json` at root with `"root": true`:
 * Prefer ES6/DOM equivalents over deprecated jQuery methods (`.each` → `forEach`, etc.)
 * Never search the full DOM with `$( '#id' )` or `$( '.selector' )`;
   use hook-provided `$content` and call `.find()` on it
+  _(full-DOM queries match stale or foreign nodes, break hook-lifecycle isolation, and waste performance by traversing the entire document)_
 * Prefer `$( '<div>' ).text( value )` over `$( '<div>text</div>' )` to avoid XSS
 
 *MediaWiki APIs*
