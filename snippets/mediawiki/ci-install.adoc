@@ -1,4 +1,6 @@
-*Test-first approach*
+'''
+
+*Test environment setup*
 
 All tests run inside a containerized MediaWiki environment managed via
 https://github.com/gesinn-it-pub/docker-compose-ci[docker-compose-ci] (the `build/` submodule).

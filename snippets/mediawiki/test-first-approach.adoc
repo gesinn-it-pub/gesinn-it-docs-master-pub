@@ -1,3 +1,7 @@
+'''
+
+*Test-first approach*
+
 Before making any code changes to fix a bug or implement a feature:
 
 . Check whether an existing test already covers the described behavior.

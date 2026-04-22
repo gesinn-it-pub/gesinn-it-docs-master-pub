@@ -1,3 +1,5 @@
+'''
+
 *Node QUnit tests*
 
 Run all JavaScript tests:

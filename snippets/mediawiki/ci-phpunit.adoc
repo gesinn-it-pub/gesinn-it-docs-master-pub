@@ -1,3 +1,5 @@
+'''
+
 *PHPUnit tests*
 
 Run all PHPUnit tests:
