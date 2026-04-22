@@ -52,13 +52,13 @@ endif::project_type[]
 
 include::../../snippets/mediawiki/test-first-approach.adoc[]
 
-include::../../snippets/mediawiki/ci-install.adoc[]
+include::../../snippets/{project_type}/ci-install.adoc[]
 
-include::../../snippets/mediawiki/ci-phpunit.adoc[]
+include::../../snippets/{project_type}/ci-phpunit.adoc[]
 
-include::../../snippets/mediawiki/ci-npm.adoc[]
+include::../../snippets/{project_type}/ci-npm.adoc[]
 
-include::../../snippets/mediawiki/ci-pre-commit.adoc[]
+include::../../snippets/{project_type}/ci-pre-commit.adoc[]
 
 == Step 5: Commit your changes
 
