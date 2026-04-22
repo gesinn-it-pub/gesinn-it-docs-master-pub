@@ -62,7 +62,7 @@ include::../../snippets/{project_type}/ci-pre-commit.adoc[]
 
 == Step 5: Commit your changes
 
-include::../../sections/universal/conventional-commits-policy.adoc[]
+include::../../sections/universal/conventional-commits-policy.adoc[leveloffset=+1]
 
 [source,console]
 ----
