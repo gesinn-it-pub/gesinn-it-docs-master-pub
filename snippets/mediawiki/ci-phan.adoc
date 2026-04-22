@@ -1,0 +1,29 @@
+ifdef::phan[]
+'''
+
+*Phan — static analysis*
+
+Run Phan against the codebase:
+
+[source,console]
+----
+make composer-phan
+----
+
+*Fixing issues*
+
+* Fix genuine type errors, undeclared-method, and undeclared-class issues in new code
+* For issues in legacy code not touched by the current change, update the baseline instead of adding `@suppress`:
++
+[source,console]
+----
+composer phan -- --save-baseline=.phan/baseline.php
+----
+* When `@suppress` is unavoidable, add an explanatory comment directly above it
+
+*Baseline updates*
+
+`.phan/baseline.php` is auto-generated.
+After updating it, commit it together with the code change that necessitated the update.
+
+endif::phan[]

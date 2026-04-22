@@ -1,0 +1,40 @@
+ifdef::phan[]
+'''
+
+*Static Analysis — Phan*
+
+Tooling: https://github.com/phan/phan[Phan] with https://github.com/wikimedia/mediawiki-phan-config[mediawiki-phan-config].
+Run locally: `make composer-phan` (or `make dev-test`).
+
+*Configuration*
+
+`.phan/config.php` inherits from `mediawiki-phan-config`:
+
+[source,php]
+----
+$cfg = require __DIR__ . '/../vendor/mediawiki/mediawiki-phan-config/src/config.php';
+
+$cfg['baseline_path'] = __DIR__ . '/baseline.php';
+
+$cfg['directory_list'] = array_merge(
+    $cfg['directory_list'],
+    ['src', 'includes', 'specials']
+);
+
+$cfg['exclude_analysis_directory_list'] = array_merge(
+    $cfg['exclude_analysis_directory_list'],
+    ['vendor/']
+);
+
+return $cfg;
+----
+
+*Baseline*
+
+* `.phan/baseline.php` is auto-generated — do not edit it manually
+* New code must not introduce Phan issues beyond the current baseline
+* When deliberately deferring a pre-existing issue, update the baseline: +
+  `composer phan -- --save-baseline=.phan/baseline.php`
+* When suppressing with `@suppress`, always add an explanatory comment
+
+endif::phan[]

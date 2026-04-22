@@ -2,6 +2,8 @@ include::coding-conventions-general.adoc[]
 
 include::coding-conventions-php.adoc[]
 
+include::coding-conventions-phan.adoc[]
+
 include::coding-conventions-js.adoc[]
 
 include::coding-conventions-css.adoc[]

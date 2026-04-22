@@ -168,6 +168,24 @@ This is the single source of truth for project-level variables.
 :project_type: mediawiki
 ----
 
+Optional feature flags control which snippets are included:
+
+[cols="1,2,1"]
+|===
+| Attribute | Effect | Default
+
+| `:phan:`
+| Enables Phan static-analysis sections in coding conventions, CI workflow, and Copilot instructions
+| off (not set)
+|===
+
+Set a flag by adding it to `docs/attributes.adoc`:
+
+[source,asciidoc]
+----
+:phan:
+----
+
 All source files include this file instead of defining attributes inline:
 
 [source,asciidoc]
