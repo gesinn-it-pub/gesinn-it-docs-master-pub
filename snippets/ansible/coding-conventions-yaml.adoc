@@ -1,0 +1,12 @@
+'''
+
+*Coding Conventions — YAML*
+
+The YAML specification forbids tab characters for indentation — these rules take precedence over the general indentation rule for all `.yml` and `.yaml` files.
+
+* Indentation: 2 spaces (never tabs)
+* Strings: use double quotes for values containing special characters; omit quotes where unambiguous
+* Booleans: `true`/`false` (unquoted) — never `yes`/`no` or `on`/`off`
+* Explicit `null` over empty values where the intent matters
+* Multi-line strings: `|` (literal block) for human-readable text, `>` (folded) for long single-line values
+* Always add a blank line between top-level keys for readability

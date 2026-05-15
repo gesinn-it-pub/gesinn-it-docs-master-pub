@@ -58,6 +58,7 @@ Run locally: `make composer-phpcs` (or `make ci`).
 
 *Code style*
 
+* Indentation: tabs, not spaces
 * 1TBS brace style — opening brace on same line, `else`/`elseif` on closing brace line
 * Always use braces, even for single-line blocks
 * Spaces inside parentheses: `getFoo( $bar )`, empty: `getBar()`

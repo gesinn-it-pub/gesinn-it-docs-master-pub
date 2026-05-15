@@ -1,0 +1,63 @@
+'''
+
+*Coding Conventions — Ansible*
+
+Tooling: https://ansible-lint.readthedocs.io/[ansible-lint].
+
+*Role structure*
+
+Follows the https://galaxy.ansible.com/docs/contributing/creating_role.html[Ansible Galaxy standard layout]:
+
+[source]
+----
+defaults/main.yml    # user-overridable variables (low precedence)
+vars/main.yml        # role-internal constants
+tasks/main.yml       # main task entry point
+handlers/main.yml
+templates/           # Jinja2 templates (.j2)
+files/               # static files
+meta/main.yml        # role metadata + version comment
+----
+
+*Version tracking in meta/main.yml*
+
+`galaxy_info.version` is not a valid schema field and causes `ansible-lint` violations.
+Track the version as a comment at the top of `meta/main.yml`:
+
+[source,yaml]
+----
+---
+# version: 1.0.0
+dependencies: []
+
+galaxy_info:
+  role_name: my_role
+  author: gesinn-it
+----
+
+*Variable naming*
+
+* All role variables prefixed with the role name: `manage_traefik_port`, not `port`
+* `defaults/main.yml`: user-overridable settings
+* `vars/main.yml`: role-internal constants not intended for override
+
+*Task conventions*
+
+* Every task must have a descriptive `name:` (written as a sentence)
+* Use FQCN for all modules: `ansible.builtin.copy`, not `copy`
+* Tasks must be idempotent; add `changed_when: false` for read-only tasks
+* Split related tasks into separate files, included via `ansible.builtin.include_tasks`
+
+*Handlers*
+
+* Handler names must match their `notify:` string exactly
+* Handlers only restart or reload services — configuration logic belongs in tasks
+
+*Dependencies (requirements.yml)*
+
+* List role dependencies without version pins — consumer projects are the single source of truth for versions
+
+*Security*
+
+* No plaintext secrets in variable files or templates — use Ansible Vault or environment injection
+* Use `become: true` at task level, not play level, to minimise privilege escalation scope

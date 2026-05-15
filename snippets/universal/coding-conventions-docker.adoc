@@ -1,0 +1,60 @@
+'''
+
+*Coding Conventions — Dockerfile*
+
+Tooling: https://github.com/hadolint/hadolint[hadolint].
+
+*Base image*
+
+* Always pin base images to a specific version tag — never use `latest`
+* Prefer official images from Docker Hub or GitHub Container Registry
+* Document the rationale for the chosen base image in a comment
+
+*Layer optimisation*
+
+* Combine related `RUN` commands with `&&` and `\` to minimise layer count and improve cache reuse
+* Delete package manager caches in the same `RUN` layer: `apt-get clean && rm -rf /var/lib/apt/lists/*`
+* Order instructions from least to most frequently changed (maximises cache hits)
+* Use `COPY` instead of `ADD` unless explicitly extracting a tar archive
+
+*Security*
+
+* Run as a non-root user: `RUN useradd -r appuser` followed by `USER appuser`
+* Never store secrets in image layers — they are visible in `docker history` regardless of later deletion
+* Use multi-stage builds to exclude build tools and intermediate artefacts from the final image
+
+*Configuration*
+
+* `ARG` for build-time values; `ENV` only for runtime configuration
+* Add a `HEALTHCHECK` in production images
+* Add OCI image labels: `org.opencontainers.image.source`, `.version`, `.description`
+
+*.dockerignore*
+
+* Every repository with a Dockerfile must include a `.dockerignore`
+* Exclude at minimum: `.git/`, `node_modules/`, `*.log`, and local override files
+
+'''
+
+*Coding Conventions — Docker Compose*
+
+*File structure*
+
+* `docker-compose.yml` is the canonical base; local overrides belong in `docker-compose.override.yml`
+* `docker-compose.override.yml` is always listed in `.gitignore` — never committed
+* Omit the top-level `version:` field (deprecated in Compose v2); start directly with `services:`
+
+*Services*
+
+* Service names: lowercase with hyphens (`wiki`, `mysql`, `smtp`)
+* Always set `container_name` for stable references in scripts and CI
+* Set `restart: unless-stopped` on all long-running services
+
+*Volumes*
+
+* Named volumes for persistent data; bind mounts only for local development overrides
+
+*Compose v2*
+
+* Use the Docker Compose plugin (`docker compose`, with a space) — never the legacy `docker-compose` binary (v1, EOL)
+* In Ansible roles: set `docker_install_compose_plugin: true`; never use `docker_install_compose: true`

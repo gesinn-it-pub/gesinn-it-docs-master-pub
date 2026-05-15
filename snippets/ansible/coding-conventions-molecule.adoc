@@ -1,0 +1,45 @@
+'''
+
+*Coding Conventions — Molecule*
+
+Tooling: https://ansible.readthedocs.io/projects/molecule/[Molecule] via `ghcr.io/ansible/community-ansible-dev-tools`.
+
+*Scenario structure*
+
+Each scenario lives in `molecule/<scenario-name>/` and contains:
+
+[source]
+----
+molecule/<scenario-name>/
+  molecule.yml    # driver + platforms + verifier configuration
+  converge.yml    # playbook that applies the role under test
+  verify.yml      # playbook with assertions
+  destroy.yml     # teardown playbook (if custom cleanup is needed)
+----
+
+*Scenario naming*
+
+* Lowercase with hyphens; name describes the tested configuration variant: `with-ofelia`, `without-tls`
+* One scenario per distinct configuration; avoid a catch-all `default` scenario
+
+*Driver*
+
+* Use the `default` driver with `ansible_connection: local` — no VM overhead in CI
+* Set `ANSIBLE_ROLES_PATH` so the role under test is resolvable by name
+
+*Verifier*
+
+* Use the Ansible verifier (`verifier: name: ansible`) with `ansible.builtin.assert`
+* Write assertions that verify observable outcomes (files exist, config contains expected values), not internal role variables
+* Name each assertion task clearly: `Assert Traefik version is correct`
+
+*Skipping tasks in Molecule context*
+
+* Tag tasks that must not run in Molecule (e.g. system-level side effects) with `molecule_skip`
+* Configure the provisioner to skip them: `options: skip-tags: molecule_skip`
+
+*CI matrix*
+
+* Run all scenarios in a matrix; add a version axis for externally-versioned dependencies (e.g. `traefik_version`)
+* Use `fail-fast: false` so all matrix cells are reported even if one fails
+* Pin the `community-ansible-dev-tools` image version for reproducibility
