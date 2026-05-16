@@ -1,0 +1,67 @@
+= Contributing
+
+We welcome contributions from the community to help make {project_name} better!
+Whether you're fixing bugs, adding new features, improving documentation, or anything else, your efforts are valuable.
+
+== Step 1: Clone the Repository
+
+Fork and clone the repository to your local machine:
+
+[source,console]
+----
+git clone https://github.com/username/projectname.git
+----
+
+== Step 2: Install Dependencies
+
+This project requires https://nodejs.org/[Node.js] and npm.
+Verify your installation:
+
+[source,console]
+----
+node --version
+npm --version
+----
+
+Install dependencies:
+
+[source,console]
+----
+npm ci
+----
+
+== Step 3: Start Coding
+
+Make sure there is an issue describing your changes.
+Create a new branch (replace _1234_ with your issue number):
+
+[source,console]
+----
+git checkout -b issue-1234
+----
+
+ifdef::project_type[]
+include::../../snippets/{project_type}/coding-conventions.adoc[]
+endif::project_type[]
+
+== Step 4: Test Your Changes
+
+include::../../snippets/{project_type}/ci-npm.adoc[]
+
+include::../../snippets/{project_type}/ci-mocha.adoc[]
+
+== Step 5: Commit Your Changes
+
+include::../../sections/universal/conventional-commits-policy.adoc[leveloffset=+1]
+
+[source,console]
+----
+git commit -m "type(scope): description"
+----
+
+== Step 6: Push and Open a Pull Request
+
+[source,console]
+----
+git push origin issue-1234
+----

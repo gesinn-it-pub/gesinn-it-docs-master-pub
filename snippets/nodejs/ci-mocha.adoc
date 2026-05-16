@@ -1,0 +1,24 @@
+'''
+
+*Mocha tests*
+
+Run the full test suite:
+
+[source,console]
+----
+npm run mocha
+----
+
+Filter tests by name (grep):
+
+[source,console]
+----
+npm run mocha -- --grep "pattern"
+----
+
+Run with coverage (via https://github.com/istanbuljs/nyc[nyc]):
+
+[source,console]
+----
+npm run test-coverage
+----

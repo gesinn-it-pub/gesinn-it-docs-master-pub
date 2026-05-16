@@ -1,0 +1,43 @@
+'''
+
+*Install dependencies*
+
+[source,console]
+----
+npm ci
+----
+
+Run all checks (lint + format check + tests):
+
+[source,console]
+----
+npm test
+----
+
+Run only ESLint:
+
+[source,console]
+----
+npm run lint
+----
+
+Check formatting (Prettier, non-destructive):
+
+[source,console]
+----
+npm run format:check
+----
+
+Auto-format source files:
+
+[source,console]
+----
+npm run format
+----
+
+Run tests with coverage report:
+
+[source,console]
+----
+npm run test-coverage
+----

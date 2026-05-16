@@ -1,0 +1,88 @@
+'''
+
+*Coding Conventions — JavaScript*
+
+Tooling: https://eslint.org/[ESLint v9] (code quality) + https://prettier.io/[Prettier] (formatting).
+Run locally: `npm run lint` / `npm run format:check` (or `npm test`).
+
+Target: Node.js 20+. Declare in `package.json`:
+
+[source,json]
+----
+"engines": { "node": ">=20.0.0" }
+----
+
+*ESLint — flat config (v9+)*
+
+New repositories use https://eslint.org/docs/latest/use/configure/configuration-files[flat config] (`eslint.config.js`).
+Install: `npm install --save-dev eslint @eslint/js globals eslint-config-prettier`
+
+[source,js]
+----
+// eslint.config.js
+import js from '@eslint/js';
+import globals from 'globals';
+import prettier from 'eslint-config-prettier';
+
+export default [
+    js.configs.recommended,
+    {
+        languageOptions: {
+            globals: globals.node,
+            ecmaVersion: 2022,
+        },
+        rules: {
+            'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+            'no-console': 'off',
+            'prefer-const': 'error',
+        },
+    },
+    prettier, // disables ESLint rules that conflict with Prettier
+];
+----
+
+NOTE: Projects with `"type": "commonjs"` in `package.json` must use CJS syntax in `eslint.config.js` (`require` / `module.exports`).
+
+Run: `npm run lint` (`eslint src/ test/`).
+
+*Prettier — code formatting*
+
+Formatting (indentation, quotes, line length) is owned by Prettier, not ESLint rules.
+Install: `npm install --save-dev --save-exact prettier`
+
+[source,json]
+----
+// .prettierrc
+{
+  "singleQuote": true,
+  "semi": true,
+  "tabWidth": 4,
+  "printWidth": 120,
+  "trailingComma": "es5"
+}
+----
+
+Format: `prettier --write src/ test/` +
+Check (CI): `prettier --check src/ test/`
+
+*Module system*
+
+* New projects: ES Modules (`import` / `export`) with `"type": "module"` in `package.json`
+* Existing CommonJS code (`require` / `module.exports`) does not need to migrate
+* One concern per file; filename reflects its exported symbol (`BotRequest.js` for class `BotRequest`)
+
+*Naming*
+
+* Variables and functions: lowerCamelCase
+* Constructors / classes: UpperCamelCase
+* Constants: `ALL_CAPS`
+* Acronyms as single words: `getHtmlSource`, not `getHTMLSource`
+
+*Code style*
+
+* `const` and `let` — never `var`
+* `===` and `!==` always; no Yoda conditions
+* Arrow functions for callbacks; async/await over raw Promise chains
+* Optional chaining (`?.`) and nullish coalescing (`??`) over manual null checks
+* Early returns over deeply nested `if` blocks
+* JSDoc type annotations on public API functions encouraged
