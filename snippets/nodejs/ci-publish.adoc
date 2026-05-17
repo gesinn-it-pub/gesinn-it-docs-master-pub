@@ -1,0 +1,22 @@
+'''
+
+*Publish workflow*
+
+Publishing is triggered automatically when a GitHub Release is published.
+The workflow runs all tests before publishing.
+
+ifeval::["{npm-registry}" != "github"]
+*Registry:* https://www.npmjs.com[npmjs.org]
+
+Authentication uses https://docs.npmjs.com/generating-provenance-statements[npm provenance]
+via OIDC (OpenID Connect) — no static `NPM_TOKEN` secret is required.
+
+The package must be configured as a Trusted Publisher on npmjs.org (one-time setup per package):
+npmjs.org → Package Settings → Publishing → Trusted Publishers → add this repository.
+endif::[]
+
+ifeval::["{npm-registry}" == "github"]
+*Registry:* https://npm.pkg.github.com[GitHub Packages]
+
+Authentication uses `GITHUB_TOKEN` — no additional secrets required.
+endif::[]

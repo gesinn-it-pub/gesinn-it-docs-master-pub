@@ -20,6 +20,10 @@ include::../../snippets/{project_type}/ci-mocha.adoc[]
 
 include::../../sections/universal/conventional-commits-policy.adoc[]
 
+== Publish Workflow
+
+include::../../snippets/{project_type}/ci-publish.adoc[]
+
 == Versioning
 
 include::../../sections/universal/semver-policy.adoc[]
