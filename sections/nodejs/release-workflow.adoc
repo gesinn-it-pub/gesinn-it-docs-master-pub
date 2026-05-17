@@ -1,0 +1,48 @@
+== Release Workflow
+
+=== Steps
+
+. Bump version in `package.json` (no git tag, no commit):
++
+[source,console]
+----
+npm version <major|minor|patch> --no-git-tag-version
+----
+
+. Commit:
++
+[source]
+----
+prepared x.x.x [skip ci]
+----
+
+. Draft release notes (see below) and present for approval.
+
+. After explicit user approval — push and create GitHub release:
++
+[source,console]
+----
+git push
+gh release create x.x.x --title "x.x.x" --notes "<release notes>"
+----
++
+Creating the GitHub release triggers the publish workflow automatically.
+
+=== Release notes
+
+List commits since the last release tag as bullet points, grouped by type.
+Include the short commit SHA in parentheses.
+
+Present release notes inside a fenced markdown code block for easy copying.
+Wait for explicit user approval before pushing or creating the GitHub release.
+
+Example:
+
+[source,markdown]
+----
+## Features
+- feat(api): add new endpoint for autocomplete (a1b2c3d)
+
+## Fixes
+- fix(parser): handle empty token list (e4f5g6h)
+----

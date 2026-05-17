@@ -24,6 +24,10 @@ include::../../sections/universal/conventional-commits-policy.adoc[]
 
 include::../../snippets/{project_type}/ci-publish.adoc[]
 
+== Release Workflow
+
+include::../../sections/nodejs/release-workflow.adoc[]
+
 == Versioning
 
 include::../../sections/universal/semver-policy.adoc[]
