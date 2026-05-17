@@ -6,19 +6,19 @@ Run the full test suite:
 
 [source,console]
 ----
-npm run mocha
+npm test
 ----
 
 Filter tests by name (grep):
 
 [source,console]
 ----
-npm run mocha -- --grep "pattern"
+npm test -- --grep "pattern"
 ----
 
-Run with coverage (via https://github.com/istanbuljs/nyc[nyc]):
+Run with coverage (via https://github.com/bcoe/c8[c8]):
 
 [source,console]
 ----
-npm run test-coverage
+npm run test:coverage
 ----

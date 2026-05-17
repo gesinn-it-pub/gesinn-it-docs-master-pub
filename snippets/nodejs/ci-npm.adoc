@@ -7,7 +7,7 @@
 npm ci
 ----
 
-Run all checks (lint + format check + tests):
+Run tests:
 
 [source,console]
 ----
@@ -48,5 +48,5 @@ Run tests with coverage report:
 
 [source,console]
 ----
-npm run test-coverage
+npm run test:coverage
 ----
