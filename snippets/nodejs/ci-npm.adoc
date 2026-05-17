@@ -28,6 +28,15 @@ Check formatting (Prettier, non-destructive):
 npm run format:check
 ----
 
+*Pre-commit gate*
+
+Run before every commit:
+
+[source,console]
+----
+make ci 2>&1 | tee /tmp/ci.log; echo "EXIT:$?"
+----
+
 Auto-format source files:
 
 [source,console]
