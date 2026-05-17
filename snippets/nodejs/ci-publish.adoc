@@ -8,11 +8,15 @@ The workflow runs all tests before publishing.
 ifeval::["{npm-registry}" != "github"]
 *Registry:* https://www.npmjs.com[npmjs.org]
 
-Authentication uses https://docs.npmjs.com/generating-provenance-statements[npm provenance]
-via OIDC (OpenID Connect) — no static `NPM_TOKEN` secret is required.
+Authentication uses OIDC (OpenID Connect) via npm Trusted Publishing —
+no static `NPM_TOKEN` secret is required.
 
-The package must be configured as a Trusted Publisher on npmjs.org (one-time setup per package):
-npmjs.org → Package Settings → Publishing → Trusted Publishers → add this repository.
+Requirements:
+
+* npm ≥ 11.5.1 — upgraded automatically in CI via `corepack prepare npm@^11`
+* `NODE_AUTH_TOKEN` must be unset before `npm publish` to allow OIDC auth
+* The package must be configured as a Trusted Publisher on npmjs.org (one-time setup per package): +
+  npmjs.org → Package Settings → Publishing → Trusted Publishers → add this repository
 endif::[]
 
 ifeval::["{npm-registry}" == "github"]

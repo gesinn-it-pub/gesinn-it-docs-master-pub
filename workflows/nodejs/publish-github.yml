@@ -1,0 +1,41 @@
+## Template: .github/workflows/publish.yml
+## Registry: GitHub Packages (npm.pkg.github.com)
+## Replace <REPO_URL> with the actual repository URL.
+
+name: Publish to GitHub Packages
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+
+  publish:
+    name: Publish to GitHub Packages
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Publish
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
