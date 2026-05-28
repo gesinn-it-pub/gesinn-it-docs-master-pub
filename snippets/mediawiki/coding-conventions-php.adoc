@@ -47,7 +47,7 @@ Run locally: `make composer-phpcs` (or `make ci`).
 * PHPDoc only when native types are insufficient (e.g. `string[]`, `array<string, Foo>`)
 * Nullable parameters: `?Type`, not `Type $x = null`
 * Prefer `??` (null coalescing) and `??=` over ternary isset checks
-* Use arrow functions `fn( $x ) => $x * 2` for single-expression closures
+* Use arrow functions `+fn( $x ) => $x * 2+` for single-expression closures
 
 *Modern PHP features (target: PHP 8.1+)*
 

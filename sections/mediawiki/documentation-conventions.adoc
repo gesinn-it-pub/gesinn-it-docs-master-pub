@@ -17,7 +17,7 @@ The workflow is triggered automatically when the source file changes.
 [WARNING]
 ====
 Never edit generated files directly. +
-Always modify the corresponding `*-source.adoc` file instead. +
+Always modify the corresponding `+*-source.adoc+` file instead. +
 The generated file will be overwritten by the next workflow run.
 ====
 
