@@ -1,0 +1,16 @@
+// ============================================================
+// TIER 2 — PHP Scope Instructions
+// applyTo: "**/*.php"
+// Loaded when editing PHP files. Includes full PHP coding conventions + Phan.
+// The applyTo frontmatter is prepended by the build workflow.
+// ============================================================
+
+include::../../../snippets/universal/coding-procedure.adoc[]
+
+include::../../../snippets/mediawiki/coding-conventions-general.adoc[]
+
+include::../../../snippets/mediawiki/coding-conventions-php.adoc[]
+
+ifdef::phan[]
+include::../../../snippets/mediawiki/coding-conventions-phan.adoc[]
+endif::phan[]

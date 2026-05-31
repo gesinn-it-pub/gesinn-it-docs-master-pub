@@ -1,0 +1,27 @@
+'''
+
+*Coding Procedure*
+
+Before writing any code, identify the task type and follow the corresponding procedure:
+
+*feat — implement new functionality*
+
+. Write a failing test that specifies the expected behavior. The test must fail before you write any implementation.
+. Write the minimum implementation to make the test pass.
+. Refactor if needed — tests must stay green.
+. Never write implementation before a failing test exists.
+
+*fix — correct a bug*
+
+. Reproduce the bug with a failing test first. This test is the proof the bug exists.
+. Fix the code until the test passes.
+. Never fix code without a reproducing test — you cannot verify the fix is correct.
+
+*refactor — improve structure without changing behavior*
+
+. Run the full test suite first. All tests must be green before you start.
+. Check test coverage for the files you intend to change. If coverage is below ~80% on the affected code paths, warn explicitly before proceeding: low coverage means the refactoring cannot be verified safely. Do not block, but make the risk visible.
+. Make structural changes (extract method, rename, move class, etc.).
+. Run the full test suite again. All tests must still be green.
+. If a test breaks, you changed behavior — revert the change or explicitly justify updating the test.
+. Never change test logic during a refactor unless the test itself was wrong.

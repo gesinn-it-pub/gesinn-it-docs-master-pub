@@ -6,6 +6,10 @@
 // ============================================================
 :project_type: mediawiki
 
+== Coding Procedure
+
+include::../../snippets/universal/coding-procedure.adoc[]
+
 == Coding Conventions
 
 include::../../snippets/{project_type}/coding-conventions.adoc[]

@@ -1,0 +1,16 @@
+// ============================================================
+// TIER 2 — CI/Build Scope Instructions
+// applyTo: ".github/**,Makefile,build/**"
+// Loaded when editing CI workflows, Makefiles, or build configuration.
+// The applyTo frontmatter is prepended by the build workflow.
+// ============================================================
+
+include::../../../snippets/mediawiki/ci-install.adoc[]
+
+include::../../../snippets/mediawiki/ci-phpunit.adoc[]
+
+include::../../../snippets/mediawiki/ci-phan.adoc[]
+
+include::../../../snippets/mediawiki/ci-npm.adoc[]
+
+include::../../../snippets/mediawiki/ci-pre-commit.adoc[]

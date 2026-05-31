@@ -1,0 +1,14 @@
+// ============================================================
+// TIER 2 — Testing Scope Instructions
+// applyTo: "tests/**"
+// Loaded when editing or creating test files.
+// The applyTo frontmatter is prepended by the build workflow.
+// ============================================================
+
+include::../../../snippets/mediawiki/test-first-approach.adoc[]
+
+include::../../../snippets/mediawiki/ci-install.adoc[]
+
+include::../../../snippets/mediawiki/ci-phpunit.adoc[]
+
+include::../../../snippets/mediawiki/ci-npm.adoc[]

@@ -1,0 +1,14 @@
+// ============================================================
+// TIER 2 — JavaScript / CSS Scope Instructions
+// applyTo: "**/*.{js,css,less}"
+// Loaded when editing JS, CSS, or LESS files.
+// The applyTo frontmatter is prepended by the build workflow.
+// ============================================================
+
+include::../../../snippets/universal/coding-procedure.adoc[]
+
+include::../../../snippets/mediawiki/coding-conventions-general.adoc[]
+
+include::../../../snippets/mediawiki/coding-conventions-js.adoc[]
+
+include::../../../snippets/mediawiki/coding-conventions-css.adoc[]
