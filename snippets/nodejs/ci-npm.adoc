@@ -34,6 +34,7 @@ Run before every commit:
 
 [source,console]
 ----
+set -o pipefail
 make ci 2>&1 | tee /tmp/ci.log; echo "EXIT:$?"
 ----
 
