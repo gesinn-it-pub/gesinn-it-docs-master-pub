@@ -1,0 +1,9 @@
+skill: coverage-php-mediawiki
+description: >
+  Measure PHP test coverage in a MediaWiki extension. Use when asked to run
+  coverage analysis, compare before/after coverage for a change, or extract
+  line and method coverage numbers from a Clover XML report.
+references:
+  - mediawiki/execution/install-deps.adoc
+  - mediawiki/procedures/coverage-php.adoc
+  - mediawiki/execution/run-tests-phpunit.adoc
