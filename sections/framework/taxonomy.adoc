@@ -360,22 +360,22 @@ Examples:
 |===
 | Title | Snippet
 
-| `*Coding Conventions — Baseline*`
+| +*Coding Conventions — Baseline*+
 | `universal/conventions/general.adoc` — no scope qualifier
 
-| `*Coding Conventions — PHP · MediaWiki*`
+| +*Coding Conventions — PHP · MediaWiki*+
 | `mediawiki/conventions/php.adoc` — MW delta over the base PHP layer
 
-| `*Procedure — code:write*`
+| +*Procedure — code:write*+
 | `universal/procedures/code-write.adoc` — universal, no qualifier
 
-| `*Procedure — test:write · PHP*`
+| +*Procedure — test:write · PHP*+
 | `php/procedures/test-write-php.adoc` — PHP-scoped procedure
 
-| `*Execution — Run Tests (PHPUnit) · MediaWiki*`
+| +*Execution — Run Tests (PHPUnit) · MediaWiki*+
 | `mediawiki/execution/run-tests-phpunit.adoc`
 
-| `*Static Analysis — Phan · PHP*`
+| +*Static Analysis — Phan · PHP*+
 | `php/conventions/phan.adoc`
 |===
 

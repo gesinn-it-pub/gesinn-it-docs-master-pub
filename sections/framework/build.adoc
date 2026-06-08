@@ -40,7 +40,7 @@ A higher count indicates stale files that were not cleaned; a lower count indica
 
 ==== No Duplicate Content Headings
 
-Each bold title (delimited by `+*+` pairs) across a skill's assembled references must be unique.
+Each bold title (delimited by asterisk pairs: +*Title*+) across a skill's assembled references must be unique.
 Duplicate headings indicate that the manifest includes overlapping snippets — a violation of the delta principle.
 
 The delta principle: each snippet layer adds only what is not already defined at a higher abstraction level.
