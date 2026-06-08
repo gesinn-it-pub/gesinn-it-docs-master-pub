@@ -581,6 +581,8 @@ wrapping in backtick monospace.
 
 ## Conventional Commits Policy
 
+**Commit Convention — Conventional Commits**
+
 Commit messages follow the [Conventional Commits
 specification](https://www.conventionalcommits.org/).
 
@@ -652,9 +654,14 @@ Guidelines:
 - Use `chore` only for repository maintenance tasks that do not affect
   runtime behavior, dependencies, CI configuration, or tests
 
+- Do **not** add a `Co-Authored-By:` trailer or any agent attribution
+  line to the commit message
+
 # Versioning
 
 ## Versioning and Releases
+
+**Versioning Convention — Semantic Versioning**
 
 This project follows [Semantic Versioning](https://semver.org/).
 
