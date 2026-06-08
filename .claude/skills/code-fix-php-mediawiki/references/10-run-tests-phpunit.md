@@ -1,4 +1,4 @@
-**PHPUnit tests**
+**Execution — Run Tests (PHPUnit) · MediaWiki**
 
 Run all PHPUnit tests:
 

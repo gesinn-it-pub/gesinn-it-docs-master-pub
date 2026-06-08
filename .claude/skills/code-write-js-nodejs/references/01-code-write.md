@@ -1,4 +1,4 @@
-**Procedure — feat (code:write)**
+**Procedure — code:write**
 
 1.  Write a failing test that specifies the expected behavior. The test
     must fail before you write any implementation.

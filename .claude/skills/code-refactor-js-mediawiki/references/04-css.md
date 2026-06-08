@@ -1,4 +1,4 @@
-**Coding Conventions — CSS / LESS**
+**Coding Conventions — CSS/LESS · MediaWiki**
 
 Tooling: [stylelint](https://stylelint.io/) via `npm run lint:styles`
 (or `make ci`). ResourceLoader natively compiles `.less` files; prefer

@@ -1,4 +1,4 @@
-**Node QUnit tests**
+**Execution — Run Tests (QUnit) · MediaWiki**
 
 Run all JavaScript tests:
 

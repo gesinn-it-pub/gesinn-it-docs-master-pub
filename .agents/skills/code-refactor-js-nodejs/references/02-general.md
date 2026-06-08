@@ -1,4 +1,4 @@
-**Coding Conventions — General**
+**Coding Conventions — Baseline**
 
 All source files regardless of language must follow these baseline
 rules.

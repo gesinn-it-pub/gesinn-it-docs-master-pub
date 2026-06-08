@@ -1,4 +1,4 @@
-**Procedure — fix (code:fix)**
+**Procedure — code:fix**
 
 1.  Reproduce the bug with a failing test first. This test is the proof
     the bug exists.

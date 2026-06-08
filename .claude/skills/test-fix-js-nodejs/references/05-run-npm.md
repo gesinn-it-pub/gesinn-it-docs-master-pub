@@ -1,4 +1,4 @@
-**Install dependencies**
+**Execution — npm Workflow · Node.js**
 
 ``` console
 npm ci

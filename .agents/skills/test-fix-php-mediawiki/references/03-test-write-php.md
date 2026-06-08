@@ -1,4 +1,4 @@
-**PHPUnit conventions**
+**Procedure — test:write · PHP**
 
 - Test class name = class under test + `Test` suffix (e.g.
   `MyClassTest`)

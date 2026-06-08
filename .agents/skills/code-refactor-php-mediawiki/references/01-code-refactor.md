@@ -1,4 +1,4 @@
-**Procedure — refactor (code:refactor)**
+**Procedure — code:refactor**
 
 1.  Run the full test suite first. All tests must be green before you
     start.

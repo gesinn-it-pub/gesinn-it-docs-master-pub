@@ -1,4 +1,4 @@
-**Coding Conventions — General**
+**Coding Conventions — MediaWiki**
 
 All source files regardless of language must follow these baseline
 rules. They are enforced by `make ci` (lint + phpcs + eslint).

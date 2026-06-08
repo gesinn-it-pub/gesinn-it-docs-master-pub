@@ -1,4 +1,4 @@
-**Test-first approach (MediaWiki PHP)**
+**Procedure — test:write · MediaWiki**
 
 Before making any code changes to fix a bug or implement a feature:
 
@@ -39,7 +39,7 @@ Do **not** extend `MediaWikiIntegrationTestCase` by default — use
 
 **Running tests**
 
-**Test environment setup**
+**Execution — Install Dependencies · MediaWiki**
 
 All tests run inside a containerized MediaWiki environment managed via
 [docker-compose-ci](https://github.com/gesinn-it-pub/docker-compose-ci)
@@ -65,7 +65,7 @@ directly.
 make install
 ```
 
-**PHPUnit tests**
+**Execution — Run Tests (PHPUnit) · MediaWiki**
 
 Run all PHPUnit tests:
 

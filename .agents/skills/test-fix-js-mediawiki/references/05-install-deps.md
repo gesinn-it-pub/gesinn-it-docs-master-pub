@@ -1,4 +1,4 @@
-**Test environment setup**
+**Execution — Install Dependencies · MediaWiki**
 
 All tests run inside a containerized MediaWiki environment managed via
 [docker-compose-ci](https://github.com/gesinn-it-pub/docker-compose-ci)

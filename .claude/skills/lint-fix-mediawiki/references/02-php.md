@@ -1,4 +1,4 @@
-**Coding Conventions — PHP (MediaWiki delta)**
+**Coding Conventions — PHP · MediaWiki**
 
 Tooling:
 [mediawiki-codesniffer](https://github.com/wikimedia/mediawiki-tools-codesniffer)

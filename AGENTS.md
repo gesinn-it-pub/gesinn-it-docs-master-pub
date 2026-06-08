@@ -248,6 +248,33 @@ files are build outputs assembled from snippets at build time.
 Each layer contains **only the delta** over the layer below — no
 repetition of content already defined at a higher abstraction level.
 
+## Snippet Heading Convention
+
+Every snippet file must open with a bold title that follows this
+pattern:
+
+    *{Category} — {Content} [· {Scope}]*
+
+| Placeholder  | Meaning                                                                                       | Values                                                                  |
+|--------------|-----------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| `{Category}` | The type of content in this snippet                                                           | `Coding Conventions`, `Procedure`, `Execution`, `Static Analysis`       |
+| `{Content}`  | The subject — the task name (`code:write`), the technology (`PHP`), or the topic (`Baseline`) | Free text, title-cased                                                  |
+| `· {Scope}`  | Optional scope qualifier, prefixed with the middle dot `·` (U+00B7)                           | Language (`PHP`, `Node.js`), platform (`MediaWiki`, `Ansible`), or both |
+
+The `·` scope qualifier is omitted when the snippet is universal (no
+language or platform restriction).
+
+Examples:
+
+| Title                                         | Snippet                                                             |
+|-----------------------------------------------|---------------------------------------------------------------------|
+| `Coding Conventions — Baseline`               | `universal/conventions/general.adoc` — no scope qualifier           |
+| `Coding Conventions — PHP · MediaWiki`        | `mediawiki/conventions/php.adoc` — MW delta over the base PHP layer |
+| `Procedure — code:write`                      | `universal/procedures/code-write.adoc` — universal, no qualifier    |
+| `Procedure — test:write · PHP`                | `php/procedures/test-write-php.adoc` — PHP-scoped procedure         |
+| `Execution — Run Tests (PHPUnit) · MediaWiki` | `mediawiki/execution/run-tests-phpunit.adoc`                        |
+| `Static Analysis — Phan · PHP`                | `php/conventions/phan.adoc`                                         |
+
 ## Skill Structure
 
 Skills are generated into `.claude/skills/` (Claude Code) and
@@ -275,7 +302,7 @@ complete workflow. Snippets in `references/` correspond to BPMN
       SKILL.md
       references/
         01-code-write.md                 # from universal/procedures/code-write.adoc
-        02-conventions-general.md        # from universal/conventions/general.adoc
+        02-conventions-general.md        # from mediawiki/conventions/general.adoc
         03-conventions-php.md            # from php/conventions/php.adoc
         04-conventions-phan.md           # from php/conventions/phan.adoc
         05-conventions-php-mediawiki.md  # from mediawiki/conventions/php.adoc
@@ -300,7 +327,7 @@ description: >
   or build new behaviour in PHP within a MediaWiki context.
 references:
   - universal/procedures/code-write.adoc
-  - universal/conventions/general.adoc
+  - mediawiki/conventions/general.adoc
   - php/conventions/php.adoc
   - php/conventions/phan.adoc
   - mediawiki/conventions/php.adoc
