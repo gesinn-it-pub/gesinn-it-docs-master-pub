@@ -75,12 +75,6 @@ jobs:
           rm -f AGENTS.adoc
           rm -f AGENTS.xml
 
-      # --- Skills ---
-
-      - name: Build skills from manifests
-        run: |
-          python3 scripts/build-skills.py
-
       # --- Single commit ---
 
       - name: Commit generated files
@@ -89,7 +83,5 @@ jobs:
           add: |
             README.adoc
             AGENTS.md
-            .claude/skills/**
-            .agents/skills/**
           pull: '--rebase --autostash'
           message: "docs(ci): update generated documentation [skip ci]"

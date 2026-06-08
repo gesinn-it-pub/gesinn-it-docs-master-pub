@@ -1,3 +1,8 @@
 .vscode/
 analysis-ai-governance-architecture.md
 ai-agent-logbook-issue6-pageForms.md
+# Auto-generated skills (built by consuming repos from manifests+snippets).
+# Hand-written skills (e.g. migrate-docs-v2) remain tracked via negation.
+.claude/skills/*
+!.claude/skills/migrate-docs-v2/
+.agents/skills/
