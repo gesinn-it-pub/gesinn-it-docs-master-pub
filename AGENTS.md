@@ -1,0 +1,494 @@
+<!-- THIS FILE IS AUTO-GENERATED. Edit AGENTS-source.adoc instead. -->
+
+# Framework Structure
+
+This is `gesinn-it-docs-master-pub` — a shared documentation library
+included as a Git submodule in consumer repositories.
+
+Three content levels:
+
+- `snippets/` — atomic blocks, no heading, inline-embeddable
+
+- `sections/` — standalone sections with a `==` heading (Level 2)
+
+- `documents/` — full document templates that assemble sections and
+  snippets
+
+Scope folders: `universal/`, `mediawiki/`, `nodejs/`, `ansible/`,
+`php/`, `framework/`
+
+# Task & Skill Taxonomy
+
+Canonical naming reference for the framework’s task and skill system.
+Defines identifiers, notation conventions, folder structures, and
+composition patterns.
+
+## Naming Schema
+
+Every task is identified by a qualified name of up to four dimensions:
+
+    {domain}:{action}[:{language}][:{platform}]
+
+| Dimension  | Required    | Description                                                                            |
+|------------|-------------|----------------------------------------------------------------------------------------|
+| `domain`   | Yes         | Subject area of the task (`code`, `test`, `lint`, …)                                   |
+| `action`   | Yes         | Verb describing what is done (`write`, `fix`, `run`, …)                                |
+| `language` | Conditional | Programming language (`php`, `js`, `css`, …) — omitted for language-agnostic tasks     |
+| `platform` | Conditional | Framework or platform (`mediawiki`, `nodejs`, `ansible`) — omitted for universal tasks |
+
+## Notation Conventions
+
+Two parallel notations with a trivial bijective mapping:
+
+| Context                                          | Separator | Example                    |
+|--------------------------------------------------|-----------|----------------------------|
+| Conceptual (documentation, matrices, discussion) | `:`       | `test:write:php:mediawiki` |
+| File system (file names, folder names)           | `-`       | `test-write-php-mediawiki` |
+| Skill `name` field (SKILL.md frontmatter)        | `-`       | `test-write-php-mediawiki` |
+
+Mapping rule: `:` ↔ `-` — bijective, lossless.
+
+<div class="note">
+
+The agentskills.io specification requires skill `name` values to contain
+only lowercase letters, numbers, and hyphens. Colons are illegal in file
+and folder names on Windows.
+
+</div>
+
+## Domains and Actions
+
+### Action Vocabulary
+
+| Action     | Meaning                                                              | Applicable domains     |
+|------------|----------------------------------------------------------------------|------------------------|
+| `write`    | Author something new                                                 | `code`, `test`, `doc`  |
+| `fix`      | Correct something existing                                           | `code`, `test`, `lint` |
+| `refactor` | Restructure without changing behaviour                               | `code`                 |
+| `run`      | Execute and report result                                            | `test`, `lint`         |
+| `update`   | Upgrade to a newer version — pipeline with optional downstream steps | `dep`                  |
+| `do`       | Full cycle: prepare → human review gate → execute                    | `commit`, `release`    |
+
+### Domain × Action Matrix
+
+| Domain    | `write` | `fix` | `refactor` | `run` | `update` | `do` |
+|-----------|---------|-------|------------|-------|----------|------|
+| `code`    | ✅      | ✅    | ✅         | —     | —        | —    |
+| `test`    | ✅      | ✅    | —          | ✅    | —        | —    |
+| `lint`    | —       | ✅    | —          | ✅    | —        | —    |
+| `doc`     | ✅      | —     | —          | —     | —        | —    |
+| `dep`     | —       | —     | —          | —     | ✅       | —    |
+| `commit`  | —       | —     | —          | —     | —        | ✅   |
+| `release` | —       | —     | —          | —     | —        | ✅   |
+
+### Domain Notes
+
+`code`  
+Production source code. `write` = new functionality — maps to CC type
+`feat`. `fix` = bug correction — CC `fix`. `refactor` = structural
+improvement without behaviour change — CC `refactor`.
+
+`test`  
+Test code only. `write` = new tests for untested or specified behaviour.
+`fix` = repair failing or outdated tests. `run` = execute test suite and
+report result.
+
+`lint`  
+Static analysis and style checking. `fix` = resolve a reported
+violation. `run` = execute linter and report.
+
+`doc`  
+Documentation. `write` = author or update documentation.
+
+`dep`  
+Dependency management. `update` is a pipeline: update manifest → install
+→ `test:run` + `lint:run` → optional `commit:do` → optional
+`release:do`.
+
+`commit`  
+Commit authoring. `do` = full cycle: classify changes, compose message
+(Conventional Commits format), await human approval, execute
+`git commit`.
+
+`release`  
+Release preparation. `do` = full cycle: determine semver increment,
+write changelog, bump version, await human approval, execute.
+
+## Language Qualifiers
+
+| Qualifier | Language          | Active platforms                                                             |
+|-----------|-------------------|------------------------------------------------------------------------------|
+| `php`     | PHP               | `mediawiki`                                                                  |
+| `js`      | JavaScript        | `mediawiki`, `nodejs`                                                        |
+| `css`     | CSS / LESS        | `mediawiki`                                                                  |
+| `ts`      | TypeScript        | *(reserved — not yet active)*                                                |
+| `yaml`    | YAML              | `ansible`                                                                    |
+| *(none)*  | Language-agnostic | `test:run`, `lint:run`, `commit:do`, `release:do`, `dep:update`, `doc:write` |
+
+## Platform Qualifiers
+
+| Qualifier   | Platform / Framework            | Languages          |
+|-------------|---------------------------------|--------------------|
+| `mediawiki` | MediaWiki extension             | `php`, `js`, `css` |
+| `nodejs`    | Node.js application             | `js`, `ts`         |
+| `ansible`   | Ansible role                    | `yaml`             |
+| *(none)*    | Universal — no platform context | —                  |
+
+## Valid Qualified Names
+
+Only combinations that reflect real-world development contexts are
+defined. Invalid combinations (e.g. `code:write:php:nodejs`) are not
+instantiated.
+
+### `code` domain
+
+| Qualified name                | Description                                                     |
+|-------------------------------|-----------------------------------------------------------------|
+| `code:write:php:mediawiki`    | Implement new PHP functionality in a MediaWiki extension        |
+| `code:write:js:mediawiki`     | Implement new JavaScript functionality in a MediaWiki extension |
+| `code:write:css:mediawiki`    | Implement new CSS/LESS styling in a MediaWiki extension         |
+| `code:write:js:nodejs`        | Implement new JavaScript functionality in a Node.js application |
+| `code:fix:php:mediawiki`      | Fix a PHP bug in a MediaWiki extension                          |
+| `code:fix:js:mediawiki`       | Fix a JavaScript bug in a MediaWiki extension                   |
+| `code:fix:css:mediawiki`      | Fix a CSS/LESS issue in a MediaWiki extension                   |
+| `code:fix:js:nodejs`          | Fix a JavaScript bug in a Node.js application                   |
+| `code:refactor:php:mediawiki` | Refactor PHP code in a MediaWiki extension                      |
+| `code:refactor:js:mediawiki`  | Refactor JavaScript code in a MediaWiki extension               |
+| `code:refactor:js:nodejs`     | Refactor JavaScript code in a Node.js application               |
+
+### `test` domain
+
+| Qualified name             | Description                                           |
+|----------------------------|-------------------------------------------------------|
+| `test:write:php:mediawiki` | Write PHPUnit / MediaWiki test-case tests             |
+| `test:write:js:mediawiki`  | Write QUnit tests for a MediaWiki extension           |
+| `test:write:js:nodejs`     | Write Mocha / Jest tests for a Node.js application    |
+| `test:fix:php:mediawiki`   | Repair failing PHPUnit tests in a MediaWiki extension |
+| `test:fix:js:mediawiki`    | Repair failing QUnit tests in a MediaWiki extension   |
+| `test:fix:js:nodejs`       | Repair failing JS tests in a Node.js application      |
+| `test:run:mediawiki`       | Run the full test suite for a MediaWiki extension     |
+| `test:run:nodejs`          | Run the full test suite for a Node.js application     |
+
+### `lint` domain
+
+| Qualified name           | Description                                          |
+|--------------------------|------------------------------------------------------|
+| `lint:fix:php:mediawiki` | Fix PHPCS / Phan violations in a MediaWiki extension |
+| `lint:fix:js:mediawiki`  | Fix ESLint violations in a MediaWiki extension       |
+| `lint:fix:css:mediawiki` | Fix stylelint violations in a MediaWiki extension    |
+| `lint:fix:js:nodejs`     | Fix ESLint violations in a Node.js application       |
+| `lint:run:mediawiki`     | Run all linters for a MediaWiki extension            |
+| `lint:run:nodejs`        | Run all linters for a Node.js application            |
+
+### Language-agnostic tasks
+
+| Qualified name         | Description                                                 |
+|------------------------|-------------------------------------------------------------|
+| `doc:write`            | Write or update documentation                               |
+| `dep:update:mediawiki` | Update Composer dependencies in a MediaWiki extension       |
+| `dep:update:nodejs`    | Update npm dependencies in a Node.js application            |
+| `commit:do`            | Classify changes, compose and execute a Conventional Commit |
+| `release:do`           | Prepare and execute a versioned release                     |
+
+## Conventional Commits Mapping
+
+Task identifiers and Conventional Commits types serve different purposes
+in separate namespaces. The mapping is applied operationally in the
+`commit:do` skill.
+
+| Task (agent instruction namespace) | CC type (commit message namespace)             |
+|------------------------------------|------------------------------------------------|
+| `code:write`                       | `feat`                                         |
+| `code:fix`                         | `fix`                                          |
+| `code:refactor`                    | `refactor`                                     |
+| `test:write`                       | `test`                                         |
+| `test:fix`                         | `test`                                         |
+| `lint:fix`                         | `style` or `fix` (depending on violation type) |
+| `doc:write`                        | `docs`                                         |
+| `dep:update`                       | `chore(deps)`                                  |
+| `release:do`                       | `chore(release)`                               |
+
+## Snippet Folder Structure (Canonical)
+
+Snippets are the single source of truth (SPoT). Skills and AGENTS.md
+files are build outputs assembled from snippets at build time.
+
+    snippets/
+      universal/
+        conventions/
+          general.adoc
+        procedures/
+          code-write.adoc           # procedure: TDD — test-first, then implement
+          code-fix.adoc             # procedure: reproduce-first
+          code-refactor.adoc        # procedure: safety-net (green before and after)
+          test-write.adoc           # procedure: spec-first, universal
+      php/                          # new scope: PHP-specific, platform-independent
+        conventions/
+          php.adoc
+          phan.adoc
+        procedures/
+          test-write-php.adoc       # delta: PHPUnit conventions
+      mediawiki/
+        conventions/
+          general.adoc              # was: coding-conventions-general.adoc
+          php.adoc                  # was: coding-conventions-php.adoc (MW delta over php/)
+          js.adoc                   # was: coding-conventions-js.adoc
+          css.adoc                  # was: coding-conventions-css.adoc
+        procedures/
+          test-write-php-mediawiki.adoc  # delta: MW base classes, runner (replaces test-first-approach.adoc)
+        execution/
+          run-tests-phpunit.adoc    # was: ci-phpunit.adoc
+          run-tests-npm.adoc        # was: ci-npm.adoc
+          run-phan.adoc             # was: ci-phan.adoc
+          run-pre-commit.adoc       # was: ci-pre-commit.adoc
+          install-deps.adoc         # was: ci-install.adoc
+      nodejs/
+        conventions/
+          …
+      ansible/
+        conventions/
+          …
+
+Each layer contains **only the delta** over the layer below — no
+repetition of content already defined at a higher abstraction level.
+
+## Skill Structure
+
+Skills are generated into `.claude/skills/` (Claude Code) and
+`.agents/skills/` (VS Code Copilot and other agentskills.io-compatible
+clients).
+
+    .claude/skills/
+      {skill-name}/
+        SKILL.md                   # frontmatter + body (< 500 lines recommended)
+        references/
+          NN-{snippet-name}.md    # rendered snippets, numbered for load order
+
+Each skill is **self-contained** at runtime — no dependency on other
+skills. The same snippet source may appear in multiple skills'
+`references/` folders. SPoT is maintained at the AsciiDoc source level;
+output duplication is accepted.
+
+Skills correspond to BPMN **Processes**: each skill orchestrates a
+complete workflow. Snippets in `references/` correspond to BPMN
+**Tasks**: reusable steps within a process.
+
+### Example: `code-write-php-mediawiki`
+
+    .claude/skills/code-write-php-mediawiki/
+      SKILL.md
+      references/
+        01-code-write.md                 # from universal/procedures/code-write.adoc
+        02-conventions-general.md        # from universal/conventions/general.adoc
+        03-conventions-php.md            # from php/conventions/php.adoc
+        04-conventions-phan.md           # from php/conventions/phan.adoc
+        05-conventions-php-mediawiki.md  # from mediawiki/conventions/php.adoc
+        06-test-write.md                 # from universal/procedures/test-write.adoc
+        07-test-write-php.md             # from php/procedures/test-write-php.adoc
+        08-test-write-php-mediawiki.md   # from mediawiki/procedures/test-write-php-mediawiki.adoc
+        09-run-tests-phpunit.md          # from mediawiki/execution/run-tests-phpunit.adoc
+        10-run-pre-commit.md             # from mediawiki/execution/run-pre-commit.adoc
+
+## Composition Manifests
+
+Each skill is described by a YAML composition manifest that drives the
+build. Manifests live in `skills/manifests/` and are the
+machine-readable equivalent of the Task × Rule-sets Matrix.
+
+``` yaml
+# skills/manifests/code-write-php-mediawiki.yml
+skill: code-write-php-mediawiki
+description: >
+  Implement new PHP functionality in a MediaWiki extension.
+  Use when asked to add a new feature, implement a method,
+  or build new behaviour in PHP within a MediaWiki context.
+references:
+  - universal/procedures/code-write.adoc
+  - universal/conventions/general.adoc
+  - php/conventions/php.adoc
+  - php/conventions/phan.adoc
+  - mediawiki/conventions/php.adoc
+  - universal/procedures/test-write.adoc
+  - php/procedures/test-write-php.adoc
+  - mediawiki/procedures/test-write-php-mediawiki.adoc
+  - mediawiki/execution/run-tests-phpunit.adoc
+  - mediawiki/execution/run-pre-commit.adoc
+```
+
+## Existing File Migration
+
+| Current path                                         | Canonical path                                                                                      | Action                                             |
+|------------------------------------------------------|-----------------------------------------------------------------------------------------------------|----------------------------------------------------|
+| `snippets/universal/coding-procedure.adoc`           | `universal/procedures/code-write.adoc` + `code-fix.adoc` + `code-refactor.adoc` + `test-write.adoc` | Split                                              |
+| `snippets/mediawiki/test-first-approach.adoc`        | `mediawiki/procedures/test-write-php-mediawiki.adoc`                                                | Rename + extend                                    |
+| `snippets/mediawiki/coding-conventions-general.adoc` | `mediawiki/conventions/general.adoc`                                                                | Rename                                             |
+| `snippets/mediawiki/coding-conventions-php.adoc`     | PHP layer → `php/conventions/php.adoc`; MW delta → `mediawiki/conventions/php.adoc`                 | Split + move                                       |
+| `snippets/mediawiki/coding-conventions-js.adoc`      | `mediawiki/conventions/js.adoc`                                                                     | Rename                                             |
+| `snippets/mediawiki/coding-conventions-css.adoc`     | `mediawiki/conventions/css.adoc`                                                                    | Rename                                             |
+| `snippets/mediawiki/coding-conventions-phan.adoc`    | `php/conventions/phan.adoc`                                                                         | Move + rename (Phan is PHP-layer, not MW-specific) |
+| `snippets/mediawiki/ci-phpunit.adoc`                 | `mediawiki/execution/run-tests-phpunit.adoc`                                                        | Rename                                             |
+| `snippets/mediawiki/ci-npm.adoc`                     | `mediawiki/execution/run-tests-npm.adoc`                                                            | Rename                                             |
+| `snippets/mediawiki/ci-phan.adoc`                    | `mediawiki/execution/run-phan.adoc`                                                                 | Rename                                             |
+| `snippets/mediawiki/ci-pre-commit.adoc`              | `mediawiki/execution/run-pre-commit.adoc`                                                           | Rename                                             |
+| `snippets/mediawiki/ci-install.adoc`                 | `mediawiki/execution/install-deps.adoc`                                                             | Rename                                             |
+
+## Agent Skills Format Reference
+
+Key facts about the Agent Skills format — available here without web
+lookup. Source: <https://agentskills.io> /
+[agentskills/agentskills](https://github.com/agentskills/agentskills)
+
+### What Are Agent Skills?
+
+A lightweight, open format originally developed by Anthropic and
+released as an open standard. A skill is a folder containing a
+`SKILL.md` file with YAML frontmatter and Markdown body. Supported by
+Claude Code, VS Code Copilot, and other agentskills.io-compatible
+clients.
+
+### Progressive Disclosure
+
+Skills load in three stages — full instructions only when needed:
+
+| Stage      | Context cost                | What is loaded                                                                      |
+|------------|-----------------------------|-------------------------------------------------------------------------------------|
+| Discovery  | ~100 tokens per skill       | `name` + `description` only — at startup, for all available skills                  |
+| Activation | \< 5 000 tokens recommended | Full `SKILL.md` body — when task matches the description                            |
+| Execution  | On demand                   | Files in `references/`, `scripts/`, `assets/` — when the skill body references them |
+
+### `SKILL.md` Frontmatter Fields
+
+| Field           | Required | Description                                                                                        |
+|-----------------|----------|----------------------------------------------------------------------------------------------------|
+| `name`          | Yes      | Max 64 chars. Lowercase letters, numbers, hyphens only. Must match folder name.                    |
+| `description`   | Yes      | Max 1 024 chars. Describes what the skill does and **when to use it**. Primary activation trigger. |
+| `license`       | No       | License name or reference to a bundled license file.                                               |
+| `compatibility` | No       | Max 500 chars. Environment requirements (OS, installed tools, network access).                     |
+| `metadata`      | No       | Arbitrary key-value mapping for additional metadata.                                               |
+| `allowed-tools` | No       | Space-separated pre-approved tools the skill may use. *(Experimental)*                             |
+
+### Key Design Principles
+
+- Keep `SKILL.md` under 500 lines / 5 000 tokens — the body loads in
+  full on activation.
+
+- Move detailed reference material to `references/` and instruct the
+  agent **when** to load each file.
+
+- The `description` field is the sole activation trigger — write it to
+  match the right prompts and reject near-misses.
+
+- Add only what the agent **would not know without the skill**: project
+  conventions, non-obvious edge cases, specific tool commands.
+
+- Favour procedures over declarations: teach the agent how to approach a
+  class of problems, not what to produce for a specific instance.
+
+# Commit Convention
+
+# Conventional Commits Policy
+
+Commit messages follow the [Conventional Commits
+specification](https://www.conventionalcommits.org/).
+
+Commit format:
+
+`type(scope): short description`
+
+The scope is optional and should describe the affected subsystem,
+module, or dependency when useful.
+
+Examples:
+
+- feat(api): add autocomplete endpoint
+
+- fix(parser): handle empty token lists
+
+- docs(readme): explain input architecture
+
+- refactor(parser): simplify token parsing
+
+- deps(smw): bump from 5.1.0 to 5.2.0
+
+- ci(github): update workflow configuration
+
+- test(api): add autocomplete tests
+
+Recommended commit types:
+
+- `feat` — new functionality
+
+- `fix` — bug fixes
+
+- `deps` — dependency updates
+
+- `docs` — documentation changes
+
+- `refactor` — internal code changes without behavioral change
+
+- `test` — tests added or updated
+
+- `ci` — changes to continuous integration configuration
+
+- `chore` — repository maintenance tasks without impact on runtime
+  behavior
+
+Dependency updates:
+
+- Use the `deps` type for dependency upgrades
+
+- The scope should identify the dependency being updated
+
+- Include the version change when applicable
+
+Example:
+
+- deps(smw): bump from 5.1.0 to 5.2.0
+
+Guidelines:
+
+- Use the imperative mood (e.g. "add feature", not "added feature")
+
+- Keep the subject line concise
+
+- Use the commit body to explain **why**, not only **what**
+
+- Scopes should be short, lowercase identifiers (e.g. `api`, `parser`,
+  `smw`, `mediawiki`, `docker`)
+
+- Use `chore` only for repository maintenance tasks that do not affect
+  runtime behavior, dependencies, CI configuration, or tests
+
+# Versioning
+
+# Versioning and Releases
+
+This project follows [Semantic Versioning](https://semver.org/).
+
+Version numbers follow the format:
+
+`MAJOR.MINOR.PATCH`
+
+Version increment rules:
+
+- MAJOR — incompatible or breaking changes
+
+- MINOR — backwards-compatible feature additions
+
+- PATCH — backwards-compatible bug fixes
+
+Breaking changes include (but are not limited to):
+
+- incompatible API changes
+
+- removal or renaming of public interfaces
+
+- behavior changes that may break existing integrations
+
+- increased minimum runtime or dependency requirements
+
+- incompatible configuration or data format changes
+
+- dependency upgrades that introduce breaking changes for users
+
+Breaking changes must always increment the MAJOR version.
