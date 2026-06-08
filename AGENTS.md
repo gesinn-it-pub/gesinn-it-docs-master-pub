@@ -48,13 +48,9 @@ Two parallel notations with a trivial bijective mapping:
 
 Mapping rule: `:` ↔ `-` — bijective, lossless.
 
-<div class="note">
-
 The agentskills.io specification requires skill `name` values to contain
 only lowercase letters, numbers, and hyphens. Colons are illegal in file
 and folder names on Windows.
-
-</div>
 
 ## Domains and Actions
 
@@ -386,7 +382,7 @@ Skills load in three stages — full instructions only when needed:
 
 # Commit Convention
 
-# Conventional Commits Policy
+## Conventional Commits Policy
 
 Commit messages follow the [Conventional Commits
 specification](https://www.conventionalcommits.org/).
@@ -461,7 +457,7 @@ Guidelines:
 
 # Versioning
 
-# Versioning and Releases
+## Versioning and Releases
 
 This project follows [Semantic Versioning](https://semver.org/).
 
