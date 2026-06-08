@@ -8,6 +8,7 @@ references:
   - universal/procedures/test-write.adoc
   - php/procedures/test-write-php.adoc
   - mediawiki/procedures/test-write-php-mediawiki.adoc
+  - mediawiki/procedures/test-write-jsonscript-php-mediawiki.adoc
   - php/conventions/php.adoc
   - mediawiki/conventions/php.adoc
   - mediawiki/execution/install-deps.adoc
