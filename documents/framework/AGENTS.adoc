@@ -19,6 +19,8 @@ Scope folders: `universal/`, `mediawiki/`, `nodejs/`, `ansible/`, `php/`, `frame
 
 include::../../sections/framework/taxonomy.adoc[]
 
+include::../../sections/framework/build.adoc[]
+
 == Commit Convention
 
 include::../../sections/universal/conventional-commits-policy.adoc[leveloffset=+1]
