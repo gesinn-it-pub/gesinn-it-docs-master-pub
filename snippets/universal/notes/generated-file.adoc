@@ -1,6 +1,6 @@
 [NOTE]
 ====
 This file is *auto-generated*. Do not edit it directly. +
-Edit the corresponding `*-source.adoc` file instead. +
+Edit the corresponding +*-source.adoc+ file instead. +
 The file is regenerated automatically by a https://docs.github.com/en/actions[GitHub Workflow].
 ====

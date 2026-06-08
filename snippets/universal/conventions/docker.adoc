@@ -13,7 +13,7 @@ Tooling: https://github.com/hadolint/hadolint[hadolint].
 *Layer optimisation*
 
 * Combine related `RUN` commands with `&&` and `\` to minimise layer count and improve cache reuse
-* Delete package manager caches in the same `RUN` layer: `apt-get clean && rm -rf /var/lib/apt/lists/*`
+* Delete package manager caches in the same `RUN` layer: `apt-get clean && rm -rf` +/var/lib/apt/lists/*+
 * Order instructions from least to most frequently changed (maximises cache hits)
 * Use `COPY` instead of `ADD` unless explicitly extracting a tar archive
 
@@ -32,7 +32,7 @@ Tooling: https://github.com/hadolint/hadolint[hadolint].
 *.dockerignore*
 
 * Every repository with a Dockerfile must include a `.dockerignore`
-* Exclude at minimum: `.git/`, `node_modules/`, `*.log`, and local override files
+* Exclude at minimum: `.git/`, `node_modules/`, +*.log+, and local override files
 
 '''
 
