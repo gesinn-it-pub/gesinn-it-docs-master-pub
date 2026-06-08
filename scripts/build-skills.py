@@ -126,7 +126,11 @@ def main():
     parser.add_argument("--agents-skills-dir", default=".agents/skills",
                         help="Output directory for agent skills (default: .agents/skills)")
     parser.add_argument("--scope", default=None,
-                        help="Only build skills whose name contains this string (e.g. 'mediawiki')")
+                        help="Only build skills whose name contains this string (e.g. 'mediawiki'). "
+                             "Skills with no platform qualifier are always built regardless of scope.")
+    parser.add_argument("--platforms", default="mediawiki,nodejs,ansible",
+                        help="Comma-separated list of known platform qualifiers (default: mediawiki,nodejs,ansible). "
+                             "Used to identify platform-specific skills when --scope is set.")
     args = parser.parse_args()
 
     if not os.path.isdir(args.manifests_dir):
@@ -138,7 +142,11 @@ def main():
     )
 
     if args.scope:
-        manifests = [f for f in manifests if args.scope in f]
+        platforms = [p.strip() for p in args.platforms.split(",") if p.strip()]
+        def is_platform_specific(filename):
+            name = os.path.splitext(filename)[0]
+            return any(p in name for p in platforms)
+        manifests = [f for f in manifests if args.scope in f or not is_platform_specific(f)]
 
     if not manifests:
         print("No manifest files found" + (f" matching scope '{args.scope}'" if args.scope else "") + ".")
