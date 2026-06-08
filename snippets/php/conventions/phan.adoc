@@ -1,7 +1,7 @@
 ifdef::phan[]
 '''
 
-*Static Analysis — Phan*
+*Static Analysis — Phan · PHP*
 
 Tooling: https://github.com/phan/phan[Phan] with https://github.com/wikimedia/mediawiki-phan-config[mediawiki-phan-config].
 Run locally: `make composer-phan` (or `make dev-test`).

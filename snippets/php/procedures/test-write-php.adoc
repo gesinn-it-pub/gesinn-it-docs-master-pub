@@ -1,6 +1,6 @@
 '''
 
-*PHPUnit conventions*
+*Procedure — test:write · PHP*
 
 * Test class name = class under test + `Test` suffix (e.g. `MyClassTest`)
 * Test class extends `\PHPUnit\Framework\TestCase` (or a subclass)

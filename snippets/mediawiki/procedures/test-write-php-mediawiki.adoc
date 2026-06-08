@@ -1,6 +1,6 @@
 '''
 
-*Test-first approach (MediaWiki PHP)*
+*Procedure — test:write · MediaWiki*
 
 Before making any code changes to fix a bug or implement a feature:
 

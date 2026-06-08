@@ -1,6 +1,6 @@
 '''
 
-*Coding Conventions — JavaScript*
+*Coding Conventions — JavaScript · MediaWiki*
 
 Tooling: https://eslint.org/[ESLint] with https://github.com/wikimedia/eslint-config-wikimedia[eslint-config-wikimedia].
 Run locally: `npm run lint:js` (or `make ci`).

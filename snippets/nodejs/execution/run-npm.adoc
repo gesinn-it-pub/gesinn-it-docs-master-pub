@@ -1,6 +1,6 @@
 '''
 
-*Install dependencies*
+*Execution — npm Workflow · Node.js*
 
 [source,console]
 ----

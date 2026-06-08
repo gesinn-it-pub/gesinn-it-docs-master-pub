@@ -1,6 +1,6 @@
 '''
 
-*Publish workflow*
+*Execution — Publish · Node.js*
 
 Publishing is triggered automatically when a GitHub Release is published.
 The workflow runs all tests before publishing.

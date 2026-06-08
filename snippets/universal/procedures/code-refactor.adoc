@@ -1,6 +1,6 @@
 '''
 
-*Procedure — refactor (code:refactor)*
+*Procedure — code:refactor*
 
 . Run the full test suite first. All tests must be green before you start.
 . Check test coverage for the files you intend to change. If coverage is below ~80% on the affected code paths, warn explicitly before proceeding: low coverage means the refactoring cannot be verified safely. Do not block, but make the risk visible.

@@ -1,6 +1,6 @@
 '''
 
-*Coding Conventions — PHP (MediaWiki delta)*
+*Coding Conventions — PHP · MediaWiki*
 
 Tooling: https://github.com/wikimedia/mediawiki-tools-codesniffer[mediawiki-codesniffer] via PHPCS.
 Run locally: `make composer-phpcs` (or `make ci`).

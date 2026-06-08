@@ -1,6 +1,6 @@
 '''
 
-*Coding Conventions — Ansible*
+*Coding Conventions — Ansible Roles*
 
 Tooling: https://ansible-lint.readthedocs.io/[ansible-lint].
 

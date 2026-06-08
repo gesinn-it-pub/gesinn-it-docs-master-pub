@@ -1,7 +1,7 @@
 ifdef::phan[]
 '''
 
-*Phan — static analysis*
+*Execution — Run Phan · MediaWiki*
 
 Run Phan against the codebase:
 

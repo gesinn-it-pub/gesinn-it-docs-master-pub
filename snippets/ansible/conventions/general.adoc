@@ -1,6 +1,6 @@
 '''
 
-*Coding Conventions — General (Ansible)*
+*Coding Conventions — Ansible*
 
 All source files regardless of language must follow these baseline rules.
 Enforced by `ansible-lint` via `make ci`.
