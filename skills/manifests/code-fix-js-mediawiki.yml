@@ -5,7 +5,6 @@ description: >
   in JS or LESS/CSS files within a MediaWiki extension context.
 references:
   - universal/procedures/code-fix.adoc
-  - universal/conventions/general.adoc
   - mediawiki/conventions/general.adoc
   - mediawiki/conventions/js.adoc
   - mediawiki/conventions/css.adoc

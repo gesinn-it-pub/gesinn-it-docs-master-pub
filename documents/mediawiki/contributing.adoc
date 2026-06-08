@@ -46,8 +46,6 @@ git checkout -b issue-1234
 
 include::../../snippets/mediawiki/conventions/general.adoc[]
 
-include::../../snippets/universal/conventions/general.adoc[]
-
 include::../../snippets/php/conventions/php.adoc[]
 
 include::../../snippets/mediawiki/conventions/php.adoc[]

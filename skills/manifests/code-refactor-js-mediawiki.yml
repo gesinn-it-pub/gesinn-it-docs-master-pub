@@ -5,7 +5,6 @@ description: >
   improvements to JS or CSS files in a MediaWiki context.
 references:
   - universal/procedures/code-refactor.adoc
-  - universal/conventions/general.adoc
   - mediawiki/conventions/general.adoc
   - mediawiki/conventions/js.adoc
   - mediawiki/conventions/css.adoc

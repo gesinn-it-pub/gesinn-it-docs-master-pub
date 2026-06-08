@@ -15,8 +15,6 @@ include::../../../snippets/universal/procedures/test-write.adoc[]
 
 include::../../../snippets/mediawiki/conventions/general.adoc[]
 
-include::../../../snippets/universal/conventions/general.adoc[]
-
 include::../../../snippets/mediawiki/conventions/js.adoc[]
 
 include::../../../snippets/mediawiki/conventions/css.adoc[]

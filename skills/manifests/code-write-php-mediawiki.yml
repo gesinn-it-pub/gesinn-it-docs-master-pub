@@ -5,7 +5,6 @@ description: >
   a MediaWiki extension context.
 references:
   - universal/procedures/code-write.adoc
-  - universal/conventions/general.adoc
   - php/conventions/php.adoc
   - php/conventions/phan.adoc
   - mediawiki/conventions/general.adoc

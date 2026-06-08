@@ -5,7 +5,6 @@ description: >
   client-side behaviour in a MediaWiki context.
 references:
   - universal/procedures/code-write.adoc
-  - universal/conventions/general.adoc
   - mediawiki/conventions/general.adoc
   - mediawiki/conventions/js.adoc
   - mediawiki/conventions/css.adoc
