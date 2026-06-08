@@ -55,7 +55,7 @@ Two parallel notations with a trivial bijective mapping:
 
 Mapping rule: `:` ↔ `-` — bijective, lossless.
 
-NOTE: The agentskills.io specification requires skill `name` values to contain only lowercase letters, numbers, and hyphens.
+The agentskills.io specification requires skill `name` values to contain only lowercase letters, numbers, and hyphens.
 Colons are illegal in file and folder names on Windows.
 
 === Domains and Actions

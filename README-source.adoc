@@ -202,17 +202,17 @@ All source files include this file instead of defining attributes inline:
 [source,asciidoc]
 ----
 // README-source.adoc
-include::docs/attributes.adoc[]
+\include::docs/attributes.adoc[]
 = {project_name}
 ...
 
 // docs/CONTRIBUTING-source.adoc
-include::attributes.adoc[]
-include::gesinn-it-docs-master-pub/documents/{project_type}/contributing.adoc[]
+\include::attributes.adoc[]
+\include::gesinn-it-docs-master-pub/documents/{project_type}/contributing.adoc[]
 
 // AGENTS-source.adoc:
-include::docs/attributes.adoc[]
-include::docs/gesinn-it-docs-master-pub/documents/{project_type}/AGENTS.adoc[]
+\include::docs/attributes.adoc[]
+\include::docs/gesinn-it-docs-master-pub/documents/{project_type}/AGENTS.adoc[]
 ----
 
 == Setup

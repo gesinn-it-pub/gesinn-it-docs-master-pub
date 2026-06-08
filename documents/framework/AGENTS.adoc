@@ -21,8 +21,8 @@ include::../../sections/framework/taxonomy.adoc[]
 
 == Commit Convention
 
-include::../../sections/universal/conventional-commits-policy.adoc[]
+include::../../sections/universal/conventional-commits-policy.adoc[leveloffset=+1]
 
 == Versioning
 
-include::../../sections/universal/semver-policy.adoc[]
+include::../../sections/universal/semver-policy.adoc[leveloffset=+1]
