@@ -66,6 +66,11 @@ def write_skill(manifest_path, output_base_dir):
     refs_dir = os.path.join(skill_dir, "references")
     os.makedirs(refs_dir, exist_ok=True)
 
+    # Remove stale reference files from previous builds
+    for stale in os.listdir(refs_dir):
+        if stale.endswith(".md"):
+            os.remove(os.path.join(refs_dir, stale))
+
     # Build reference files
     ref_lines = []
     for i, ref_path in enumerate(references, start=1):
