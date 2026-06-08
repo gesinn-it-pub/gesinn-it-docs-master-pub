@@ -9,6 +9,10 @@ For each manifest in <manifests-dir>/*.yml:
 
 Also mirrors output to <agents-skills-dir>/{name}/ for VS Code Copilot / other agents.
 
+NOTE: This script is NOT run by the submodule's own CI. Skills are built exclusively
+by consumer repos — this script is provided for them to call. Do not add a skill-build
+step to build-docs.yml.
+
 Designed to be called from within the submodule directory or from a consumer repo
 root with explicit path overrides:
 

@@ -1,3 +1,0 @@
-== Conventional commits
-
-Commit messages follow the https://www.conventionalcommits.org/[Conventional Commits specification] to ensure consistent history and meaningful change logs.

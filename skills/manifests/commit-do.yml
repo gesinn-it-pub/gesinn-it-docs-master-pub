@@ -5,3 +5,4 @@ description: >
   into a commit following the project's commit convention.
 references:
   - universal/conventions/general.adoc
+  - universal/conventions/conventional-commits.adoc

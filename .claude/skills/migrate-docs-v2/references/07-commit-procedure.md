@@ -29,6 +29,8 @@ git diff --staged --stat
 
 ## Commit message template
 
+Do **not** append a `Co-Authored-By:` trailer — the commit message must not contain any agent attribution lines.
+
 ```
 chore(docs): migrate to gesinn-it-docs-master-pub v2 snippet paths
 

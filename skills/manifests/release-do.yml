@@ -5,3 +5,4 @@ description: >
   the project's release workflow.
 references:
   - universal/conventions/general.adoc
+  - universal/conventions/semver.adoc

@@ -1,3 +1,0 @@
-== Versioning
-
-We use http://semver.org/[SemVer] for versioning. See the tags in this repository for available versions.
