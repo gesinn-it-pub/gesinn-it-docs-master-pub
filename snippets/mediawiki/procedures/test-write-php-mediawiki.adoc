@@ -27,6 +27,4 @@ Do *not* extend `MediaWikiIntegrationTestCase` by default — use `MediaWikiUnit
 
 *Running tests*
 
-include::../execution/install-deps.adoc[]
-
-include::../execution/run-tests-phpunit.adoc[]
+See the *Execution — Install Dependencies · MediaWiki* and *Execution — Run Tests (PHPUnit) · MediaWiki* reference files loaded by this skill.

@@ -5,7 +5,7 @@
 Tooling: https://stylelint.io/[stylelint] via `npm run lint:styles` (or `make ci`).
 ResourceLoader natively compiles `.less` files; prefer LESS over plain CSS.
 
-*Naming*
+*Class and ID naming*
 
 * Classes and IDs: all-lowercase, hyphen-separated
 * Use an extension-specific prefix to avoid conflicts (e.g. `pf-`, `smw-`, `mw-`)
