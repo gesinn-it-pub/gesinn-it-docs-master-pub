@@ -79,8 +79,10 @@ def write_skill(manifest_path, output_base_dir):
             print(f"  WARNING: snippet not found: {adoc_path}", file=sys.stderr)
             continue
 
-        basename = os.path.splitext(os.path.basename(ref_path))[0]
-        ref_filename = f"{i:02d}-{basename}.md"
+        parts = ref_path.replace("\\", "/").split("/")
+        scope = parts[0]
+        name = os.path.splitext(parts[-1])[0]
+        ref_filename = f"{i:02d}-{scope}-{name}.md"
         ref_filepath = os.path.join(refs_dir, ref_filename)
 
         print(f"  Converting {ref_path} -> references/{ref_filename}")
