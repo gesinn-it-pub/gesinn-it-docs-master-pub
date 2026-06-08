@@ -6,10 +6,10 @@ description: >
 
 Load the following reference files before starting work:
 
-- `references/01-test-write.md`
-- `references/02-test-write-php.md`
-- `references/03-test-write-php-mediawiki.md`
-- `references/04-php.md`
-- `references/05-php.md`
-- `references/06-install-deps.md`
-- `references/07-run-tests-phpunit.md`
+- `references/01-universal-test-write.md`
+- `references/02-php-test-write-php.md`
+- `references/03-mediawiki-test-write-php-mediawiki.md`
+- `references/04-php-php.md`
+- `references/05-mediawiki-php.md`
+- `references/06-mediawiki-install-deps.md`
+- `references/07-mediawiki-run-tests-phpunit.md`

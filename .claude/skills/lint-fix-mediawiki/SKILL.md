@@ -6,11 +6,11 @@ description: >
 
 Load the following reference files before starting work:
 
-- `references/01-general.md`
-- `references/02-php.md`
-- `references/03-php.md`
-- `references/04-phan.md`
-- `references/05-js.md`
-- `references/06-css.md`
-- `references/07-run-phan.md`
-- `references/08-run-pre-commit.md`
+- `references/01-mediawiki-general.md`
+- `references/02-mediawiki-php.md`
+- `references/03-php-php.md`
+- `references/04-php-phan.md`
+- `references/05-mediawiki-js.md`
+- `references/06-mediawiki-css.md`
+- `references/07-mediawiki-run-phan.md`
+- `references/08-mediawiki-run-pre-commit.md`

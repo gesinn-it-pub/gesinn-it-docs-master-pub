@@ -6,6 +6,6 @@ description: >
 
 Load the following reference files before starting work:
 
-- `references/01-general.md`
-- `references/02-js.md`
-- `references/03-run-npm.md`
+- `references/01-nodejs-general.md`
+- `references/02-nodejs-js.md`
+- `references/03-nodejs-run-npm.md`

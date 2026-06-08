@@ -6,11 +6,11 @@ description: >
 
 Load the following reference files before starting work:
 
-- `references/01-code-refactor.md`
-- `references/02-php.md`
-- `references/03-phan.md`
-- `references/04-general.md`
-- `references/05-php.md`
-- `references/06-install-deps.md`
-- `references/07-run-tests-phpunit.md`
-- `references/08-run-pre-commit.md`
+- `references/01-universal-code-refactor.md`
+- `references/02-php-php.md`
+- `references/03-php-phan.md`
+- `references/04-mediawiki-general.md`
+- `references/05-mediawiki-php.md`
+- `references/06-mediawiki-install-deps.md`
+- `references/07-mediawiki-run-tests-phpunit.md`
+- `references/08-mediawiki-run-pre-commit.md`

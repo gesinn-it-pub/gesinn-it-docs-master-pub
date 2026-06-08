@@ -266,14 +266,14 @@ language or platform restriction).
 
 Examples:
 
-| Title                                         | Snippet                                                             |
-|-----------------------------------------------|---------------------------------------------------------------------|
-| `Coding Conventions — Baseline`               | `universal/conventions/general.adoc` — no scope qualifier           |
-| `Coding Conventions — PHP · MediaWiki`        | `mediawiki/conventions/php.adoc` — MW delta over the base PHP layer |
-| `Procedure — code:write`                      | `universal/procedures/code-write.adoc` — universal, no qualifier    |
-| `Procedure — test:write · PHP`                | `php/procedures/test-write-php.adoc` — PHP-scoped procedure         |
-| `Execution — Run Tests (PHPUnit) · MediaWiki` | `mediawiki/execution/run-tests-phpunit.adoc`                        |
-| `Static Analysis — Phan · PHP`                | `php/conventions/phan.adoc`                                         |
+| Title                                           | Snippet                                                             |
+|-------------------------------------------------|---------------------------------------------------------------------|
+| \*Coding Conventions — Baseline\*               | `universal/conventions/general.adoc` — no scope qualifier           |
+| \*Coding Conventions — PHP · MediaWiki\*        | `mediawiki/conventions/php.adoc` — MW delta over the base PHP layer |
+| \*Procedure — code:write\*                      | `universal/procedures/code-write.adoc` — universal, no qualifier    |
+| \*Procedure — test:write · PHP\*                | `php/procedures/test-write-php.adoc` — PHP-scoped procedure         |
+| \*Execution — Run Tests (PHPUnit) · MediaWiki\* | `mediawiki/execution/run-tests-phpunit.adoc`                        |
+| \*Static Analysis — Phan · PHP\*                | `php/conventions/phan.adoc`                                         |
 
 ## Skill Structure
 
@@ -406,6 +406,86 @@ Skills load in three stages — full instructions only when needed:
 
 - Favour procedures over declarations: teach the agent how to approach a
   class of problems, not what to produce for a specific instance.
+
+# Build System
+
+`scripts/build-skills.py` assembles skills from YAML manifests and
+AsciiDoc snippets. The script is the single source of truth for the
+generated output structure. CI runs it on every push that touches
+snippets/\*\* or skills/manifests/\*\*.
+
+## Build Invariants
+
+These invariants must hold after every successful build. Violations
+indicate either a manifest error or a bug in the build script.
+
+### Idempotency
+
+Running the build twice in a row must produce identical output. The
+script achieves this by deleting all \*.md files from each skill’s
+`references/` directory before writing new ones.
+
+**Corollary:** Never hand-edit files inside `.claude/skills/` or
+`.agents/skills/` — they are fully owned by the build and will be
+overwritten on the next CI run.
+
+### Output Filename Uniqueness
+
+Each entry in a manifest must map to a distinct output filename within
+that skill’s `references/` directory.
+
+Output filenames follow the pattern:
+
+    {NN}-{scope}-{name}.md
+
+where `{scope}` is the first path component of the snippet (e.g.
+`universal`, `php`, `mediawiki`) and `{name}` is the basename without
+extension.
+
+Example: `php/conventions/php.adoc` and `mediawiki/conventions/php.adoc`
+both have basename `php.adoc` but produce distinct files `02-php-php.md`
+and `05-mediawiki-php.md`.
+
+**Rule:** A manifest must never reference two snippets from the same
+scope with the same basename. Such a collision would indicate a content
+design error — two files in the same scope doing the same job.
+
+### Reference Count Consistency
+
+The number of \*.md files in a skill’s `references/` directory must
+equal the number of entries in its manifest. A higher count indicates
+stale files that were not cleaned; a lower count indicates a missing or
+unresolvable snippet.
+
+### No Duplicate Content Headings
+
+Each bold title (delimited by asterisk pairs: \*Title\*) across a
+skill’s assembled references must be unique. Duplicate headings indicate
+that the manifest includes overlapping snippets — a violation of the
+delta principle.
+
+The delta principle: each snippet layer adds only what is not already
+defined at a higher abstraction level. For example, a MediaWiki skill
+includes `mediawiki/conventions/general.adoc` (the complete MW baseline)
+but **not** `universal/conventions/general.adoc` (which is a strict
+subset of the MW baseline).
+
+## Manifest Authoring Rules
+
+When adding or modifying a `skills/manifests/*.yml` file:
+
+1.  List snippets from most general to most specific — universal before
+    platform-specific.
+
+2.  Do not include a snippet if its content is already fully covered by
+    another snippet in the same manifest.
+
+3.  Do not include two snippets from the same scope that share a
+    basename — rename one of the source files instead.
+
+4.  Validate by running the build locally
+    (`python3 scripts/build-skills.py`) and checking that reference
+    counts match manifest entry counts.
 
 # Commit Convention
 

@@ -6,8 +6,8 @@ description: >
 
 Load the following reference files before starting work:
 
-- `references/01-test-write.md`
-- `references/02-general.md`
-- `references/03-js.md`
-- `references/04-run-npm.md`
-- `references/05-run-tests-mocha.md`
+- `references/01-universal-test-write.md`
+- `references/02-nodejs-general.md`
+- `references/03-nodejs-js.md`
+- `references/04-nodejs-run-npm.md`
+- `references/05-nodejs-run-tests-mocha.md`

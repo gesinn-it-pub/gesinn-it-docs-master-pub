@@ -6,5 +6,5 @@ description: >
 
 Load the following reference files before starting work:
 
-- `references/01-run-phan.md`
-- `references/02-run-pre-commit.md`
+- `references/01-mediawiki-run-phan.md`
+- `references/02-mediawiki-run-pre-commit.md`

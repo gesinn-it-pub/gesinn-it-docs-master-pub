@@ -6,10 +6,10 @@ description: >
 
 Load the following reference files before starting work:
 
-- `references/01-code-write.md`
-- `references/02-general.md`
-- `references/03-js.md`
-- `references/04-css.md`
-- `references/05-install-deps.md`
-- `references/06-run-tests-npm.md`
-- `references/07-run-pre-commit.md`
+- `references/01-universal-code-write.md`
+- `references/02-mediawiki-general.md`
+- `references/03-mediawiki-js.md`
+- `references/04-mediawiki-css.md`
+- `references/05-mediawiki-install-deps.md`
+- `references/06-mediawiki-run-tests-npm.md`
+- `references/07-mediawiki-run-pre-commit.md`

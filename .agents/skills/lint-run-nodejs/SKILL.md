@@ -6,4 +6,4 @@ description: >
 
 Load the following reference files before starting work:
 
-- `references/01-run-npm.md`
+- `references/01-nodejs-run-npm.md`

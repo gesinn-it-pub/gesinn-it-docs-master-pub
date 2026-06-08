@@ -6,7 +6,7 @@ description: >
 
 Load the following reference files before starting work:
 
-- `references/01-install-deps.md`
-- `references/02-run-tests-phpunit.md`
-- `references/03-run-tests-npm.md`
-- `references/04-run-pre-commit.md`
+- `references/01-mediawiki-install-deps.md`
+- `references/02-mediawiki-run-tests-phpunit.md`
+- `references/03-mediawiki-run-tests-npm.md`
+- `references/04-mediawiki-run-pre-commit.md`

@@ -6,5 +6,5 @@ description: >
 
 Load the following reference files before starting work:
 
-- `references/01-run-npm.md`
-- `references/02-run-tests-mocha.md`
+- `references/01-nodejs-run-npm.md`
+- `references/02-nodejs-run-tests-mocha.md`
