@@ -7,11 +7,10 @@ description: >
 Load the following reference files before starting work:
 
 - `references/01-code-refactor.md`
-- `references/02-general.md`
-- `references/03-php.md`
-- `references/04-phan.md`
-- `references/05-general.md`
-- `references/06-php.md`
-- `references/07-install-deps.md`
-- `references/08-run-tests-phpunit.md`
-- `references/09-run-pre-commit.md`
+- `references/02-php.md`
+- `references/03-phan.md`
+- `references/04-general.md`
+- `references/05-php.md`
+- `references/06-install-deps.md`
+- `references/07-run-tests-phpunit.md`
+- `references/08-run-pre-commit.md`

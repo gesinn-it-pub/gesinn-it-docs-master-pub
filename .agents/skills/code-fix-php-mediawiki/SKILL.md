@@ -7,14 +7,13 @@ description: >
 Load the following reference files before starting work:
 
 - `references/01-code-fix.md`
-- `references/02-general.md`
-- `references/03-php.md`
-- `references/04-phan.md`
-- `references/05-general.md`
-- `references/06-php.md`
-- `references/07-test-write.md`
-- `references/08-test-write-php.md`
-- `references/09-test-write-php-mediawiki.md`
-- `references/10-install-deps.md`
-- `references/11-run-tests-phpunit.md`
-- `references/12-run-pre-commit.md`
+- `references/02-php.md`
+- `references/03-phan.md`
+- `references/04-general.md`
+- `references/05-php.md`
+- `references/06-test-write.md`
+- `references/07-test-write-php.md`
+- `references/08-test-write-php-mediawiki.md`
+- `references/09-install-deps.md`
+- `references/10-run-tests-phpunit.md`
+- `references/11-run-pre-commit.md`

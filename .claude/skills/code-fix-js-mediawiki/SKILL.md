@@ -8,9 +8,8 @@ Load the following reference files before starting work:
 
 - `references/01-code-fix.md`
 - `references/02-general.md`
-- `references/03-general.md`
-- `references/04-js.md`
-- `references/05-css.md`
-- `references/06-install-deps.md`
-- `references/07-run-tests-npm.md`
-- `references/08-run-pre-commit.md`
+- `references/03-js.md`
+- `references/04-css.md`
+- `references/05-install-deps.md`
+- `references/06-run-tests-npm.md`
+- `references/07-run-pre-commit.md`
