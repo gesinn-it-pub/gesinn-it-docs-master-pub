@@ -1,0 +1,12 @@
+skill: test-fix-js-mediawiki
+description: >
+  Fix broken or incorrect QUnit tests in a MediaWiki extension. Use when a
+  JavaScript test fails for the wrong reason or needs to be corrected to reflect
+  the actual specification.
+references:
+  - universal/procedures/code-fix.adoc
+  - universal/procedures/test-write.adoc
+  - mediawiki/conventions/general.adoc
+  - mediawiki/conventions/js.adoc
+  - mediawiki/execution/install-deps.adoc
+  - mediawiki/execution/run-tests-npm.adoc

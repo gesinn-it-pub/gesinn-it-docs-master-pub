@@ -1,0 +1,13 @@
+skill: lint-fix-mediawiki
+description: >
+  Fix linting violations in a MediaWiki extension. Use when asked to fix ESLint,
+  PHPCS, stylelint, or Phan issues reported by the CI pipeline or linter tools.
+references:
+  - mediawiki/conventions/general.adoc
+  - mediawiki/conventions/php.adoc
+  - php/conventions/php.adoc
+  - php/conventions/phan.adoc
+  - mediawiki/conventions/js.adoc
+  - mediawiki/conventions/css.adoc
+  - mediawiki/execution/run-phan.adoc
+  - mediawiki/execution/run-pre-commit.adoc

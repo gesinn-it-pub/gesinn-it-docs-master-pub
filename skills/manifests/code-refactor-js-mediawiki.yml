@@ -1,0 +1,14 @@
+skill: code-refactor-js-mediawiki
+description: >
+  Refactor JavaScript code in a MediaWiki extension without changing behaviour.
+  Use when asked to improve structure, modernise syntax, or apply clean-code
+  improvements to JS or CSS files in a MediaWiki context.
+references:
+  - universal/procedures/code-refactor.adoc
+  - universal/conventions/general.adoc
+  - mediawiki/conventions/general.adoc
+  - mediawiki/conventions/js.adoc
+  - mediawiki/conventions/css.adoc
+  - mediawiki/execution/install-deps.adoc
+  - mediawiki/execution/run-tests-npm.adoc
+  - mediawiki/execution/run-pre-commit.adoc

@@ -1,0 +1,19 @@
+'''
+
+*Coding Conventions — Node.js*
+
+Tooling: https://eslint.org/[ESLint v9] (code quality) + https://prettier.io/[Prettier] (formatting).
+Run locally: `npm run lint` / `npm run format:check` (or `npm test`).
+
+Target: Node.js 20+. Declare in `package.json`:
+
+[source,json]
+----
+"engines": { "node": ">=20.0.0" }
+----
+
+*Module system*
+
+* New projects: ES Modules (`import` / `export`) with `"type": "module"` in `package.json`
+* Existing CommonJS code (`require` / `module.exports`) does not need to migrate
+* One concern per file; filename reflects its exported symbol (`BotRequest.js` for class `BotRequest`)

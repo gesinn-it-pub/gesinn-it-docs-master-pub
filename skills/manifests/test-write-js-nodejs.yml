@@ -1,0 +1,11 @@
+skill: test-write-js-nodejs
+description: >
+  Write Mocha tests for a Node.js application. Use when asked to add test
+  coverage for untested behaviour, write tests for a new feature, or close
+  coverage gaps in the test suite.
+references:
+  - universal/procedures/test-write.adoc
+  - nodejs/conventions/general.adoc
+  - nodejs/conventions/js.adoc
+  - nodejs/execution/run-npm.adoc
+  - nodejs/execution/run-tests-mocha.adoc

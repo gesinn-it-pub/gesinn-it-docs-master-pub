@@ -40,15 +40,17 @@ Create a new branch (replace _1234_ with your issue number):
 git checkout -b issue-1234
 ----
 
-ifdef::project_type[]
-include::../../snippets/{project_type}/coding-conventions.adoc[]
-endif::project_type[]
+include::../../snippets/universal/conventions/general.adoc[]
+
+include::../../snippets/nodejs/conventions/general.adoc[]
+
+include::../../snippets/nodejs/conventions/js.adoc[]
 
 == Step 4: Test Your Changes
 
-include::../../snippets/{project_type}/ci-npm.adoc[]
+include::../../snippets/nodejs/execution/run-npm.adoc[]
 
-include::../../snippets/{project_type}/ci-mocha.adoc[]
+include::../../snippets/nodejs/execution/run-tests-mocha.adoc[]
 
 == Step 5: Commit Your Changes
 

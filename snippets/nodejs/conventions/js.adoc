@@ -65,12 +65,6 @@ Install: `npm install --save-dev --save-exact prettier`
 Format: `prettier --write src/ test/` +
 Check (CI): `prettier --check src/ test/`
 
-*Module system*
-
-* New projects: ES Modules (`import` / `export`) with `"type": "module"` in `package.json`
-* Existing CommonJS code (`require` / `module.exports`) does not need to migrate
-* One concern per file; filename reflects its exported symbol (`BotRequest.js` for class `BotRequest`)
-
 *Naming*
 
 * Variables and functions: lowerCamelCase

@@ -1,0 +1,7 @@
+'''
+
+*Procedure — fix (code:fix)*
+
+. Reproduce the bug with a failing test first. This test is the proof the bug exists.
+. Fix the code until the test passes.
+. Never fix code without a reproducing test — you cannot verify the fix is correct.

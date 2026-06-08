@@ -1,0 +1,14 @@
+skill: test-fix-php-mediawiki
+description: >
+  Fix broken or incorrect PHPUnit tests in a MediaWiki extension. Use when a
+  test fails for the wrong reason, asserts the wrong thing, or needs to be
+  corrected to reflect the actual specification.
+references:
+  - universal/procedures/code-fix.adoc
+  - universal/procedures/test-write.adoc
+  - php/procedures/test-write-php.adoc
+  - mediawiki/procedures/test-write-php-mediawiki.adoc
+  - php/conventions/php.adoc
+  - mediawiki/conventions/php.adoc
+  - mediawiki/execution/install-deps.adoc
+  - mediawiki/execution/run-tests-phpunit.adoc

@@ -1,0 +1,12 @@
+skill: code-write-js-nodejs
+description: >
+  Implement new JavaScript functionality in a Node.js application. Use when
+  asked to add a new feature, implement a module, or build new server-side
+  behaviour in a Node.js project.
+references:
+  - universal/procedures/code-write.adoc
+  - universal/conventions/general.adoc
+  - nodejs/conventions/general.adoc
+  - nodejs/conventions/js.adoc
+  - nodejs/execution/run-npm.adoc
+  - nodejs/execution/run-tests-mocha.adoc

@@ -1,0 +1,10 @@
+'''
+
+*Procedure — refactor (code:refactor)*
+
+. Run the full test suite first. All tests must be green before you start.
+. Check test coverage for the files you intend to change. If coverage is below ~80% on the affected code paths, warn explicitly before proceeding: low coverage means the refactoring cannot be verified safely. Do not block, but make the risk visible.
+. Make structural changes (extract method, rename, move class, etc.).
+. Run the full test suite again. All tests must still be green.
+. If a test breaks, you changed behavior — revert the change or explicitly justify updating the test.
+. Never change test logic during a refactor unless the test itself was wrong.

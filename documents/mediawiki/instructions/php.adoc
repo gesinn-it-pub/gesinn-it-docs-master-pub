@@ -5,12 +5,20 @@
 // The applyTo frontmatter is prepended by the build workflow.
 // ============================================================
 
-include::../../../snippets/universal/coding-procedure.adoc[]
+include::../../../snippets/universal/procedures/code-write.adoc[]
 
-include::../../../snippets/mediawiki/coding-conventions-general.adoc[]
+include::../../../snippets/universal/procedures/code-fix.adoc[]
 
-include::../../../snippets/mediawiki/coding-conventions-php.adoc[]
+include::../../../snippets/universal/procedures/code-refactor.adoc[]
 
-ifdef::phan[]
-include::../../../snippets/mediawiki/coding-conventions-phan.adoc[]
-endif::phan[]
+include::../../../snippets/universal/procedures/test-write.adoc[]
+
+include::../../../snippets/mediawiki/conventions/general.adoc[]
+
+include::../../../snippets/universal/conventions/general.adoc[]
+
+include::../../../snippets/php/conventions/php.adoc[]
+
+include::../../../snippets/mediawiki/conventions/php.adoc[]
+
+include::../../../snippets/php/conventions/phan.adoc[]

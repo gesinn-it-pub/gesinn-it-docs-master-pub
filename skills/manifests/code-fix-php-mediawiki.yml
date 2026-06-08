@@ -1,0 +1,18 @@
+skill: code-fix-php-mediawiki
+description: >
+  Fix a PHP bug in a MediaWiki extension. Use when asked to correct incorrect
+  behaviour, a failing test, or a reported defect in PHP code within a MediaWiki
+  extension context.
+references:
+  - universal/procedures/code-fix.adoc
+  - universal/conventions/general.adoc
+  - php/conventions/php.adoc
+  - php/conventions/phan.adoc
+  - mediawiki/conventions/general.adoc
+  - mediawiki/conventions/php.adoc
+  - universal/procedures/test-write.adoc
+  - php/procedures/test-write-php.adoc
+  - mediawiki/procedures/test-write-php-mediawiki.adoc
+  - mediawiki/execution/install-deps.adoc
+  - mediawiki/execution/run-tests-phpunit.adoc
+  - mediawiki/execution/run-pre-commit.adoc

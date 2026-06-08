@@ -1,0 +1,9 @@
+skill: lint-fix-nodejs
+description: >
+  Fix linting and formatting violations in a Node.js application. Use when
+  asked to fix ESLint errors, Prettier formatting issues, or code style problems
+  reported by the CI pipeline.
+references:
+  - nodejs/conventions/general.adoc
+  - nodejs/conventions/js.adoc
+  - nodejs/execution/run-npm.adoc

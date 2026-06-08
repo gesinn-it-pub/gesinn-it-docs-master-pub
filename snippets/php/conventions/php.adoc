@@ -2,20 +2,15 @@
 
 *Coding Conventions — PHP*
 
-Tooling: https://github.com/wikimedia/mediawiki-tools-codesniffer[mediawiki-codesniffer] via PHPCS.
-Run locally: `make composer-phpcs` (or `make ci`).
-
 *File structure*
 
 * Every file starts with `declare( strict_types=1 );`
 * No closing `?>` tag
 * One class per file; filename matches class name (UpperCamelCase, e.g. `MyClass.php`)
-* New code belongs in `src/` following PSR-4; `includes/` is legacy and should be migrated incrementally
 
 *Namespaces and autoloading*
 
 * PSR-4 via Composer (`autoload.psr-4` in `composer.json`)
-* Top-level namespace = extension name (e.g. `MediaWiki\Extension\FooBar\...`)
 * Acronyms treated as single words: `HtmlId`, not `HTMLId`
 
 *Naming*
@@ -35,10 +30,6 @@ Run locally: `make composer-phpcs` (or `make ci`).
 | Constants
 | UPPER_CASE
 | `MAX_FORM_SIZE`
-
-| Global variables
-| `$wg` prefix
-| `$wgPageFormsSettings`
 |===
 
 *Type system*
@@ -74,6 +65,4 @@ Run locally: `make composer-phpcs` (or `make ci`).
 * `private` by default; `protected` only when subclass access is needed
 * Dependency injection over direct instantiation — delegate `new Foo()` to factories
 * Single Responsibility: one class, one concern
-* No superglobals (`$_GET`, `$_POST`) — use `WebRequest` via `RequestContext`
-* No new global functions — use static utility classes (`Html`, `IP`) if needed
 * Order class members: `public` → `protected` → `private`

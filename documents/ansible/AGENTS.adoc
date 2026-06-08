@@ -8,10 +8,18 @@
 
 == Coding Conventions
 
-include::../../snippets/{project_type}/coding-conventions.adoc[]
+include::../../snippets/universal/conventions/general.adoc[]
+
+include::../../snippets/ansible/conventions/general.adoc[]
+
+include::../../snippets/ansible/conventions/yaml.adoc[]
+
+include::../../snippets/ansible/conventions/ansible.adoc[]
+
+include::../../snippets/ansible/conventions/molecule.adoc[]
 
 ifdef::with_docker[]
-include::../../snippets/universal/coding-conventions-docker.adoc[]
+include::../../snippets/universal/conventions/docker.adoc[]
 endif::[]
 
 == Commit Convention

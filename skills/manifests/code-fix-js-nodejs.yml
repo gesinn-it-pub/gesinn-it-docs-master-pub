@@ -1,0 +1,12 @@
+skill: code-fix-js-nodejs
+description: >
+  Fix a JavaScript bug in a Node.js application. Use when asked to correct
+  incorrect behaviour, a failing Mocha test, or a reported defect in JS source
+  files within a Node.js project.
+references:
+  - universal/procedures/code-fix.adoc
+  - universal/conventions/general.adoc
+  - nodejs/conventions/general.adoc
+  - nodejs/conventions/js.adoc
+  - nodejs/execution/run-npm.adoc
+  - nodejs/execution/run-tests-mocha.adoc

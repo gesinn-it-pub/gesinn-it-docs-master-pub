@@ -44,21 +44,31 @@ Create a new branch (replace _1234_ with your issue number):
 git checkout -b issue-1234
 ----
 
-ifdef::project_type[]
-include::../../snippets/{project_type}/coding-conventions.adoc[]
-endif::project_type[]
+include::../../snippets/mediawiki/conventions/general.adoc[]
+
+include::../../snippets/universal/conventions/general.adoc[]
+
+include::../../snippets/php/conventions/php.adoc[]
+
+include::../../snippets/mediawiki/conventions/php.adoc[]
+
+include::../../snippets/php/conventions/phan.adoc[]
+
+include::../../snippets/mediawiki/conventions/js.adoc[]
+
+include::../../snippets/mediawiki/conventions/css.adoc[]
 
 == Step 4: Test your changes
 
-include::../../snippets/mediawiki/test-first-approach.adoc[]
+include::../../snippets/mediawiki/procedures/test-write-php-mediawiki.adoc[]
 
-include::../../snippets/{project_type}/ci-install.adoc[]
+include::../../snippets/mediawiki/execution/install-deps.adoc[]
 
-include::../../snippets/{project_type}/ci-phpunit.adoc[]
+include::../../snippets/mediawiki/execution/run-tests-phpunit.adoc[]
 
-include::../../snippets/{project_type}/ci-npm.adoc[]
+include::../../snippets/mediawiki/execution/run-tests-npm.adoc[]
 
-include::../../snippets/{project_type}/ci-pre-commit.adoc[]
+include::../../snippets/mediawiki/execution/run-pre-commit.adoc[]
 
 == Step 5: Commit your changes
 

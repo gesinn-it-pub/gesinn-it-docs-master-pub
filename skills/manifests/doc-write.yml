@@ -1,0 +1,7 @@
+skill: doc-write
+description: >
+  Write or update documentation for a project. Use when asked to add or improve
+  README files, CONTRIBUTING guides, inline code comments, or any other
+  project documentation.
+references:
+  - universal/conventions/general.adoc

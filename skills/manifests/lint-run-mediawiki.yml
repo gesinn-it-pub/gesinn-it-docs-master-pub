@@ -1,0 +1,8 @@
+skill: lint-run-mediawiki
+description: >
+  Run all linters for a MediaWiki extension and report violations. Use when
+  asked to check code style, run static analysis, or verify linting passes
+  before committing.
+references:
+  - mediawiki/execution/run-phan.adoc
+  - mediawiki/execution/run-pre-commit.adoc

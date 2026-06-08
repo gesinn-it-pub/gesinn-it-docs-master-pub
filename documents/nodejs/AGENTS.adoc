@@ -8,13 +8,17 @@
 
 == Coding Conventions
 
-include::../../snippets/{project_type}/coding-conventions.adoc[]
+include::../../snippets/universal/conventions/general.adoc[]
+
+include::../../snippets/nodejs/conventions/general.adoc[]
+
+include::../../snippets/nodejs/conventions/js.adoc[]
 
 == Test Workflow
 
-include::../../snippets/{project_type}/ci-npm.adoc[]
+include::../../snippets/nodejs/execution/run-npm.adoc[]
 
-include::../../snippets/{project_type}/ci-mocha.adoc[]
+include::../../snippets/nodejs/execution/run-tests-mocha.adoc[]
 
 == Commit Convention
 
@@ -22,7 +26,7 @@ include::../../sections/universal/conventional-commits-policy.adoc[]
 
 == Publish Workflow
 
-include::../../snippets/{project_type}/ci-publish.adoc[]
+include::../../snippets/nodejs/execution/publish.adoc[]
 
 == Release Workflow
 

@@ -1,7 +1,0 @@
-include::../universal/coding-conventions-general.adoc[]
-
-include::coding-conventions-yaml.adoc[]
-
-include::coding-conventions-ansible.adoc[]
-
-include::coding-conventions-molecule.adoc[]

@@ -5,12 +5,12 @@
 // The applyTo frontmatter is prepended by the build workflow.
 // ============================================================
 
-include::../../../snippets/mediawiki/ci-install.adoc[]
+include::../../../snippets/mediawiki/execution/install-deps.adoc[]
 
-include::../../../snippets/mediawiki/ci-phpunit.adoc[]
+include::../../../snippets/mediawiki/execution/run-tests-phpunit.adoc[]
 
-include::../../../snippets/mediawiki/ci-phan.adoc[]
+include::../../../snippets/mediawiki/execution/run-phan.adoc[]
 
-include::../../../snippets/mediawiki/ci-npm.adoc[]
+include::../../../snippets/mediawiki/execution/run-tests-npm.adoc[]
 
-include::../../../snippets/mediawiki/ci-pre-commit.adoc[]
+include::../../../snippets/mediawiki/execution/run-pre-commit.adoc[]

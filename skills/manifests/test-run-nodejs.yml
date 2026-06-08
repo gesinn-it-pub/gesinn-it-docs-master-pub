@@ -1,0 +1,7 @@
+skill: test-run-nodejs
+description: >
+  Run the full test suite for a Node.js application and report results. Use when
+  asked to run tests, verify CI passes, or check test status before committing.
+references:
+  - nodejs/execution/run-npm.adoc
+  - nodejs/execution/run-tests-mocha.adoc

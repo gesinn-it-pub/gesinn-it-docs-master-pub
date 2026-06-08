@@ -8,25 +8,43 @@
 
 == Coding Procedure
 
-include::../../snippets/universal/coding-procedure.adoc[]
+include::../../snippets/universal/procedures/code-write.adoc[]
+
+include::../../snippets/universal/procedures/code-fix.adoc[]
+
+include::../../snippets/universal/procedures/code-refactor.adoc[]
+
+include::../../snippets/universal/procedures/test-write.adoc[]
 
 == Coding Conventions
 
-include::../../snippets/{project_type}/coding-conventions.adoc[]
+include::../../snippets/mediawiki/conventions/general.adoc[]
+
+include::../../snippets/universal/conventions/general.adoc[]
+
+include::../../snippets/php/conventions/php.adoc[]
+
+include::../../snippets/mediawiki/conventions/php.adoc[]
+
+include::../../snippets/php/conventions/phan.adoc[]
+
+include::../../snippets/mediawiki/conventions/js.adoc[]
+
+include::../../snippets/mediawiki/conventions/css.adoc[]
 
 == Test Workflow
 
-include::../../snippets/{project_type}/test-first-approach.adoc[]
+include::../../snippets/mediawiki/procedures/test-write-php-mediawiki.adoc[]
 
-include::../../snippets/{project_type}/ci-install.adoc[]
+include::../../snippets/mediawiki/execution/install-deps.adoc[]
 
-include::../../snippets/{project_type}/ci-phpunit.adoc[]
+include::../../snippets/mediawiki/execution/run-tests-phpunit.adoc[]
 
-include::../../snippets/{project_type}/ci-phan.adoc[]
+include::../../snippets/mediawiki/execution/run-phan.adoc[]
 
-include::../../snippets/{project_type}/ci-npm.adoc[]
+include::../../snippets/mediawiki/execution/run-tests-npm.adoc[]
 
-include::../../snippets/{project_type}/ci-pre-commit.adoc[]
+include::../../snippets/mediawiki/execution/run-pre-commit.adoc[]
 
 == Commit Convention
 

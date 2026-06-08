@@ -8,6 +8,7 @@ on:
       - sections/**
       - snippets/**
       - documents/**
+      - skills/manifests/**
     branches:
       - '**'
   workflow_dispatch:
@@ -25,7 +26,7 @@ jobs:
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y asciidoctor pandoc
+          sudo apt-get install -y asciidoctor pandoc python3-yaml
           sudo gem install asciidoctor-reducer --pre
 
       # --- README ---
@@ -69,6 +70,12 @@ jobs:
           rm -f AGENTS.adoc
           rm -f AGENTS.xml
 
+      # --- Skills ---
+
+      - name: Build skills from manifests
+        run: |
+          python3 scripts/build-skills.py
+
       # --- Single commit ---
 
       - name: Commit generated files
@@ -77,5 +84,7 @@ jobs:
           add: |
             README.adoc
             AGENTS.md
+            .claude/skills/**
+            .agents/skills/**
           pull: '--rebase --autostash'
           message: "docs(ci): update generated documentation [skip ci]"

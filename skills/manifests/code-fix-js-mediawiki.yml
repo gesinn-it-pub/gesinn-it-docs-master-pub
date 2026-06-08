@@ -1,0 +1,14 @@
+skill: code-fix-js-mediawiki
+description: >
+  Fix a JavaScript bug in a MediaWiki extension. Use when asked to correct
+  incorrect client-side behaviour, a failing QUnit test, or a reported defect
+  in JS or LESS/CSS files within a MediaWiki extension context.
+references:
+  - universal/procedures/code-fix.adoc
+  - universal/conventions/general.adoc
+  - mediawiki/conventions/general.adoc
+  - mediawiki/conventions/js.adoc
+  - mediawiki/conventions/css.adoc
+  - mediawiki/execution/install-deps.adoc
+  - mediawiki/execution/run-tests-npm.adoc
+  - mediawiki/execution/run-pre-commit.adoc

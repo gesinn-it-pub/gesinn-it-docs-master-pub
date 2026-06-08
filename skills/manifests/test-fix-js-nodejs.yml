@@ -1,0 +1,12 @@
+skill: test-fix-js-nodejs
+description: >
+  Fix broken or incorrect Mocha tests in a Node.js application. Use when a test
+  fails for the wrong reason or needs to be corrected to reflect the actual
+  specification.
+references:
+  - universal/procedures/code-fix.adoc
+  - universal/procedures/test-write.adoc
+  - nodejs/conventions/general.adoc
+  - nodejs/conventions/js.adoc
+  - nodejs/execution/run-npm.adoc
+  - nodejs/execution/run-tests-mocha.adoc

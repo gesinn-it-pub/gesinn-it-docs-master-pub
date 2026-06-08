@@ -1,0 +1,8 @@
+'''
+
+*Procedure — feat (code:write)*
+
+. Write a failing test that specifies the expected behavior. The test must fail before you write any implementation.
+. Write the minimum implementation to make the test pass.
+. Refactor if needed — tests must stay green.
+. Never write implementation before a failing test exists.

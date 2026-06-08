@@ -1,0 +1,7 @@
+skill: dep-update-nodejs
+description: >
+  Update npm dependencies in a Node.js application. Use when asked to upgrade
+  packages, apply security patches, or update the package-lock.json.
+references:
+  - nodejs/execution/run-npm.adoc
+  - nodejs/execution/run-tests-mocha.adoc

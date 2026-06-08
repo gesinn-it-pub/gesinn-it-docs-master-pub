@@ -1,0 +1,7 @@
+skill: commit-do
+description: >
+  Classify the staged changes and create a Conventional Commit. Use when asked
+  to commit changes, write a commit message, or finalize a set of code changes
+  into a commit following the project's commit convention.
+references:
+  - universal/conventions/general.adoc

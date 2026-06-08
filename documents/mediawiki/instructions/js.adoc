@@ -5,10 +5,18 @@
 // The applyTo frontmatter is prepended by the build workflow.
 // ============================================================
 
-include::../../../snippets/universal/coding-procedure.adoc[]
+include::../../../snippets/universal/procedures/code-write.adoc[]
 
-include::../../../snippets/mediawiki/coding-conventions-general.adoc[]
+include::../../../snippets/universal/procedures/code-fix.adoc[]
 
-include::../../../snippets/mediawiki/coding-conventions-js.adoc[]
+include::../../../snippets/universal/procedures/code-refactor.adoc[]
 
-include::../../../snippets/mediawiki/coding-conventions-css.adoc[]
+include::../../../snippets/universal/procedures/test-write.adoc[]
+
+include::../../../snippets/mediawiki/conventions/general.adoc[]
+
+include::../../../snippets/universal/conventions/general.adoc[]
+
+include::../../../snippets/mediawiki/conventions/js.adoc[]
+
+include::../../../snippets/mediawiki/conventions/css.adoc[]

@@ -1,0 +1,10 @@
+skill: dep-update-mediawiki
+description: >
+  Update dependencies in a MediaWiki extension. Use when asked to upgrade
+  Composer or npm packages, update the submodule lock, or apply dependency
+  security patches.
+references:
+  - mediawiki/execution/install-deps.adoc
+  - mediawiki/execution/run-tests-phpunit.adoc
+  - mediawiki/execution/run-tests-npm.adoc
+  - mediawiki/execution/run-pre-commit.adoc

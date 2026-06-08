@@ -1,0 +1,14 @@
+skill: code-write-js-mediawiki
+description: >
+  Implement new JavaScript functionality in a MediaWiki extension. Use when
+  asked to add a new feature, implement a ResourceLoader module, or build new
+  client-side behaviour in a MediaWiki context.
+references:
+  - universal/procedures/code-write.adoc
+  - universal/conventions/general.adoc
+  - mediawiki/conventions/general.adoc
+  - mediawiki/conventions/js.adoc
+  - mediawiki/conventions/css.adoc
+  - mediawiki/execution/install-deps.adoc
+  - mediawiki/execution/run-tests-npm.adoc
+  - mediawiki/execution/run-pre-commit.adoc

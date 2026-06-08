@@ -1,3 +1,0 @@
-include::../universal/coding-conventions-general.adoc[]
-
-include::coding-conventions-js.adoc[]

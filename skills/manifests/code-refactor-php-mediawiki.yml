@@ -1,0 +1,15 @@
+skill: code-refactor-php-mediawiki
+description: >
+  Refactor PHP code in a MediaWiki extension without changing behaviour. Use
+  when asked to improve structure, extract methods, rename classes, or apply
+  clean-code improvements to PHP files in a MediaWiki context.
+references:
+  - universal/procedures/code-refactor.adoc
+  - universal/conventions/general.adoc
+  - php/conventions/php.adoc
+  - php/conventions/phan.adoc
+  - mediawiki/conventions/general.adoc
+  - mediawiki/conventions/php.adoc
+  - mediawiki/execution/install-deps.adoc
+  - mediawiki/execution/run-tests-phpunit.adoc
+  - mediawiki/execution/run-pre-commit.adoc

@@ -1,0 +1,10 @@
+skill: test-run-mediawiki
+description: >
+  Run the full test suite for a MediaWiki extension and report results. Use when
+  asked to run tests, verify CI passes, or check test status before committing.
+references:
+  - mediawiki/execution/install-deps.adoc
+  - mediawiki/execution/run-tests-phpunit.adoc
+  - mediawiki/execution/run-tests-npm.adoc
+  - mediawiki/execution/run-phan.adoc
+  - mediawiki/execution/run-pre-commit.adoc

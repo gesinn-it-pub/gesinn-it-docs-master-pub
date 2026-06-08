@@ -1,0 +1,13 @@
+skill: test-write-php-mediawiki
+description: >
+  Write PHPUnit tests for a MediaWiki extension. Use when asked to add test
+  coverage for untested behaviour, write tests for a new feature, or close
+  coverage gaps in PHP test files within a MediaWiki extension context.
+references:
+  - universal/procedures/test-write.adoc
+  - php/procedures/test-write-php.adoc
+  - mediawiki/procedures/test-write-php-mediawiki.adoc
+  - php/conventions/php.adoc
+  - mediawiki/conventions/php.adoc
+  - mediawiki/execution/install-deps.adoc
+  - mediawiki/execution/run-tests-phpunit.adoc

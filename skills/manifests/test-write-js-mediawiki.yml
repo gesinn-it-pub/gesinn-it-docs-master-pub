@@ -1,0 +1,11 @@
+skill: test-write-js-mediawiki
+description: >
+  Write QUnit tests for JavaScript in a MediaWiki extension. Use when asked to
+  add test coverage for untested client-side behaviour or write tests for a new
+  JavaScript feature.
+references:
+  - universal/procedures/test-write.adoc
+  - mediawiki/conventions/general.adoc
+  - mediawiki/conventions/js.adoc
+  - mediawiki/execution/install-deps.adoc
+  - mediawiki/execution/run-tests-npm.adoc
