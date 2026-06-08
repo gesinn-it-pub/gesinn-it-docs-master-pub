@@ -457,12 +457,18 @@ equal the number of entries in its manifest. A higher count indicates
 stale files that were not cleaned; a lower count indicates a missing or
 unresolvable snippet.
 
-### No Duplicate Content Headings
+### No Duplicate Top-Level Titles
 
-Each bold title (delimited by asterisk pairs: \*Title\*) across a
-skill’s assembled references must be unique. Duplicate headings indicate
-that the manifest includes overlapping snippets — a violation of the
-delta principle.
+The first bold line of each snippet is its identifier title (e.g.
+\*Coding Conventions — PHP · MediaWiki\*). Each identifier title must
+appear exactly once across a skill’s assembled reference files. A
+duplicate identifier title means two snippets cover the same topic — a
+violation of the delta principle.
+
+Internal subheadings within a snippet (e.g. \*Naming\*,
+\*Architecture\*) are scoped to their snippet and may share names across
+different snippets in the same skill, as long as their content is
+additive and non-overlapping.
 
 The delta principle: each snippet layer adds only what is not already
 defined at a higher abstraction level. For example, a MediaWiki skill

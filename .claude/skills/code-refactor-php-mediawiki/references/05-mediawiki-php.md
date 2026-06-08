@@ -4,7 +4,7 @@ Tooling:
 [mediawiki-codesniffer](https://github.com/wikimedia/mediawiki-tools-codesniffer)
 via PHPCS. Run locally: `make composer-phpcs` (or `make ci`).
 
-**File structure**
+**Source directories**
 
 - New code belongs in `src/` following PSR-4; `includes/` is legacy and
   should be migrated incrementally
@@ -14,11 +14,11 @@ via PHPCS. Run locally: `make composer-phpcs` (or `make ci`).
 - Top-level namespace = extension name (e.g.
   `MediaWiki\Extension\FooBar...`)
 
-**Naming**
+**Global variable prefix**
 
 - Global variables: `$wg` prefix (e.g. `$wgPageFormsSettings`)
 
-**Architecture**
+**Request handling**
 
 - No superglobals (`$_GET`, `$_POST`) — use `WebRequest` via
   `RequestContext`
