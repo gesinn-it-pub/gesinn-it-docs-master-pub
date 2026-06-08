@@ -63,11 +63,86 @@ Tooling: ...
 |===
 | File | Content
 
-| `note-generated-file.adoc`
+| `conventions/general.adoc`
+| Baseline rules (encoding, line endings, max line length)
+
+| `conventions/docker.adoc`
+| Dockerfile and Docker Compose conventions (hadolint, layer optimisation, security)
+
+| `procedures/code-write.adoc`
+| Procedure — feat: TDD (write failing test first, then implement)
+
+| `procedures/code-fix.adoc`
+| Procedure — fix: reproduce bug with failing test before fixing
+
+| `procedures/code-refactor.adoc`
+| Procedure — refactor: run tests first, structural changes only
+
+| `procedures/test-write.adoc`
+| Procedure — test:write: spec-first, never infer from implementation
+
+| `notes/generated-file.adoc`
 | Admonition: file is auto-generated, do not edit manually
 
-| `note-contains-submodule.adoc`
+| `notes/contains-submodule.adoc`
 | Admonition: repository contains Git submodules, clone with `--recursive`
+|===
+
+=== snippets/php/
+
+PHP-specific content, platform-independent (no MediaWiki API dependencies).
+
+[cols="2,4"]
+|===
+| File | Content
+
+| `conventions/php.adoc`
+| PHP conventions (strict_types, PSR-4, naming, type system, modern PHP 8.1+, code style)
+
+| `conventions/phan.adoc`
+| Phan static analysis: setup, configuration, baseline management
+
+| `procedures/test-write-php.adoc`
+| PHPUnit conventions (class layout, DataProvider, assertion style)
+|===
+
+=== snippets/mediawiki/
+
+MediaWiki-specific delta over `snippets/php/` and `snippets/universal/`.
+
+[cols="2,4"]
+|===
+| File | Content
+
+| `conventions/general.adoc`
+| Baseline rules enforced by `make ci` (tabs, LF, PHPCS + ESLint toolchain)
+
+| `conventions/php.adoc`
+| MediaWiki PHP delta: codesniffer tooling, `includes/` migration, `$wg` prefix, WebRequest
+
+| `conventions/js.adoc`
+| JavaScript conventions (ESLint wikimedia config, ResourceLoader, jQuery patterns)
+
+| `conventions/css.adoc`
+| CSS/LESS conventions (stylelint, RTL, naming, anti-patterns)
+
+| `procedures/test-write-php-mediawiki.adoc`
+| Test-first procedure + MW base classes (Unit vs Integration), fixtures, test runner
+
+| `execution/install-deps.adoc`
+| How to run `make install` before tests
+
+| `execution/run-tests-phpunit.adoc`
+| PHPUnit test commands and filtering
+
+| `execution/run-tests-npm.adoc`
+| Node QUnit test commands and filtering
+
+| `execution/run-phan.adoc`
+| Phan execution, fixing issues, baseline updates
+
+| `execution/run-pre-commit.adoc`
+| Pre-commit validation gate (`make ci` / `make dev-test`)
 |===
 
 === sections/universal/
@@ -87,43 +162,6 @@ Tooling: ...
 
 | `conventional-commits-policy.adoc`
 | Full Conventional Commits policy with types, scopes, examples
-|===
-
-=== snippets/mediawiki/
-
-[cols="2,4"]
-|===
-| File | Content
-
-| `coding-conventions.adoc`
-| Aggregator — includes general, PHP, JS, CSS conventions
-
-| `coding-conventions-general.adoc`
-| Baseline rules (encoding, line endings, indentation)
-
-| `coding-conventions-php.adoc`
-| PHP conventions (PHPCS, namespaces, types, modern PHP)
-
-| `coding-conventions-js.adoc`
-| JavaScript conventions (ESLint, ResourceLoader, jQuery)
-
-| `coding-conventions-css.adoc`
-| CSS/LESS conventions (stylelint, naming, anti-patterns)
-
-| `test-first-approach.adoc`
-| Test-first workflow (write failing test before code)
-
-| `ci-install.adoc`
-| How to run `make install` before tests
-
-| `ci-phpunit.adoc`
-| PHPUnit test commands and filtering
-
-| `ci-npm.adoc`
-| Node QUnit test commands and filtering
-
-| `ci-pre-commit.adoc`
-| Pre-commit validation gate (`make ci`)
 |===
 
 === sections/mediawiki/
@@ -750,7 +788,9 @@ Reference content in source files:
 ----
 \include::docs/gesinn-it-docs-master-pub/sections/universal/semver-policy.adoc[]
 
-\include::docs/gesinn-it-docs-master-pub/snippets/mediawiki/coding-conventions-php.adoc[]
+\include::docs/gesinn-it-docs-master-pub/snippets/php/conventions/php.adoc[]
+
+\include::docs/gesinn-it-docs-master-pub/snippets/mediawiki/conventions/php.adoc[]
 
 // embed a section one level deeper:
 \include::docs/gesinn-it-docs-master-pub/sections/mediawiki/architecture-conventions.adoc[leveloffset=+1]
@@ -812,6 +852,7 @@ on:
       - sections/**
       - snippets/**
       - documents/**
+      - skills/manifests/**
     branches:
       - '**'
   workflow_dispatch:
