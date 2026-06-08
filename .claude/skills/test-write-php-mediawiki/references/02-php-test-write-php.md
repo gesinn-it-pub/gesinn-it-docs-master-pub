@@ -29,7 +29,7 @@ public static function provideParseData(): array {
 - Assertions: prefer specific assertions (`assertSame`, `assertCount`,
   `assertInstanceOf`) over `assertTrue`
 
-- One logical assertion per test; multiple `assert*` calls are fine when
+- One logical assertion per test; multiple assert\* calls are fine when
   they verify the same concern
 
 - Test names describe behavior, not implementation:

@@ -487,6 +487,83 @@ When adding or modifying a `skills/manifests/*.yml` file:
     (`python3 scripts/build-skills.py`) and checking that reference
     counts match manifest entry counts.
 
+# AsciiDoc Authoring Conventions
+
+Rules for writing AsciiDoc source files in this repository. Violations
+are caught by `scripts/lint-adoc.sh`, which runs as the first step in
+CI.
+
+Run locally before committing:
+
+``` console
+bash scripts/lint-adoc.sh
+```
+
+## Inline Markup Rules
+
+These rules prevent invalid DocBook XML during the AsciiDoc → DocBook →
+Markdown conversion pipeline.
+
+### No double asterisk inside backtick spans
+
+Double asterisk (\*\*) is an **unconstrained** bold marker — it opens
+and closes regardless of surrounding formatting spans, including
+backtick monospace. When \*\* appears inside a backtick span it leaks
+out, producing interleaved `<emphasis>` and `<literal>` DocBook tags.
+
+<div class="formalpara-title">
+
+**Wrong — causes invalid DocBook**
+
+</div>
+
+    CI runs on every push to `snippets/**`.
+
+<div class="formalpara-title">
+
+**Correct — use inline passthrough**
+
+</div>
+
+    CI runs on every push to +snippets/**+.
+
+### No `*` as first or last character inside a backtick span
+
+A single asterisk at the very start or end of a backtick span may be
+parsed as a constrained bold delimiter, producing the same interleaved
+DocBook output.
+
+<div class="formalpara-title">
+
+**Wrong — asterisk at start or end of backtick span**
+
+</div>
+
+    Exclude `*.log` files.
+    Multiple `assert*` calls are fine.
+
+<div class="formalpara-title">
+
+**Correct — use inline passthrough**
+
+</div>
+
+    Exclude +*.log+ files.
+    Multiple +assert*+ calls are fine.
+
+### Rule of thumb
+
+When displaying text that contains `*` in a monospace context, always
+use the inline passthrough `...` instead of backtick monospace. Backtick
+spans are safe only when the content contains no asterisks.
+
+### Bold titles in snippet files
+
+Snippet files open with a bold title using the `*Title Text*` pattern
+written as plain AsciiDoc bold (not inside backticks). When referencing
+these titles in prose, use the inline passthrough `*...*` rather than
+wrapping in backtick monospace.
+
 # Commit Convention
 
 ## Conventional Commits Policy
