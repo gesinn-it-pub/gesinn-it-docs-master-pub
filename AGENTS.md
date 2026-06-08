@@ -490,10 +490,17 @@ When adding or modifying a `skills/manifests/*.yml` file:
 # AsciiDoc Authoring Conventions
 
 Rules for writing AsciiDoc source files in this repository. Violations
-are caught by `scripts/lint-adoc.sh`, which runs as the first step in
-CI.
+are caught by `scripts/lint-adoc.sh`, which runs as the first step in CI
+and as a local pre-commit hook.
 
-Run locally before committing:
+**One-time setup per clone** — activates the pre-commit hook:
+
+``` console
+git config core.hooksPath .githooks
+```
+
+After that, `scripts/lint-adoc.sh` runs automatically on every
+`git commit`. To run manually at any time:
 
 ``` console
 bash scripts/lint-adoc.sh
