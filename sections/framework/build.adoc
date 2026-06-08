@@ -12,7 +12,7 @@ Violations indicate either a manifest error or a bug in the build script.
 ==== Idempotency
 
 Running the build twice in a row must produce identical output.
-The script achieves this by deleting all `*.md` files from each skill's `references/` directory before writing new ones.
+The script achieves this by deleting all +*.md+ files from each skill's `references/` directory before writing new ones.
 
 *Corollary:* Never hand-edit files inside `.claude/skills/` or `.agents/skills/` — they are fully owned by the build and will be overwritten on the next CI run.
 
@@ -35,12 +35,12 @@ Such a collision would indicate a content design error — two files in the same
 
 ==== Reference Count Consistency
 
-The number of `*.md` files in a skill's `references/` directory must equal the number of entries in its manifest.
+The number of +*.md+ files in a skill's `references/` directory must equal the number of entries in its manifest.
 A higher count indicates stale files that were not cleaned; a lower count indicates a missing or unresolvable snippet.
 
 ==== No Duplicate Content Headings
 
-Each bold title (`*…*`) across a skill's assembled references must be unique.
+Each bold title (delimited by `+*+` pairs) across a skill's assembled references must be unique.
 Duplicate headings indicate that the manifest includes overlapping snippets — a violation of the delta principle.
 
 The delta principle: each snippet layer adds only what is not already defined at a higher abstraction level.
