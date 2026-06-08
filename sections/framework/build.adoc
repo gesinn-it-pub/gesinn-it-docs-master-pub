@@ -2,7 +2,7 @@
 
 `scripts/build-skills.py` assembles skills from YAML manifests and AsciiDoc snippets.
 The script is the single source of truth for the generated output structure.
-CI runs it on every push that touches `snippets/**` or `skills/manifests/**`.
+CI runs it on every push that touches +snippets/**+ or +skills/manifests/**+.
 
 === Build Invariants
 
