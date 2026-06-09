@@ -18,6 +18,8 @@
 . Update `CHANGELOG.md`:
   * Rename `[Unreleased]` to `[X.Y.Z] - YYYY-MM-DD` (today's date, ISO 8601).
   * Add a new empty `[Unreleased]` section at the top.
+  * If this is a MAJOR release: rotate the previous major's entries into `CHANGELOG-PREV.x.md`
+    and add an "Older releases" link at the bottom of `CHANGELOG.md` (see Changelog Convention).
   * Update the compare links at the bottom:
 +
 [source]
