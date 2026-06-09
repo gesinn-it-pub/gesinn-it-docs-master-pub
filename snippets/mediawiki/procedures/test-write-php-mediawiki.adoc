@@ -16,8 +16,47 @@ Use the appropriate base class:
 * `MediaWikiUnitTestCase` — pure unit tests (no database, no service container); fastest
 * `MediaWikiIntegrationTestCase` — integration tests that need the service container or database
 * `MediaWikiLangTestCase` — when language handling is under test
+* `SpecialPageTestBase` — extends `MediaWikiIntegrationTestCase`; use when testing Special Pages
 
 Do *not* extend `MediaWikiIntegrationTestCase` by default — use `MediaWikiUnitTestCase` unless integration with MW services is required.
+
+*Testing Special Pages with SpecialPageTestBase*
+
+Extend `SpecialPageTestBase` and implement `newSpecialPage()` to return the page instance:
+
+[source,php]
+----
+class SpecialFooTest extends SpecialPageTestBase {
+    protected function newSpecialPage() {
+        return MediaWikiServices::getInstance()
+            ->getSpecialPageFactory()->getPage( 'Foo' );
+    }
+}
+----
+
+Key methods available in tests:
+
+* `$this->executeSpecialPage( $subpage, new FauxRequest( $query, $isPosted ) )` — renders the special page and returns `[ $html, $context ]`
+* `$this->setUserLang( 'qqx' )` — use `qqx` locale so message keys appear literally in output, making assertions locale-independent
+* `$this->setGroupPermissions( '*', 'edit', false )` — adjust permissions; combine with `$this->expectException( PermissionsError::class )` to test access control
+* `$this->insertPage( $title, $content )` — create a page as fixture
+* `$this->getServiceContainer()` — access MW services
+
+Annotate the class with `@group Database` when the test writes to the database.
+
+*Asserting HTML output*
+
+Parse the returned `$html` with `DomDocument` and `DomXPath` to assert on form fields, links, or rendered content:
+
+[source,php]
+----
+[ $html, ] = $this->executeSpecialPage( '', new FauxRequest( [] ) );
+$dom = new DomDocument;
+$dom->loadHTML( $html );
+$xpath = new DomXpath( $dom );
+$input = $xpath->query( '//input[@name="wpFoo"]' )->item( 0 );
+$this->assertNotNull( $input );
+----
 
 *Test fixtures*
 
