@@ -30,3 +30,5 @@ include::../../sections/universal/conventional-commits-policy.adoc[leveloffset=+
 == Versioning
 
 include::../../sections/universal/semver-policy.adoc[leveloffset=+1]
+
+include::../../sections/universal/changelog-policy.adoc[leveloffset=+1]

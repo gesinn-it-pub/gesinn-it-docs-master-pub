@@ -1,0 +1,7 @@
+== Changelog
+
+include::../../snippets/universal/conventions/changelog.adoc[]
+
+== Release Workflow
+
+include::../../snippets/universal/procedures/release.adoc[]

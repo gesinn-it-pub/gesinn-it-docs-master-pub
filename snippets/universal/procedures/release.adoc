@@ -1,0 +1,52 @@
+'''
+
+*Procedure — release:do*
+
+. Determine the new version number from commits since the last tag using SemVer rules:
+  * Any breaking change (`!` or `BREAKING CHANGE`) → MAJOR
+  * Any `feat` commit → MINOR
+  * Only `fix`, `deps`, `refactor`, `docs` commits → PATCH
+
+. Identify the version file for this project. Common locations:
+  * `package.json` (Node.js)
+  * `extension.json` / `composer.json` (MediaWiki extension)
+  * `composer.json` (PHP library)
+  * If unclear, ask the user before proceeding.
+
+. Bump the version number in the version file.
+
+. Update `CHANGELOG.md`:
+  * Rename `[Unreleased]` to `[X.Y.Z] - YYYY-MM-DD` (today's date, ISO 8601).
+  * Add a new empty `[Unreleased]` section at the top.
+  * Add the new compare link at the bottom: +
+    `[X.Y.Z]: https://github.com/org/repo/compare/PREV...X.Y.Z` +
+    Update the `[Unreleased]` link: +
+    `[Unreleased]: https://github.com/org/repo/compare/X.Y.Z...HEAD`
+
+. Present the `[X.Y.Z]` changelog section as the release notes draft for user approval.
+  Present inside a fenced markdown code block for easy review.
+  Do not proceed until the user explicitly approves.
+
+. After approval — commit all changes:
++
+[source]
+----
+prepare X.Y.Z [skip ci]
+----
+
+. Push the branch.
+
+. Create and push the git tag:
++
+[source,console]
+----
+git tag X.Y.Z
+git push origin X.Y.Z
+----
+
+. Create the GitHub release using the approved changelog section as body:
++
+[source,console]
+----
+gh release create X.Y.Z --title "X.Y.Z" --notes "<approved changelog section>"
+----

@@ -75,6 +75,11 @@ jobs:
           rm -f AGENTS.adoc
           rm -f AGENTS.xml
 
+      # --- CLAUDE.md ---
+
+      - name: Copy AGENTS.md to CLAUDE.md
+        run: cp AGENTS.md CLAUDE.md
+
       # --- Single commit ---
 
       - name: Commit generated files
@@ -83,5 +88,6 @@ jobs:
           add: |
             README.adoc
             AGENTS.md
+            CLAUDE.md
           pull: '--rebase --autostash'
           message: "docs(ci): update generated documentation [skip ci]"
