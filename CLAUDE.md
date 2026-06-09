@@ -807,10 +807,10 @@ Map conventional commit types to changelog categories as follows:
 
     - Add a new empty `[Unreleased]` section at the top.
 
-    - Add the new compare link at the bottom:  
-      `[X.Y.Z]: https://github.com/org/repo/compare/PREV…​X.Y.Z`  
-      Update the `[Unreleased]` link:  
-      `[Unreleased]: https://github.com/org/repo/compare/X.Y.Z…​HEAD`
+    - Update the compare links at the bottom:
+
+          [Unreleased]: https://github.com/org/repo/compare/X.Y.Z...HEAD
+          [X.Y.Z]: https://github.com/org/repo/compare/PREV...X.Y.Z
 
 5.  Present the `[X.Y.Z]` changelog section as the release notes draft
     for user approval. Present inside a fenced markdown code block for
