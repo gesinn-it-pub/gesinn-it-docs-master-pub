@@ -15,3 +15,4 @@ references:
   - mediawiki/execution/install-deps.adoc
   - mediawiki/execution/run-tests-phpunit.adoc
   - mediawiki/execution/run-pre-commit.adoc
+  - mediawiki/execution/debug-browser-playwright.adoc

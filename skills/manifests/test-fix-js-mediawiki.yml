@@ -10,3 +10,4 @@ references:
   - mediawiki/conventions/js.adoc
   - mediawiki/execution/install-deps.adoc
   - mediawiki/execution/run-tests-npm.adoc
+  - mediawiki/execution/debug-browser-playwright.adoc
