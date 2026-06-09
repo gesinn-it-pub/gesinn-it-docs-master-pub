@@ -784,6 +784,23 @@ Map conventional commit types to changelog categories as follows:
 - The `[Unreleased]` section is updated continuously as notable changes
   are committed — do not wait until release time.
 
+**Rotation at major releases**
+
+When a new MAJOR version is released, the previous major’s history is
+rotated out of `CHANGELOG.md` into a dedicated archive file:
+
+1.  Move all entries for the previous major (e.g. all `1.x.x` sections)
+    into `CHANGELOG-1.x.md`.
+
+2.  Add a link at the bottom of `CHANGELOG.md`:
+
+    `Older releases: [1.x](CHANGELOG-1.x.md)`
+
+3.  `CHANGELOG.md` then contains only the current major’s releases plus
+    `[Unreleased]`.
+
+4.  Archive files are never modified after creation.
+
 ## Release Workflow
 
 **Procedure — release:do**
@@ -815,6 +832,10 @@ Map conventional commit types to changelog categories as follows:
       8601).
 
     - Add a new empty `[Unreleased]` section at the top.
+
+    - If this is a MAJOR release: rotate the previous major’s entries
+      into `CHANGELOG-PREV.x.md` and add an "Older releases" link at the
+      bottom of `CHANGELOG.md` (see Changelog Convention).
 
     - Update the compare links at the bottom:
 
