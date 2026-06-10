@@ -107,12 +107,20 @@ rules belong in AGENTS.md; reusable conventions belong in skills.
 
 ---
 
-## Step 5: Set up skills
+## Step 5: Set up CI-generated outputs
 
-Copy the pre-built skills from the submodule into the consumer repo's
-`.claude/skills/` directory following `references/05-skills-setup.md`.
+Update `build-docs.yml` to generate all three output types on every submodule
+change, following `references/05-skills-setup.md`:
 
-Also update `build-docs.yml` to keep skills in sync whenever the submodule changes.
+1. **`CLAUDE.md`** — copied from `AGENTS.md` after the AGENTS build step
+2. **Scoped instructions** — one per scope (`php`, `js`, `testing`, `ci`),
+   written to `.github/instructions/*.instructions.md` (Copilot) and
+   `{src,libs,tests,.github}/AGENTS.md` (other agents)
+3. **Skills** — built from manifests by `build-skills.py`, written to
+   `.claude/skills/` and `.agents/skills/`
+
+Also bump the commit action to `EndBug/add-and-commit@v10` and add all
+generated files to the commit step's `add:` list.
 
 ---
 

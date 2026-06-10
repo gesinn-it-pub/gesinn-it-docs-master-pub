@@ -15,11 +15,74 @@ docs/gesinn-it-docs-master-pub/
 .agents/skills/       ← generated: built by CI, committed to THIS repo
 ```
 
-## CI step to add to build-docs.yml
+## CI steps to add to build-docs.yml
 
-Add this step before the final commit, after all other build steps:
+Add these steps before the final commit, after the AGENTS build steps:
 
 ```yaml
+      - name: Create CLAUDE.md from AGENTS.md
+        run: cp AGENTS.md .claude/CLAUDE.md
+
+      # --- Instructions ---
+
+      - name: Create output directories
+        run: |
+          mkdir -p .github/instructions
+          mkdir -p src libs tests .github
+
+      - name: Build instructions (scope loop)
+        shell: bash
+        run: |
+          BASE="docs/gesinn-it-docs-master-pub/documents/mediawiki/instructions"
+
+          declare -A APPLY_TO=(
+            [php]="**/*.php"
+            [js]="**/*.{js,css,less}"
+            [testing]="tests/**"
+            [ci]=".github/**,Makefile,build/**"
+          )
+
+          declare -A SUBTREE_DIR=(
+            [php]="src"
+            [js]="libs"
+            [testing]="tests"
+            [ci]=".github"
+          )
+
+          for SCOPE in php js testing ci; do
+            APPLYTO="${APPLY_TO[$SCOPE]}"
+            DIR="${SUBTREE_DIR[$SCOPE]}"
+
+            asciidoctor-reducer \
+              -a phan \
+              -o /tmp/${SCOPE}.adoc \
+              ${BASE}/${SCOPE}.adoc
+
+            asciidoctor \
+              -b docbook5 \
+              -o /tmp/${SCOPE}.xml \
+              /tmp/${SCOPE}.adoc
+
+            pandoc \
+              -f docbook \
+              -t gfm \
+              /tmp/${SCOPE}.xml \
+              -o /tmp/${SCOPE}.md
+
+            printf '%s\n%s\n%s\n%s\n\n' \
+              '---' \
+              "applyTo: \"${APPLYTO}\"" \
+              '---' \
+              "<!-- AUTO-GENERATED from docs/gesinn-it-docs-master-pub/documents/mediawiki/instructions/${SCOPE}.adoc -->" \
+              | cat - /tmp/${SCOPE}.md \
+              > .github/instructions/${SCOPE}.instructions.md
+
+            printf '%s\n\n' \
+              "<!-- AUTO-GENERATED from docs/gesinn-it-docs-master-pub/documents/mediawiki/instructions/${SCOPE}.adoc -->" \
+              | cat - /tmp/${SCOPE}.md \
+              > ${DIR}/AGENTS.md
+          done
+
       # --- Skills ---
 
       - name: Build skills
@@ -33,7 +96,7 @@ Add this step before the final commit, after all other build steps:
             --scope "$PROJECT_TYPE"
 ```
 
-Then add `.claude/skills/` and `.agents/skills/` to the commit step's `add:` list:
+Then update the commit step to `@v10` and include all generated files:
 
 ```yaml
       - name: Commit generated files
@@ -43,6 +106,12 @@ Then add `.claude/skills/` and `.agents/skills/` to the commit step's `add:` lis
             README.adoc
             docs/CONTRIBUTING.adoc
             AGENTS.md
+            .claude/CLAUDE.md
+            .github/instructions/
+            .github/AGENTS.md
+            src/AGENTS.md
+            libs/AGENTS.md
+            tests/AGENTS.md
             .claude/skills/
             .agents/skills/
 ```
@@ -64,6 +133,11 @@ on:
 
 The `docs/gesinn-it-docs-master-pub/**` glob already covers manifest changes
 since manifests live inside the submodule directory.
+
+**Note on `-a phan`**: The instructions build passes `-a phan` to
+`asciidoctor-reducer`. This activates Phan-specific content in repos where
+`:phan:` is set in `docs/attributes.adoc`. It is harmless in repos without
+Phan — the attribute simply has no effect if no conditional blocks reference it.
 
 ## What controls which skills are built
 

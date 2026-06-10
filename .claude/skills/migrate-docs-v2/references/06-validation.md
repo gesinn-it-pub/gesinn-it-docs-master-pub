@@ -49,3 +49,12 @@ grep "build-skills.py" .github/workflows/build-docs.yml
 ```
 
 Expected: one match showing the `python3 ... build-skills.py` invocation.
+
+## 5. build-docs.yml contains CLAUDE.md and instructions steps
+
+```bash
+grep "Create CLAUDE.md" .github/workflows/build-docs.yml
+grep "Build instructions" .github/workflows/build-docs.yml
+```
+
+Expected: one match each.
