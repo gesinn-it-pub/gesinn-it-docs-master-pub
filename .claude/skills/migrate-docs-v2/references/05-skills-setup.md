@@ -20,15 +20,16 @@ docs/gesinn-it-docs-master-pub/
 Add these steps before the final commit, after the AGENTS build steps:
 
 ```yaml
-      - name: Create CLAUDE.md from AGENTS.md
-        run: cp AGENTS.md .claude/CLAUDE.md
-
       # --- Instructions ---
 
       - name: Create output directories
         run: |
+          mkdir -p .claude
           mkdir -p .github/instructions
           mkdir -p src libs tests .github
+
+      - name: Create CLAUDE.md from AGENTS.md
+        run: cp AGENTS.md .claude/CLAUDE.md
 
       - name: Build instructions (scope loop)
         shell: bash
