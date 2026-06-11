@@ -826,13 +826,14 @@ rotated out of `CHANGELOG.md` into a dedicated archive file:
 
     - Only `fix`, `deps`, `refactor`, `docs` commits → PATCH
 
-3.  If this is a MAJOR bump (e.g. `2.x → 3.0.0`): create a maintenance
-    branch for the outgoing major *before* making any other changes:
+3.  If this is a **MAJOR** bump (e.g. `2.x → 3.0.0`): create a
+    maintenance branch for the outgoing major **before** making any
+    other changes:
 
     ``` console
-    git checkout -b N.x   # e.g. git checkout -b 2.x (snapshot of current main)
+    git checkout -b N.x          # e.g. git checkout -b 2.x  (snapshot of current main)
     git push origin N.x
-    git checkout main     # tag 3.0.0 will be set from main
+    git checkout main            # tag 3.0.0 will be set from main
     ```
 
 4.  Identify the version file for this project. Common locations:
