@@ -5,4 +5,5 @@ ai-agent-logbook-issue6-pageForms.md
 # Hand-written skills (e.g. migrate-docs-v2) remain tracked via negation.
 .claude/skills/*
 !.claude/skills/migrate-docs-v2/
+!.claude/skills/init-docsmp/
 .agents/skills/
