@@ -2,10 +2,27 @@
 
 *Procedure — release:do*
 
+. Confirm the target branch — the tag must be created from the correct branch:
+  * Run `git branch --show-current`.
+  * For a release on `main` (normal or MAJOR): stay on `main`.
+  * For a backport release on an older major (e.g. `2.4.1` while `3.x` is on `main`):
+    check out the maintenance branch first (`git checkout 2.x`).
+    All remaining steps — including the tag and GitHub release — execute on that branch.
+
 . Determine the new version number from commits since the last tag using SemVer rules:
   * Any breaking change (`!` or `BREAKING CHANGE`) → MAJOR
   * Any `feat` commit → MINOR
   * Only `fix`, `deps`, `refactor`, `docs` commits → PATCH
+
+. If this is a *MAJOR* bump (e.g. `2.x → 3.0.0`):
+  create a maintenance branch for the outgoing major *before* making any other changes:
++
+[source,console]
+----
+git checkout -b N.x          # e.g. git checkout -b 2.x  (snapshot of current main)
+git push origin N.x
+git checkout main            # tag 3.0.0 will be set from main
+----
 
 . Identify the version file for this project. Common locations:
   * `package.json` (Node.js)
