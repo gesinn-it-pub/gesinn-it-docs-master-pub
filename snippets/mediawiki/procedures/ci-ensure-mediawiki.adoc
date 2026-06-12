@@ -333,37 +333,144 @@ Key points when creating or reviewing this file:
 * Do *not* set `NODE_JS` in the workflow env; it is controlled in the
   Makefile and activated by DCI when needed
 
-== Step 8: Check for repo-specific deviations
+== Step 8: Detect and apply repo-specific configuration
 
-Before committing, scan for non-default configuration that may require
-adjustments:
+Run all detection commands first, then apply what the signals show.
+Only ask the user when a signal is ambiguous or a version is unspecified.
+
+=== 8a: Detect dependency extensions
 
 [source,bash]
 ----
-# Additional extensions (bundled or custom)
-grep -E "SMW_VERSION|DT_VERSION|SRF_VERSION|PF_VERSION|AL_VERSION|AR_VERSION" Makefile
+# Check extension.json for declared dependencies
+cat extension.json | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+reqs = d.get('requires', {}).get('extensions', {})
+for ext, ver in reqs.items():
+    print(ext, ver)
+"
 
-# Custom LocalSettings entries
-test -f __setup_extension__ && cat __setup_extension__
+# Check whether a Makefile already pins any bundled DCI extension
+grep -E "SMW_VERSION|DT_VERSION|SRF_VERSION|PF_VERSION|AL_VERSION|AR_VERSION|ECHO_VERSION|LINGO_VERSION|MAPS_VERSION|MM_VERSION|PS_VERSION|SCRIBUNTO_VERSION" Makefile 2>/dev/null || echo "none"
 
-# Custom extension list
-test -f extensions.local.json && cat extensions.local.json
+# Custom extensions not bundled in DCI
+test -f extensions.local.json && cat extensions.local.json || echo "none"
 
-# Extra PHP extensions or OS packages
-grep -E "PHP_EXTENSIONS|OS_PACKAGES" Makefile
-
-# Phan configuration
-test -d .phan && echo "Phan configured"
+# Custom LocalSettings.php additions
+test -f __setup_extension__ && cat __setup_extension__ || echo "none"
 ----
 
-If bundled extensions are required (e.g. `SMW_VERSION`), add them to the
-`env:` block in `ci.yml` (passing them to `make`) *and* to the Makefile
-defaults.
+DCI bundles these extensions — activate by setting the version variable:
 
-If Phan is configured, add a dedicated step on the coverage row after
-the coverage step (see DCI GitHub Actions guide for the exact target name).
+[cols="1,1",options="header"]
+|===
+| Extension | Makefile variable
 
-Report any deviations to the user before committing.
+| SemanticMediaWiki | `SMW_VERSION`
+| DisplayTitle | `DT_VERSION`
+| SemanticResultFormats | `SRF_VERSION`
+| PageForms | `PF_VERSION`
+| AdminLinks | `AL_VERSION`
+| ApprovedRevs | `AR_VERSION`
+| Echo | `ECHO_VERSION`
+| Lingo | `LINGO_VERSION`
+| Maps | `MAPS_VERSION`
+| Mermaid | `MM_VERSION`
+| PageSchemas | `PS_VERSION`
+| Scribunto | `SCRIBUNTO_VERSION`
+|===
+
+For each required extension:
+
+. If it is in the DCI bundle table, add `VAR_VERSION ?= X.Y.Z` to the
+  Makefile and the same variable to the `env:` block in `ci.yml`.
+. If a version is already pinned in the Makefile, use that value.
+. If the version is unknown and cannot be read from `composer.json` or
+  `extension.json`, ask the user which version to pin before continuing.
+. If the extension is not in the DCI bundle, add it to `extensions.local.json`
+  (see DCI README for the format).
+
+=== 8b: Detect private Composer packages
+
+[source,bash]
+----
+cat composer.json | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+repos = d.get('repositories', [])
+for r in repos:
+    if r.get('type') == 'vcs' or 'github.com' in str(r.get('url','')):
+        print(r)
+" 2>/dev/null || echo "none"
+----
+
+If private VCS repositories are declared, add `COMPOSER_AUTH` to the
+workflow so Composer can authenticate:
+
+[source,yaml]
+----
+      - name: Run CI
+        run: make ci
+        env:
+          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+----
+
+Apply to both the plain `Run CI` and `Run CI with coverage` steps.
+The secret is expected to be set at organisation level as a JSON string
+in the format Composer expects (`{"github-oauth": {"github.com": "TOKEN"}}`).
+
+=== 8c: Detect extra PHP extensions or OS packages
+
+[source,bash]
+----
+grep -E "PHP_EXTENSIONS|OS_PACKAGES" Makefile 2>/dev/null || echo "none"
+----
+
+If set, carry them into the `env:` block of `ci.yml` as well:
+
+[source,yaml]
+----
+    env:
+      PHP_EXTENSIONS: "gd intl"
+      OS_PACKAGES: "libgd-dev"
+----
+
+=== 8d: Detect Phan
+
+[source,bash]
+----
+test -d .phan && echo "configured" || echo "not configured"
+----
+
+If `.phan/` exists, add a dedicated Phan step on the coverage matrix row,
+*after* the coverage step. Phan runs only on the coverage row to avoid
+baseline mismatches across MW versions. Do *not* add `phan` to the
+`composer test` script — it must be a separate step so failures are
+visible independently.
+
+[source,yaml]
+----
+      - name: Run Phan
+        if: matrix.coverage == true
+        run: make composer-phan
+        env:
+          MW_VERSION: ${{ matrix.mediawiki_version }}
+          PHP_VERSION: ${{ matrix.php_version }}
+----
+
+Pass the same version variables used in the coverage step.
+
+=== 8e: Ask only when ambiguous
+
+After running all detection commands, ask the user only if:
+
+* A required bundled extension was detected but its version cannot be
+  determined from the repository files.
+* `extensions.local.json` is absent but `extension.json` lists extensions
+  that are *not* in the DCI bundle — ask whether they are needed for tests.
+
+Do not ask about extensions that are already pinned or clearly not needed.
 
 == Step 9: Activate Codecov
 
