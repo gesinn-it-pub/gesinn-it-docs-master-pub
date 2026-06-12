@@ -474,6 +474,39 @@ Do not ask about extensions that are already pinned or clearly not needed.
 
 == Step 9: Activate Codecov
 
+=== 9a: Create codecov.yml
+
+The coverage XML produced by PHPUnit inside the Docker container contains
+absolute paths of the form `/var/www/html/extensions/<EXTENSION>/...`.
+Codecov cannot match these to the repository's source paths unless a path
+fix is declared.
+
+Check:
+
+[source,bash]
+----
+test -f codecov.yml && cat codecov.yml || echo "missing"
+----
+
+If missing (or if no `fixes:` entry is present), create `codecov.yml` in
+the repository root:
+
+[source,yaml]
+----
+fixes:
+  - "/var/www/html/extensions/<EXTENSION>/::"
+----
+
+The trailing `::` strips the prefix and maps the remaining path to the
+repository root. Replace `<EXTENSION>` with the exact extension directory
+name (same value as `EXTENSION` in the Makefile).
+
+Without this file, Codecov will accept the upload but show 0% coverage
+or fail to annotate source lines — even when the XML file is valid and
+the upload step reports success.
+
+=== 9b: Activate the repository on Codecov
+
 . Open https://app.codecov.io and sign in with the GitHub organisation account.
 . Find the repository in the list. If it is not listed, click *Add repository*
   and install the Codecov GitHub App for the organisation.
@@ -519,7 +552,8 @@ Stage only changed files — do not use `git add .`:
 git add .gitmodules build Makefile \
         composer.json package.json \
         phpunit.xml.dist Gruntfile.js \
-        .github/workflows/ci.yml
+        .github/workflows/ci.yml \
+        codecov.yml
 git commit -m "ci: ensure docker-compose-ci integration and GitHub Actions workflow"
 ----
 
