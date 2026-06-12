@@ -99,17 +99,16 @@ If missing, create `AGENTS-source.adoc` with the minimal boilerplate:
 // NEVER edit or regenerate AGENTS.md manually.
 // ============================================================
 include::docs/attributes.adoc[]
-
-== Conventional Commits
-
-include::docs/gesinn-it-docs-master-pub/sections/universal/conventional-commits-policy.adoc[]
-
-include::docs/gesinn-it-docs-master-pub/sections/universal/semver-policy.adoc[]
 ```
 
-Project-specific rules go as additional `==` sections between the header
-comment and the `== Conventional Commits` block. Leave the file minimal
-for now — the user can add project-specific sections later.
+Do **not** add a "Conventional Commits" or "Versioning" section here.
+Those conventions are already covered by the `commit-do` and `release-do`
+skills and are loaded on demand. Duplicating them in `AGENTS-source.adoc`
+would load the same content on every context load, wasting tokens.
+
+Project-specific rules go as additional `==` sections after the header
+comment. Leave the file minimal for now — the user can add project-specific
+sections later.
 
 ---
 
@@ -198,7 +197,7 @@ ls docs/attributes.adoc AGENTS-source.adoc README-source.adoc \
    .github/workflows/build-docs.yml
 
 # DOCSMP snippets reachable (smoke-check one include path)
-ls docs/gesinn-it-docs-master-pub/sections/universal/conventional-commits-policy.adoc
+ls docs/gesinn-it-docs-master-pub/sections/universal/changelog-policy.adoc
 ```
 
 All six files must exist and the DOCSMP snippet path must resolve.
