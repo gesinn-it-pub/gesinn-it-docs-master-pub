@@ -1,0 +1,420 @@
+'''
+
+*Procedure — ci:ensure · MediaWiki*
+
+Ensures a fully working, idempotent GitHub Actions CI workflow for a MediaWiki
+extension, backed by
+https://github.com/gesinn-it-pub/docker-compose-ci[docker-compose-ci] (DCI).
+
+Run this procedure whenever CI is missing, broken, or needs to be brought up
+to the current standard. Every step is a check-then-act: safe to re-run on a
+repo that is already correctly configured.
+
+== Gather facts
+
+Collect the values needed throughout the procedure:
+
+[source,bash]
+----
+# Extension name (must match the directory name in extensions/)
+cat extension.json | python3 -c "import json,sys; print(json.load(sys.stdin)['name'])"
+
+# GitHub org/repo slug (e.g. gesinn-it-pub/mediawiki-extensions-Arrays)
+git remote get-url origin | sed 's|.*github.com[:/]\(.*\)\.git|\1|'
+
+# Default branch
+git remote show origin | grep 'HEAD branch' | awk '{print $NF}'
+
+# Existing MW versions in use (check extension.json)
+cat extension.json | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('requires',{}))"
+----
+
+You need:
+
+* `EXTENSION` — e.g. `Arrays`
+* `GITHUB_ORG_REPO` — e.g. `gesinn-it-pub/mediawiki-extensions-Arrays`
+* `DEFAULT_BRANCH` — typically `master` or `main`
+* Whether the extension uses JS tests (check for +package.json+ / +Gruntfile.js+)
+* Whether Phan is configured (check for +.phan/+ directory)
+
+== Step 1: Add the DCI submodule
+
+Check:
+
+[source,bash]
+----
+test -d build && echo "exists" || echo "missing"
+----
+
+If missing:
+
+[source,bash]
+----
+git submodule add https://github.com/gesinn-it-pub/docker-compose-ci.git build
+git submodule update --init build
+----
+
+If it exists but may be outdated:
+
+[source,bash]
+----
+git submodule update --init --remote build
+git add build
+----
+
+Only stage `build` if the pointer actually changed.
+
+== Step 2: Create or update Makefile
+
+Check:
+
+[source,bash]
+----
+test -f Makefile && echo "exists" || echo "missing"
+----
+
+The Makefile must set DCI variables and include `build/Makefile`.
+The auto-init guard ensures the submodule is available even after a plain
+`git clone` (without `--recursive`).
+
+If missing, create `Makefile` with:
+
+[source,makefile]
+----
+-include .env
+export
+
+ifeq (,$(wildcard ./build/))
+    $(shell git submodule update --init --remote)
+endif
+
+EXTENSION      = <EXTENSION>
+
+# docker images
+MW_VERSION    ?= 1.43
+PHP_VERSION   ?= 8.3
+DB_TYPE       ?= mysql
+DB_IMAGE      ?= "mysql:8"
+
+# composer
+COMPOSER_EXT  ?= true
+
+# nodejs — set to true if the extension has JS tests
+NODE_JS       ?= true
+
+include build/Makefile
+----
+
+If Makefile exists, verify that:
+
+* `EXTENSION` is set to the correct name
+* `include build/Makefile` is present
+* The auto-init guard (`ifeq (,$(wildcard ./build/))`) is present
+
+== Step 3: Verify composer.json scripts
+
+`make ci-coverage` calls `composer test-coverage` inside the container.
+This script must exist and must produce a Clover XML file at
+`coverage/php/coverage.xml` (relative to the extension directory inside
+the container, which maps to `build/coverage/php/coverage.xml` on the host).
+
+Required scripts in `composer.json`:
+
+[source,json]
+----
+"scripts": {
+    "test": [
+        "@lint",
+        "@phpcs",
+        "@phpunit"
+    ],
+    "test-coverage": [
+        "@lint",
+        "@phpcs",
+        "@phpunit-coverage"
+    ],
+    "lint": [
+        "parallel-lint . --exclude vendor --exclude node_modules",
+        "minus-x check ."
+    ],
+    "phpcs": "phpcs -sp",
+    "phpunit": "php -d memory_limit=512M ../../tests/phpunit/phpunit.php -c phpunit.xml.dist --testdox",
+    "phpunit-coverage": "php -d memory_limit=512M ../../tests/phpunit/phpunit.php -c phpunit.xml.dist --testdox --coverage-text --coverage-html coverage/php --coverage-clover coverage/php/coverage.xml"
+}
+----
+
+NOTE: The coverage output path `coverage/php/` is *relative to the
+extension directory inside the container*. DCI's `docker-compose-ci.yml`
+overlay maps `./coverage` inside the container to `build/coverage/` on the
+host. The GitHub Actions step therefore finds the file at
+`build/coverage/php/coverage.xml`.
+
+Check whether `test-coverage` and `phpunit-coverage` are present:
+
+[source,bash]
+----
+cat composer.json | python3 -c "import json,sys; s=json.load(sys.stdin).get('scripts',{}); print('ok' if 'test-coverage' in s and 'phpunit-coverage' in s else 'MISSING')"
+----
+
+== Step 4: Verify package.json scripts (JS extensions)
+
+Skip if the extension has no JS tests.
+
+`make ci-coverage` also calls `npm run test-coverage`. Add it if missing:
+
+[source,json]
+----
+"scripts": {
+    "test": "grunt test",
+    "test-coverage": "grunt test"
+}
+----
+
+For extensions without separate coverage tooling, `test-coverage` is
+identical to `test`. Do not omit it — DCI calls it unconditionally when
+`NODE_JS` is set.
+
+== Step 5: Verify phpunit.xml.dist
+
+Check that:
+
+. Every `<testsuite>` entry points to a directory that actually exists.
+  A reference to a missing directory causes PHPUnit to fail silently or
+  with a confusing error.
++
+[source,bash]
+----
+python3 -c "
+import xml.etree.ElementTree as ET, os
+tree = ET.parse('phpunit.xml.dist')
+for d in tree.findall('.//directory'):
+    path = d.text.strip()
+    print('OK' if os.path.isdir(path) else 'MISSING: ' + path)
+"
+----
++
+Remove any `<testsuite>` block whose `<directory>` does not exist.
+
+. The `<coverage>` section excludes build artefact directories:
++
+[source,xml]
+----
+<coverage>
+    <include>
+        <directory suffix=".php">.</directory>
+    </include>
+    <exclude>
+        <directory>vendor</directory>
+        <directory>node_modules</directory>
+        <directory>tests</directory>
+        <directory>build</directory>
+        <directory>docs</directory>
+    </exclude>
+</coverage>
+----
+
+== Step 6: Exclude coverage output from ESLint / Gruntfile
+
+When coverage is enabled, PHPUnit writes HTML files to `build/coverage/`.
+Those files contain JS that ESLint would otherwise lint and fail on.
+
+Check `Gruntfile.js` for exclusions:
+
+[source,bash]
+----
+grep -E "coverage" Gruntfile.js || echo "MISSING exclusions"
+----
+
+If missing, add +!coverage/**+ and +!build/coverage/**+ to the ESLint
+`all` file glob. Example:
+
+[source,javascript]
+----
+all: [
+    '**/*.{js,json}',
+    '!node_modules/**',
+    '!vendor/**',
+    '!coverage/**',
+    '!build/coverage/**'
+]
+----
+
+== Step 7: Create or update .github/workflows/ci.yml
+
+Check:
+
+[source,bash]
+----
+test -f .github/workflows/ci.yml && echo "exists" || echo "missing"
+----
+
+The canonical workflow for a MediaWiki extension with MySQL and coverage:
+
+[source,yaml]
+----
+name: CI
+
+on:
+  push:
+    branches: [ <DEFAULT_BRANCH> ]
+    paths-ignore:
+      - '**/*.adoc'
+  pull_request:
+    branches: [ <DEFAULT_BRANCH> ]
+    paths-ignore:
+      - '**/*.adoc'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental }}
+
+    strategy:
+      matrix:
+        include:
+          - mediawiki_version: '1.39'
+            php_version: '8.1'
+            database_type: mysql
+            database_image: "mysql:8"
+            coverage: false
+            experimental: false
+          - mediawiki_version: '1.43'
+            php_version: '8.3'
+            database_type: mysql
+            database_image: "mysql:8"
+            coverage: true
+            experimental: false
+
+    env:
+      MW_VERSION: ${{ matrix.mediawiki_version }}
+      PHP_VERSION: ${{ matrix.php_version }}
+      DB_TYPE: ${{ matrix.database_type }}
+      DB_IMAGE: ${{ matrix.database_image }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Run CI
+        run: make ci
+        if: matrix.coverage == false
+
+      - name: Run CI with coverage
+        run: mkdir -p build/coverage && make ci-coverage
+        if: matrix.coverage == true
+
+      - name: Upload coverage
+        if: matrix.coverage == true
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: <GITHUB_ORG_REPO>
+          files: build/coverage/php/coverage.xml
+          disable_search: true
+----
+
+Key points when creating or reviewing this file:
+
+* `runs-on: ubuntu-latest` — not `ubuntu-22.04` (stays evergreen)
+* `submodules: recursive` in the checkout step — required for the `build/`
+  submodule; no separate "Update submodules" step needed
+* `mkdir -p build/coverage` before `make ci-coverage` — DCI's bind mount
+  fails if the host directory does not exist
+* `codecov/codecov-action@v7` — v4 is outdated and fails token validation
+* `token: ${{ secrets.CODECOV_TOKEN }}` — the org-level secret is assumed
+  to be set; do not omit even for public repos (required for protected branches)
+* `slug: <GITHUB_ORG_REPO>` — must be set explicitly; without it Codecov
+  cannot identify the repository when the action runs from a fork or after
+  a rename
+* `disable_search: true` — prevents the action from auto-discovering and
+  uploading unrelated XML files (e.g. from node_modules or vendor)
+* Do *not* set `NODE_JS` in the workflow env; it is controlled in the
+  Makefile and activated by DCI when needed
+
+== Step 8: Check for repo-specific deviations
+
+Before committing, scan for non-default configuration that may require
+adjustments:
+
+[source,bash]
+----
+# Additional extensions (bundled or custom)
+grep -E "SMW_VERSION|DT_VERSION|SRF_VERSION|PF_VERSION|AL_VERSION|AR_VERSION" Makefile
+
+# Custom LocalSettings entries
+test -f __setup_extension__ && cat __setup_extension__
+
+# Custom extension list
+test -f extensions.local.json && cat extensions.local.json
+
+# Extra PHP extensions or OS packages
+grep -E "PHP_EXTENSIONS|OS_PACKAGES" Makefile
+
+# Phan configuration
+test -d .phan && echo "Phan configured"
+----
+
+If bundled extensions are required (e.g. `SMW_VERSION`), add them to the
+`env:` block in `ci.yml` (passing them to `make`) *and* to the Makefile
+defaults.
+
+If Phan is configured, add a dedicated step on the coverage row after
+the coverage step (see DCI GitHub Actions guide for the exact target name).
+
+Report any deviations to the user before committing.
+
+== Step 9: Activate Codecov
+
+. Open https://app.codecov.io and sign in with the GitHub organisation account.
+. Find the repository in the list. If it is not listed, click *Add repository*
+  and install the Codecov GitHub App for the organisation.
+. Activate the repository by clicking the toggle next to its name.
+. Verify that `CODECOV_TOKEN` is set as an organisation-level Actions secret
+  (Settings → Secrets → Actions → Organisation secrets). If it is missing,
+  generate a new token from the Codecov repository settings and add it.
+. After the first successful CI run, check that the coverage report appears
+  on the Codecov dashboard. If the upload succeeds but no report appears,
+  confirm that the `slug` in `ci.yml` matches exactly the `org/repo` path
+  shown in Codecov.
+
+== Step 10: Validate locally
+
+[source,bash]
+----
+# Submodule present and initialised
+test -d build && git submodule status build
+
+# Composer scripts present
+composer validate --no-check-publish
+cat composer.json | python3 -c "import json,sys; s=json.load(sys.stdin)['scripts']; [print(k) for k in ['test','test-coverage','phpunit','phpunit-coverage'] if k not in s and print('MISSING: '+k) is None]"
+
+# PHPUnit test directories exist
+python3 -c "
+import xml.etree.ElementTree as ET, os
+tree = ET.parse('phpunit.xml.dist')
+for d in tree.findall('.//directory'):
+    p = d.text.strip()
+    print(('OK   ' if os.path.isdir(p) else 'MISS ') + p)
+"
+
+# Workflow file present
+test -f .github/workflows/ci.yml && echo "ci.yml OK"
+----
+
+== Step 11: Commit
+
+Stage only changed files — do not use `git add .`:
+
+[source,bash]
+----
+git add .gitmodules build Makefile \
+        composer.json package.json \
+        phpunit.xml.dist Gruntfile.js \
+        .github/workflows/ci.yml
+git commit -m "ci: ensure docker-compose-ci integration and GitHub Actions workflow"
+----
+
+Omit files that were not changed. If only a subset of files was touched,
+commit with a more specific message (e.g. `ci(codecov): add slug and disable auto-search`).
