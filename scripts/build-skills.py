@@ -153,8 +153,9 @@ def main():
                         help="Output directory for Claude Code skills (default: .claude/skills)")
     parser.add_argument("--agents-skills-dir", default=".agents/skills",
                         help="Output directory for agent skills (default: .agents/skills)")
-    parser.add_argument("--scope", default=None,
+    parser.add_argument("--scope", action="append", dest="scopes", default=None,
                         help="Only build skills whose name contains this string (e.g. 'mediawiki'). "
+                             "Can be specified multiple times. "
                              "Skills with no platform qualifier are always built regardless of scope.")
     parser.add_argument("--platforms", default="mediawiki,nodejs,ansible,docker-mediawiki",
                         help="Comma-separated list of known platform qualifiers "
@@ -180,15 +181,18 @@ def main():
         print("No manifest files found.")
         return
 
-    if args.scope:
+    if args.scopes:
         platforms = [p.strip() for p in args.platforms.split(",") if p.strip()]
         def is_platform_specific(manifest_path):
             name = os.path.splitext(os.path.basename(manifest_path))[0]
             return any(p in name for p in platforms)
-        manifests = [f for f in manifests if args.scope in os.path.basename(f) or not is_platform_specific(f)]
+        def matches_scope(manifest_path):
+            basename = os.path.basename(manifest_path)
+            return any(s in basename for s in args.scopes) or not is_platform_specific(manifest_path)
+        manifests = [f for f in manifests if matches_scope(f)]
 
     if not manifests:
-        print(f"No manifest files found matching scope '{args.scope}'.")
+        print(f"No manifest files found matching scopes '{args.scopes}'.")
         return
 
     for manifest_path in manifests:
@@ -197,7 +201,7 @@ def main():
         write_skill(manifest_path, snippets_dirs, args.claude_skills_dir)
         write_skill(manifest_path, snippets_dirs, args.agents_skills_dir)
 
-    scope_info = f" (scope: {args.scope})" if args.scope else ""
+    scope_info = f" (scopes: {', '.join(args.scopes)})" if args.scopes else ""
     print(f"Built {len(manifests)} skills{scope_info}.")
 
 
