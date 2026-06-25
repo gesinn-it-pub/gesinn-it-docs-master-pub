@@ -27,7 +27,7 @@ root with explicit path overrides:
     --agents-skills-dir .agents/skills \\
     --scope mediawiki
 
-  # With an additional private snippets root (e.g. DOCSM):
+  # With an additional private snippets root (e.g. DOCSM) and multiple scopes:
   python3 docs/gesinn-it-docs-master-pub/scripts/build-skills.py \\
     --manifests-dir docs/gesinn-it-docs-master-pub/skills/manifests \\
     --manifests-dir docs/gesinn-it-docs-master/skills/manifests \\
@@ -35,7 +35,8 @@ root with explicit path overrides:
     --extra-snippets-dir docs/gesinn-it-docs-master/snippets \\
     --claude-skills-dir .claude/skills \\
     --agents-skills-dir .agents/skills \\
-    --scope docker-mediawiki
+    --scope mediawiki \\
+    --scope debug-fix-docker-mediawiki
 
 Snippet references in manifests are resolved against --snippets-dir first,
 then against each --extra-snippets-dir in order. The first match wins.
@@ -155,7 +156,7 @@ def main():
                         help="Output directory for agent skills (default: .agents/skills)")
     parser.add_argument("--scope", action="append", dest="scopes", default=None,
                         help="Only build skills whose name contains this string (e.g. 'mediawiki'). "
-                             "Can be specified multiple times. "
+                             "Can be specified multiple times — a skill matches if its name contains any scope. "
                              "Skills with no platform qualifier are always built regardless of scope.")
     parser.add_argument("--platforms", default="mediawiki,nodejs,ansible,docker-mediawiki",
                         help="Comma-separated list of known platform qualifiers "
@@ -192,7 +193,7 @@ def main():
         manifests = [f for f in manifests if matches_scope(f)]
 
     if not manifests:
-        print(f"No manifest files found matching scopes '{args.scopes}'.")
+        print(f"No manifest files found matching scopes '{', '.join(args.scopes)}'.")
         return
 
     for manifest_path in manifests:
