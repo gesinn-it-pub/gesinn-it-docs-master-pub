@@ -415,10 +415,10 @@ generated output structure. CI runs it on every push that touches
 snippets/\*\* or skills/manifests/\*\*.
 
 **The build never runs locally in this repository.** It executes
-exclusively in the CI pipelines of consumer repositories. Do not
-attempt to run `scripts/build-skills.py` or any related build command
-locally — the required toolchain (`asciidoctor-reducer`, `pandoc`,
-etc.) is not installed here and local execution is forbidden.
+exclusively in the CI pipelines of consumer repositories. Do not attempt
+to run `scripts/build-skills.py` or any related build command locally —
+the required toolchain (`asciidoctor-reducer`, `pandoc`, etc.) is not
+installed here and local execution is forbidden.
 
 ## Build Invariants
 
