@@ -9,6 +9,7 @@ references:
   - php/conventions/phan.adoc
   - mediawiki/conventions/general.adoc
   - mediawiki/conventions/php.adoc
+  - mediawiki/conventions/css.adoc
   - universal/procedures/test-write.adoc
   - php/procedures/test-write-php.adoc
   - mediawiki/procedures/test-write-php-mediawiki.adoc

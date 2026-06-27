@@ -414,6 +414,12 @@ AsciiDoc snippets. The script is the single source of truth for the
 generated output structure. CI runs it on every push that touches
 snippets/\*\* or skills/manifests/\*\*.
 
+**The build never runs locally in this repository.** It executes
+exclusively in the CI pipelines of consumer repositories. Do not
+attempt to run `scripts/build-skills.py` or any related build command
+locally — the required toolchain (`asciidoctor-reducer`, `pandoc`,
+etc.) is not installed here and local execution is forbidden.
+
 ## Build Invariants
 
 These invariants must hold after every successful build. Violations
@@ -489,9 +495,9 @@ When adding or modifying a `skills/manifests/*.yml` file:
 3.  Do not include two snippets from the same scope that share a
     basename — rename one of the source files instead.
 
-4.  Validate by running the build locally
-    (`python3 scripts/build-skills.py`) and checking that reference
-    counts match manifest entry counts.
+4.  Validate by verifying that the number of entries in the manifest
+    matches the expected reference count — the build itself runs in CI
+    only.
 
 # AsciiDoc Authoring Conventions
 
