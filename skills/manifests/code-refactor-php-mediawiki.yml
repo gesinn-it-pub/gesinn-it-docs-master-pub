@@ -9,6 +9,7 @@ references:
   - php/conventions/phan.adoc
   - mediawiki/conventions/general.adoc
   - mediawiki/conventions/php.adoc
+  - mediawiki/conventions/html-output.adoc
   - mediawiki/conventions/css.adoc
   - mediawiki/execution/install-deps.adoc
   - mediawiki/execution/run-tests-phpunit.adoc
