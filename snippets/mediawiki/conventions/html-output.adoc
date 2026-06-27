@@ -17,14 +17,14 @@ This is explicitly required by https://www.mediawiki.org/wiki/Best_practices_for
 [source,php]
 ----
 // Safe: both attributes and text content are escaped
-$html = Html::element( 'span', [ 'class' => 'pf-error' ], $userText );
+$html = Html::element( 'span', [ 'class' => 'pf-date-input__error' ], $userText );
 
 // Safe: attributes escaped; $innerHtml must already be safe
-$html = Html::rawElement( 'div', [ 'id' => 'pf-container' ], $innerHtml );
+$html = Html::rawElement( 'div', [ 'class' => 'pf-date-input' ], $innerHtml );
 
 // Form inputs
 $html = Html::hidden( 'wpEditToken', $token );
-$html = Html::input( 'q', $value, 'search', [ 'class' => 'pf-search' ] );
+$html = Html::input( 'q', $value, 'search', [ 'class' => 'pf-search__input' ] );
 ----
 
 Anti-patterns to avoid:
@@ -53,9 +53,9 @@ $html = $templateParser->processTemplate( 'MyWidget', [
 ----
 {{! templates/MyWidget.mustache }}
 <div class="pf-widget{{#isActive}} pf-widget--active{{/isActive}}">
-    <label>{{label}}</label>
-    <ul>
-        {{#items}}<li>{{name}}</li>{{/items}}
+    <label class="pf-widget__label">{{label}}</label>
+    <ul class="pf-widget__list">
+        {{#items}}<li class="pf-widget__item">{{name}}</li>{{/items}}
     </ul>
 </div>
 ----
@@ -85,3 +85,65 @@ Rules:
 | Skin or full-page templating
 | `SkinMustache`
 |===
+
+*Semantic CSS classes — customizability*
+
+Every rendered component must carry CSS classes that allow site administrators and users to target elements via `MediaWiki:Common.css` or a site skin without reading extension source code.
+Use BEM (Block__Element--Modifier) with the extension-specific prefix defined in `css.adoc`.
+
+Levels:
+
+* *Block* — the outermost container of a component: `{prefix}-{component}` (e.g. `pf-date-input`)
+* *Element* — a named functional part of the block: `{prefix}-{component}__{part}` (e.g. `pf-date-input__label`, `pf-date-input__input`, `pf-date-input__help`)
+* *Modifier* — a state or variant: `{prefix}-{component}--{state}` (e.g. `pf-date-input--disabled`, `pf-date-input--error`)
+
+Rules:
+
+* Every component wrapper receives a block class — no anonymous `<div>` containers
+* Functional sub-elements (label, input, error message, help text, icon) each receive an element class
+* States (disabled, required, error, loading) are expressed as modifier classes on the block, not via inline styles or ad-hoc class names
+* Modifiers are added alongside the block class, not instead of it: `class="pf-date-input pf-date-input--error"`
+* IDs are allowed for ARIA relationships (`aria-describedby`, `aria-labelledby`) but must not be the primary styling hook
+
+Example:
+
+[source,html]
+----
+<div class="pf-date-input pf-date-input--required">
+    <label class="pf-date-input__label" for="pf-date-input-1">Start date</label>
+    <input class="pf-date-input__input" id="pf-date-input-1" type="text" />
+    <span class="pf-date-input__help">Format: YYYY-MM-DD</span>
+    <span class="pf-date-input__error">Invalid date</span>
+</div>
+----
+
+*Migration strategy for existing code*
+
+Changing CSS class names on rendered HTML is a breaking change for any site that targets those classes in `MediaWiki:Common.css` or a skin.
+Apply the following strategy — do not rename classes silently.
+
+[cols="1,2,2"]
+|===
+| Code status | Rule | Action
+
+| New code
+| BEM required
+| Apply BEM from the start — no legacy class needed
+
+| Existing code being modified
+| Migrate on touch
+| Add BEM class, keep old class alongside it, document as deprecated in `CHANGELOG.md`
+
+| Existing code not being touched
+| Leave as-is
+| Do not migrate speculatively — only when the file is opened for another reason
+
+|===
+
+Deprecation procedure when migrating existing classes:
+
+. Add the BEM class alongside the old class: +
+  `class="pf-date-input pf-dateinput"` — old class last
+. Add a `CHANGELOG.md` entry under `Deprecated`: +
+  "CSS class `pf-dateinput` deprecated; use `pf-date-input` instead. Old class will be removed in the next major release."
+. Remove the old class in the next major version bump and add a `Breaking Changes` entry to `CHANGELOG.md`
