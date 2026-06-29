@@ -49,11 +49,14 @@ import sys
 import yaml
 
 
-def adoc_to_markdown(adoc_path):
+def adoc_to_markdown(adoc_path, attributes=None):
     """Convert an AsciiDoc file to Markdown via asciidoctor + pandoc."""
+    attr_flags = []
+    for attr in (attributes or []):
+        attr_flags += ["-a", attr]
     try:
         reduced = subprocess.run(
-            ["asciidoctor-reducer", adoc_path],
+            ["asciidoctor-reducer"] + attr_flags + [adoc_path],
             capture_output=True, text=True, check=True
         ).stdout
 
@@ -63,7 +66,7 @@ def adoc_to_markdown(adoc_path):
             f.write(reduced)
 
         subprocess.run(
-            ["asciidoctor", "-b", "docbook5", "-o", tmp_xml, tmp_adoc],
+            ["asciidoctor", "-b", "docbook5"] + attr_flags + ["-o", tmp_xml, tmp_adoc],
             capture_output=True, text=True, check=True
         )
 
@@ -87,7 +90,7 @@ def resolve_snippet(ref_path, snippets_dirs):
     return None
 
 
-def write_skill(manifest_path, snippets_dirs, output_base_dir):
+def write_skill(manifest_path, snippets_dirs, output_base_dir, attributes=None, custom_file=None):
     with open(manifest_path) as f:
         manifest = yaml.safe_load(f)
 
@@ -117,7 +120,7 @@ def write_skill(manifest_path, snippets_dirs, output_base_dir):
         ref_filepath = os.path.join(refs_dir, ref_filename)
 
         print(f"  Converting {ref_path} -> references/{ref_filename}")
-        md_content = adoc_to_markdown(adoc_path)
+        md_content = adoc_to_markdown(adoc_path, attributes)
         with open(ref_filepath, "w") as f:
             f.write(md_content + "\n")
 
@@ -125,6 +128,14 @@ def write_skill(manifest_path, snippets_dirs, output_base_dir):
 
     skill_md_path = os.path.join(skill_dir, "SKILL.md")
     ref_section = "\n".join(ref_lines) if ref_lines else "_No references._"
+    custom_section = ""
+    if custom_file:
+        custom_section = f"""
+## Repo-specific conventions
+
+Load `../../99-custom.md` if it exists — it contains project-specific rules
+that override or extend the references above.
+"""
     with open(skill_md_path, "w") as f:
         f.write(f"""---
 name: {skill_name}
@@ -135,7 +146,7 @@ description: >
 Load the following reference files before starting work:
 
 {ref_section}
-""")
+{custom_section}""")
 
 
 def main():
@@ -162,6 +173,12 @@ def main():
                         help="Comma-separated list of known platform qualifiers "
                              "(default: mediawiki,nodejs,ansible,docker-mediawiki). "
                              "Used to identify platform-specific skills when --scope is set.")
+    parser.add_argument("--attribute", "-a", action="append", dest="attributes", default=[],
+                        help="AsciiDoc attribute to set (e.g. 'phan'). "
+                             "Can be specified multiple times. Passed to asciidoctor-reducer and asciidoctor.")
+    parser.add_argument("--custom-file", default=None,
+                        help="Path to a repo-specific 99-custom.md file. When set, every SKILL.md "
+                             "gets a section instructing the agent to load ../../99-custom.md.")
     args = parser.parse_args()
 
     if args.manifests_dirs is None:
@@ -199,8 +216,8 @@ def main():
     for manifest_path in manifests:
         skill_name = os.path.splitext(os.path.basename(manifest_path))[0]
         print(f"Building skill: {skill_name}")
-        write_skill(manifest_path, snippets_dirs, args.claude_skills_dir)
-        write_skill(manifest_path, snippets_dirs, args.agents_skills_dir)
+        write_skill(manifest_path, snippets_dirs, args.claude_skills_dir, args.attributes, args.custom_file)
+        write_skill(manifest_path, snippets_dirs, args.agents_skills_dir, args.attributes, args.custom_file)
 
     scope_info = f" (scopes: {', '.join(args.scopes)})" if args.scopes else ""
     print(f"Built {len(manifests)} skills{scope_info}.")
