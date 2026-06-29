@@ -1,0 +1,67 @@
+'''
+
+*Procedure — test:write · Python*
+
+Framework: https://pytest.org/[pytest]. No `unittest.TestCase` subclasses.
+
+*File and naming conventions*
+
+* Mirror the source tree under `tests/`: `gf/core/host.py` → `tests/core/test_host.py`
+* One test file per production module
+* Test function names describe behaviour: `test_find_host_returns_full_name_for_short_input`, not `test_find_host_1`
+* No test classes unless grouping genuinely aids readability; prefer top-level functions
+
+*Parameterised tests*
+
+Use `@pytest.mark.parametrize` for multiple input/output combinations:
+
+[source,python]
+----
+import pytest
+
+@pytest.mark.parametrize("input,expected", [
+    ("llm01", "llm01.host.gesinn.it"),
+    ("llm01.host.gesinn.it", "llm01.host.gesinn.it"),
+    ("unknown", None),
+])
+def test_find_host(input, expected):
+    hosts = ["llm01.host.gesinn.it", "wiki02.host.gesinn.it"]
+    assert find_host(input, hosts) == expected
+----
+
+*Filesystem tests*
+
+Use the built-in `tmp_path` fixture — no manual `tempfile` or `os.mkdir` calls:
+
+[source,python]
+----
+def test_list_hosts_returns_sorted(tmp_path):
+    (tmp_path / "hostnames" / "wiki02.host.gesinn.it").mkdir(parents=True)
+    (tmp_path / "hostnames" / "llm01.host.gesinn.it").mkdir(parents=True)
+    result = list_hosts(tmp_path)
+    assert result == ["llm01.host.gesinn.it", "wiki02.host.gesinn.it"]
+----
+
+*Subprocess boundary*
+
+Mock `subprocess.run` at the module boundary — do not let tests invoke real processes:
+
+[source,python]
+----
+def test_run_ping_calls_ansible(monkeypatch):
+    calls = []
+    monkeypatch.setattr(
+        "gf.core.host.subprocess.run",
+        lambda cmd, **kw: calls.append(cmd),
+    )
+    run_ansible_ping("llm01.host.gesinn.it", Path("/base"))
+    assert calls[0][0] == "ansible"
+----
+
+Prefer `monkeypatch` over `unittest.mock.patch` — it integrates with pytest fixtures and cleans up automatically.
+
+*Assertions*
+
+* Use plain `assert` — pytest rewrites it with informative diffs
+* One logical concern per test; multiple assertions are fine when they verify the same outcome
+* Never assert `True` or `False` directly — assert the value: `assert result == expected`, not `assert result is True`
