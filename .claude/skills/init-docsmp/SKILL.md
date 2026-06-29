@@ -40,10 +40,11 @@ cat composer.json 2>/dev/null | python3 -c "import json,sys; d=json.load(sys.std
 
 You need:
 - `PROJECT_NAME` — human-readable name (e.g. `Arrays`)
-- `PROJECT_TYPE` — `mediawiki`, `nodejs`, or `ansible`
+- `PROJECT_TYPE` — `mediawiki`, `nodejs`, `ansible`, or `factory`
+- `PROJECT_ACRONYM` — short identifier derived from the project name (e.g. `SRF` for SemanticResultFormats, `gf` for gesinn-factory). Ask the user if not obvious.
 - `GITHUB_ORG_REPO` — e.g. `gesinn-it-pub/mediawiki-extensions-Arrays`
 
-If `PROJECT_TYPE` cannot be determined automatically, ask the user.
+If `PROJECT_TYPE` or `PROJECT_ACRONYM` cannot be determined automatically, ask the user.
 
 ---
 
@@ -73,9 +74,10 @@ If missing, create `docs/attributes.adoc`:
 ```asciidoc
 :project_name: {PROJECT_NAME}
 :project_type: {PROJECT_TYPE}
+:project_acronym: {PROJECT_ACRONYM}
 ```
 
-For MediaWiki extensions that use Phan, add a third line:
+For MediaWiki extensions that use Phan, add a fourth line:
 
 ```asciidoc
 :phan:

@@ -1,0 +1,83 @@
+'''
+
+*Coding Conventions — Python*
+
+Target: Python 3.10+. Formatter: https://black.readthedocs.io/[Black]. Linter: https://docs.astral.sh/ruff/[ruff].
+
+*Naming*
+
+[cols="1,1,1"]
+|===
+| Element | Convention | Example
+
+| Modules, packages
+| `snake_case`
+| `host_manager.py`
+
+| Classes
+| `UpperCamelCase`
+| `HostResolver`
+
+| Functions, methods, variables
+| `snake_case`
+| `resolve_host()`
+
+| Constants
+| `UPPER_CASE`
+| `DEFAULT_SSH_USER`
+
+| Private members
+| Leading underscore
+| `_build_command()`
+|===
+
+*Type annotations*
+
+* Annotate all function parameters and return types
+* Use `from __future__ import annotations` for forward references
+* Prefer built-in generics (`list[str]`, `dict[str, int]`) over `typing.List`, `typing.Dict` (Python 3.9+)
+* Use `X | None` over `Optional[X]` (Python 3.10+)
+* Use `X | Y` over `Union[X, Y]` (Python 3.10+)
+
+*Imports*
+
+Maintain three groups separated by blank lines, in this order:
+
+. Standard library
+. Third-party packages
+. Local modules
+
+[source,python]
+----
+import os
+import sys
+
+import typer
+from rich.console import Console
+
+from mypackage.core import host
+----
+
+Never use wildcard imports (`+from foo import *+`).
+
+*Functions and classes*
+
+* One responsibility per function; extract when a function does two things
+* Prefer pure functions — no side effects unless the function name makes them explicit
+* Raise exceptions rather than returning error codes or `None` as a sentinel
+* Use dataclasses or `TypedDict` for structured return values — avoid returning plain tuples
+* Keep functions short enough to read without scrolling; extract helpers freely
+
+*Error handling*
+
+* Catch specific exceptions, never bare `except:`
+* Let unexpected errors propagate — do not swallow exceptions silently
+* Add context when re-raising: `raise RuntimeError("failed to resolve host") from e`
+
+*Code style*
+
+* Indentation: 4 spaces (enforced by Black)
+* Maximum line length: 88 characters (Black default)
+* Double quotes for strings (Black default)
+* Trailing commas in multi-line collections (Black default)
+* No semicolons; one statement per line
