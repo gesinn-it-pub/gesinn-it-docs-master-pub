@@ -49,7 +49,7 @@ $html = $templateParser->processTemplate( 'MyWidget', [
 ] );
 ----
 
-[source,html]
+[source,text]
 ----
 {{! templates/MyWidget.mustache }}
 <div class="pf-widget{{#isActive}} pf-widget--active{{/isActive}}">
@@ -89,25 +89,25 @@ Rules:
 *Semantic CSS classes — customizability*
 
 Every rendered component must carry CSS classes that allow site administrators and users to target elements via `MediaWiki:Common.css` or a site skin without reading extension source code.
-Use BEM (Block__Element--Modifier) with the extension-specific prefix defined in `css.adoc`.
+Use BEM (Block\__Element\--Modifier) with the extension-specific prefix defined in `css.adoc`.
 
 Levels:
 
 * *Block* — the outermost container of a component: `{prefix}-{component}` (e.g. `pf-date-input`)
-* *Element* — a named functional part of the block: `{prefix}-{component}__{part}` (e.g. `pf-date-input__label`, `pf-date-input__input`, `pf-date-input__help`)
-* *Modifier* — a state or variant: `{prefix}-{component}--{state}` (e.g. `pf-date-input--disabled`, `pf-date-input--error`)
+* *Element* — a named functional part of the block: `+{prefix}-{component}__{part}+` (e.g. `+pf-date-input__label+`, `+pf-date-input__input+`, `+pf-date-input__help+`)
+* *Modifier* — a state or variant: `+{prefix}-{component}--{state}+` (e.g. `+pf-date-input--disabled+`, `+pf-date-input--error+`)
 
 Rules:
 
 * Every component wrapper receives a block class — no anonymous `<div>` containers
 * Functional sub-elements (label, input, error message, help text, icon) each receive an element class
 * States (disabled, required, error, loading) are expressed as modifier classes on the block, not via inline styles or ad-hoc class names
-* Modifiers are added alongside the block class, not instead of it: `class="pf-date-input pf-date-input--error"`
+* Modifiers are added alongside the block class, not instead of it: `+class="pf-date-input pf-date-input--error"+`
 * IDs are allowed for ARIA relationships (`aria-describedby`, `aria-labelledby`) but must not be the primary styling hook
 
 Example:
 
-[source,html]
+[source,text]
 ----
 <div class="pf-date-input pf-date-input--required">
     <label class="pf-date-input__label" for="pf-date-input-1">Start date</label>
