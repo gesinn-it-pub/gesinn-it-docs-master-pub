@@ -9,6 +9,7 @@ on:
       - snippets/**
       - documents/**
       - skills/manifests/**
+      - scripts/**
     branches:
       - '**'
   workflow_dispatch:
@@ -33,6 +34,9 @@ jobs:
 
       - name: Lint AsciiDoc sources
         run: bash scripts/lint-adoc.sh
+
+      - name: Run build-skills.py regression tests
+        run: python3 scripts/test_build_skills.py -v
 
       # --- README ---
 

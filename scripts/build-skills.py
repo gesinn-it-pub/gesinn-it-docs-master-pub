@@ -81,6 +81,21 @@ def adoc_to_markdown(adoc_path, attributes=None):
             return f.read().strip()
 
 
+def platform_qualifier(skill_name, platforms):
+    """Return the platform qualifier trailing skill_name, or None if it has none.
+
+    Matches only a whole hyphen-delimited segment run at the end of the name
+    (per the Naming Schema in CLAUDE.md: {domain}-{action}[-{language}][-{platform}]),
+    never a bare substring — e.g. "mediawiki" must not match inside "docker-mediawiki".
+    Checks longest platform names first so a compound qualifier like
+    "docker-mediawiki" is found before a shorter one it contains.
+    """
+    for p in sorted(platforms, key=len, reverse=True):
+        if skill_name == p or skill_name.endswith("-" + p):
+            return p
+    return None
+
+
 def resolve_snippet(ref_path, snippets_dirs):
     """Find the first existing snippet file across all snippet roots."""
     for snippets_dir in snippets_dirs:
@@ -169,9 +184,9 @@ def main():
                         help="Only build skills whose name contains this string (e.g. 'mediawiki'). "
                              "Can be specified multiple times — a skill matches if its name contains any scope. "
                              "Skills with no platform qualifier are always built regardless of scope.")
-    parser.add_argument("--platforms", default="mediawiki,nodejs,ansible,docker-mediawiki",
+    parser.add_argument("--platforms", default="mediawiki,nodejs,ansible,docker-mediawiki,factory",
                         help="Comma-separated list of known platform qualifiers "
-                             "(default: mediawiki,nodejs,ansible,docker-mediawiki). "
+                             "(default: mediawiki,nodejs,ansible,docker-mediawiki,factory). "
                              "Used to identify platform-specific skills when --scope is set.")
     parser.add_argument("--attribute", "-a", action="append", dest="attributes", default=[],
                         help="AsciiDoc attribute to set (e.g. 'phan'). "
@@ -201,12 +216,11 @@ def main():
 
     if args.scopes:
         platforms = [p.strip() for p in args.platforms.split(",") if p.strip()]
-        def is_platform_specific(manifest_path):
-            name = os.path.splitext(os.path.basename(manifest_path))[0]
-            return any(p in name for p in platforms)
+        def manifest_skill_name(manifest_path):
+            return os.path.splitext(os.path.basename(manifest_path))[0]
         def matches_scope(manifest_path):
-            basename = os.path.basename(manifest_path)
-            return any(s in basename for s in args.scopes) or not is_platform_specific(manifest_path)
+            qualifier = platform_qualifier(manifest_skill_name(manifest_path), platforms)
+            return qualifier is None or qualifier in args.scopes
         manifests = [f for f in manifests if matches_scope(f)]
 
     if not manifests:
