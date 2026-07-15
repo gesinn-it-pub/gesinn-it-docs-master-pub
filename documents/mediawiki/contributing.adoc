@@ -70,7 +70,11 @@ include::../../snippets/mediawiki/execution/run-pre-commit.adoc[]
 
 == Step 5: Commit your changes
 
-include::../../sections/universal/conventional-commits-policy.adoc[leveloffset=+1]
+:leveloffset: +1
+
+include::../../sections/universal/conventional-commits-policy.adoc[]
+
+:leveloffset!:
 
 [source,console]
 ----
