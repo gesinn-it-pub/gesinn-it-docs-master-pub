@@ -148,8 +148,12 @@ def write_skill(manifest_path, snippets_dirs, output_base_dir, attributes=None, 
         custom_section = f"""
 ## Repo-specific conventions
 
-Load `../../99-custom.md` if it exists — it contains project-specific rules
-that override or extend the references above.
+Load `99-custom.md` if it exists, resolved two directories up from this
+SKILL.md file (i.e. the `.claude/` or `.agents/` folder that contains this
+skill's own `skills/` directory — NOT the target repo root, and NOT the
+current working directory if this skill was loaded via `--add-dir` from an
+external skills location). It contains project-specific rules that override
+or extend the references above.
 """
     with open(skill_md_path, "w") as f:
         f.write(f"""---
