@@ -11,7 +11,7 @@ Before making any code changes to fix a bug or implement a feature:
 
 *Node-based QUnit, not the in-browser runner*
 
-Extensions in this org standardize on node-based QUnit (`tests/node-qunit/` + jsdom + sinon), not MediaWiki's in-browser `Special:JavaScriptTest/qunit` runner. It runs in CI without a full MediaWiki+browser stack, and existing `tests/qunit/*.test.js` suites are ported over rather than kept in parallel — see the *Execution — Run Tests (QUnit) · MediaWiki* reference file for how to run and filter tests.
+Extensions in this org standardize on node-based QUnit (`tests/node-qunit/` + jsdom + sinon), not MediaWiki's in-browser `Special:JavaScriptTest/qunit` runner. It runs in CI without a full MediaWiki+browser stack, and existing `tests/qunit/` test suites are ported over rather than kept in parallel — see the *Execution — Run Tests (QUnit) · MediaWiki* reference file for how to run and filter tests.
 
 Only fall back to the in-browser runner (kept as documented legacy-only files, e.g. see SemanticResultFormats' `tests/qunit/README.md`) for what jsdom genuinely can't fake: real Leaflet/canvas rendering, `window.matchMedia`, or similarly heavy browser-only APIs. Document *why* per file when this happens.
 
