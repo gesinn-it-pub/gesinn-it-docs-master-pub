@@ -6,6 +6,7 @@ description: >
 references:
   - universal/procedures/code-fix.adoc
   - universal/procedures/test-write.adoc
+  - mediawiki/procedures/test-write-js-mediawiki.adoc
   - mediawiki/conventions/general.adoc
   - mediawiki/conventions/js.adoc
   - mediawiki/execution/install-deps.adoc
