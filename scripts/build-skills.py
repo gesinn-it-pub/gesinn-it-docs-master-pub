@@ -122,20 +122,26 @@ def write_skill(manifest_path, snippets_dirs, output_base_dir, attributes=None, 
             os.remove(os.path.join(refs_dir, stale))
 
     ref_lines = []
-    for i, ref_path in enumerate(references, start=1):
+    ref_index = 0
+    for ref_path in references:
         adoc_path = resolve_snippet(ref_path, snippets_dirs)
         if not adoc_path:
             print(f"  WARNING: snippet not found in any root: {ref_path}", file=sys.stderr)
             continue
 
+        md_content = adoc_to_markdown(adoc_path, attributes)
+        if not md_content.strip():
+            print(f"  Skipping {ref_path} -> rendered empty (likely excluded by attributes)", file=sys.stderr)
+            continue
+
+        ref_index += 1
         parts = ref_path.replace("\\", "/").split("/")
         scope = parts[0]
         name = os.path.splitext(parts[-1])[0]
-        ref_filename = f"{i:02d}-{scope}-{name}.md"
+        ref_filename = f"{ref_index:02d}-{scope}-{name}.md"
         ref_filepath = os.path.join(refs_dir, ref_filename)
 
         print(f"  Converting {ref_path} -> references/{ref_filename}")
-        md_content = adoc_to_markdown(adoc_path, attributes)
         with open(ref_filepath, "w") as f:
             f.write(md_content + "\n")
 
