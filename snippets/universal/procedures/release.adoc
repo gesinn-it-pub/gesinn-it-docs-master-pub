@@ -2,6 +2,28 @@
 
 *Procedure — release:do*
 
+. Never rely on `gh auth login` / `~/.config/gh/hosts.yml` for the `gh`
+  calls below — that file holds a single global login that can
+  silently drift from the identity this repo actually needs. Instead,
+  every step in this procedure that invokes `gh` resolves the token
+  live from the environment and passes it inline, in the *same* shell
+  invocation as the `gh` call — a variable set in one tool call does
+  not survive into a later, separate tool call, so the resolution must
+  be repeated at each `gh` call site rather than hoisted into a
+  one-time preflight step:
++
+[source,shell]
+----
+gh_user=$(git config user.name)
+env_var="GH_TOKEN_$(echo "$gh_user" | tr '[:lower:]-' '[:upper:]_')"
+token="${!env_var}"
+if [ -z "$token" ]; then
+  echo "Missing $env_var for gh user '$gh_user' — set it before releasing." >&2
+  exit 1
+fi
+GH_TOKEN="$token" gh ...
+----
+
 . Confirm the target branch — the tag must be created from the correct branch:
   * Run `git branch --show-current`.
   * For a release on `main` (normal or MAJOR): stay on `main`.
@@ -68,9 +90,17 @@ git tag X.Y.Z
 git push origin X.Y.Z
 ----
 
-. Create the GitHub release using the approved changelog section as body:
+. Create the GitHub release using the approved changelog section as body.
+  Resolve the token inline as shown above, in the same shell invocation:
 +
-[source,console]
+[source,shell]
 ----
-gh release create X.Y.Z --title "X.Y.Z" --notes "<approved changelog section>"
+gh_user=$(git config user.name)
+env_var="GH_TOKEN_$(echo "$gh_user" | tr '[:lower:]-' '[:upper:]_')"
+token="${!env_var}"
+if [ -z "$token" ]; then
+  echo "Missing $env_var for gh user '$gh_user' — set it before releasing." >&2
+  exit 1
+fi
+GH_TOKEN="$token" gh release create X.Y.Z --title "X.Y.Z" --notes "<approved changelog section>"
 ----
