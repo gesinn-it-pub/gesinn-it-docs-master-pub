@@ -30,7 +30,7 @@ include::../../snippets/nodejs/execution/publish.adoc[]
 
 == Release Workflow
 
-include::../../sections/nodejs/release-workflow.adoc[]
+include::../../snippets/universal/procedures/release.adoc[]
 
 == Versioning
 
