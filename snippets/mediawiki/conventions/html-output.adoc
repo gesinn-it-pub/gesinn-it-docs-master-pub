@@ -32,6 +32,35 @@ Anti-patterns to avoid:
 * `'<span class="' . $class . '">' . $text . '</span>'` — no escaping, XSS risk
 * Direct use of `$_GET` / `$_POST` in HTML — use `WebRequest` first
 
+*`isHTML` return values — every branch must resolve to safe HTML*
+
+Parser functions, tag hooks, and result printers can return `[ $text, 'isHTML' => true ]` (or set `$parser->getOutput()`/`ParserOutput::setText()` equivalents) to tell MediaWiki the string is already-final HTML.
+This is a stronger claim than `Html::rawElement()`'s "this fragment is safe": it tells the parser to skip wikitext processing for the *entire* returned value, via a strip marker that is spliced back in verbatim near the end of parsing.
+Nothing sanitizes an `isHTML` string afterwards — if it contains unparsed wikitext or a user-controlled value, that reaches the page as-is.
+
+This means every conditional branch that can produce the returned string must independently guarantee it is fully resolved to HTML.
+A guard that only sometimes runs the resolving step is not a performance shortcut — it is an unparsed-output leak, and if any value it touches is user-authored (a template parameter, a query parameter such as a search/caption label, wikitext from a transcluded page), it is stored or reflected XSS.
+
+[source,php]
+----
+// ANTI-PATTERN: the guard's false branch skips parsing, but isHTML still claims
+// the whole string is safe. $link may still contain raw wikitext or, if built
+// from a user-authored parameter, a raw <script> tag.
+if ( !$this->isSpecialPage() ) {
+    $link = $parser->recursiveTagParse( $link );
+}
+return [ $html . $link, 'isHTML' => true ];
+
+// CORRECT: resolution happens unconditionally, so there is no branch where an
+// unresolved value can reach the isHTML output.
+$link = $this->recursiveTextProcessor->recursiveTagParse( $link );
+return [ $html . $link, 'isHTML' => true ];
+----
+
+Before writing an ad-hoc call to `Parser::recursiveTagParse()` (which requires an in-progress parse — it fatals otherwise) or a bare `ParserFactory::getMainInstance()`, check whether the repository already provides a text-processing helper for this exact situation.
+Frameworks that inject query results into result printers commonly hand the printer the *in-flight* parser together with a wrapper that checks whether a parse is actually in progress and falls back to a full parse otherwise (for example, `RecursiveTextProcessor` in Semantic MediaWiki-based extensions, injected by the query processor).
+Reusing that wrapper is both safer (no unparsed branch, no wrong-parser-instance bugs during nested parses) and consistent with how the rest of the codebase already does this — grep the codebase for how sibling result printers/classes build similar links before inventing a new approach.
+
 *`TemplateParser` + Mustache — complex HTML structures*
 
 Use https://www.mediawiki.org/wiki/Manual:TemplateParser[`TemplateParser`] for larger HTML blocks, conditional structures, and repeated elements.
