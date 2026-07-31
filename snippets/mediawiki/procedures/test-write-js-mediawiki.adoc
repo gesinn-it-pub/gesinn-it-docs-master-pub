@@ -46,6 +46,38 @@ originalSetTimeout( function () {
 
 A stub that swallows every `setTimeout` call (never invoking `callback`) doesn't just intercept the code under test — it also blocks jQuery's own internal scheduling inside `$.Deferred`/`$.ajax` (called with no `delay` argument), silently breaking unrelated assertions later in the same test (a resolved promise's `.done()` callback never runs). Always call through to the real timer inside the stub, and gate the assertion-relevant capture on `delay !== undefined` so jQuery's parameterless internal calls are excluded.
 
+*Pitfall: hardcoded future dates in fixtures go stale and start failing*
+
+A test fixture using a literal date string (`'2026-07-30T...'`) to represent
+"today" or "a day soon" passes only until that date arrives, then fails in
+CI for a reason unrelated to any regression — and if the date is far enough
+out, it fails long after everyone who wrote it has forgotten why. This is
+especially easy to hit when the code under test derives its rendered range
+from the wall clock (`start=current`, `defaultview`, "next 7 days").
+
+Never hardcode a date that must remain in the future. Instead:
+
+[source,javascript]
+----
+// Bad: silently starts failing once 2026-07-31 arrives.
+const data = { events: [ { start: '2026-07-30T10:00:00', ... } ] };
+
+// Good: pin the clock the code under test reads, then derive fixture
+// dates relative to it.
+const clock = sinon.useFakeTimers( new Date( '2026-07-30T09:00:00' ).getTime() );
+// ... build fixture dates from `new Date()` here, or from the same literal
+// used to seed the fake clock ...
+clock.restore(); // in afterEach, or rely on the suite's global sinon.restore()
+----
+
+If the code under test cannot have its clock faked (e.g. it reads a
+pre-computed date baked into fixture data rather than calling `Date.now()`
+itself), derive the fixture date from `new Date()` at test-run time instead
+of a literal, so the test always exercises "today" rather than a specific
+calendar date that will eventually be in the past or, worse, still render
+but exercise a different branch (a different day-of-week, a different
+month boundary) than the one intended.
+
 *Running tests*
 
 See the *Execution — Run Tests (QUnit) · MediaWiki* reference file loaded by this skill.
