@@ -70,4 +70,13 @@ return $cfg;
   This re-generates `.phan/baseline.php` and converts Phan's hardcoded 4-space indentation to tabs (required by MediaWiki PHPCS). Never run `--save-baseline` directly without this post-processing step.
 * When suppressing with `@suppress`, always add an explanatory comment
 
+*Ratcheting a suppressed issue type back on*
+
+`suppress_issue_types` in `.phan/config.php` can list an entire issue class as suppressed project-wide (e.g. `SecurityCheck-SQLInjection`, `SecurityCheck-XSS`) rather than baselined per-line — typically because it was unaffordable to fix every finding when the check was first introduced. Treat each suppressed entry as a backlog item, not a permanent exemption. To re-enable one:
+
+. Remove the single issue type from `suppress_issue_types` locally and run Phan to get the full findings list for that type only.
+. Fix each finding using the platform-provided safe primitive (e.g. an identifier-quoting helper on the DB abstraction, not manual string quoting) rather than a per-site `@suppress`.
+. Confirm behavior is unchanged by running the affected integration tests against a real backend, not just the unit suite — taint-plugin findings cluster around DDL/dynamic-SQL and cache paths that unit tests often mock around.
+. Commit the config change (removing the suppression) together with the fixes, so CI enforces the check on this issue type from that commit forward — a future regression fails fast in review instead of shipping.
+
 endif::phan[]

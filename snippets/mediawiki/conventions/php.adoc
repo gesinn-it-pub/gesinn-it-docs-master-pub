@@ -53,3 +53,13 @@ When support for a MediaWiki version is dropped:
 . Delete the entire `if/else` block and keep only the `if`-branch body (the new path)
 . Delete any `@deprecated-call` comments that referenced the dropped version
 . Run the full test suite and linters to confirm nothing regressed
+
+*Multi-backend database access*
+
+An extension that supports more than one DB backend (MySQL/MariaDB, PostgreSQL, SQLite) must not assume every backend behaves identically for anything beyond standard SQL. Apply these rules whenever writing or reviewing raw SQL or schema DDL:
+
+* Never interpolate a table or column name into a query string directly, even when it comes from trusted-looking schema metadata — use the DB abstraction's identifier-quoting method (e.g. `IDatabase::addIdentifierQuotes()`). It produces the correct quote character per backend and fails fast with a typed exception on malformed input, instead of emitting SQL that only works on the backend you tested against.
+* Binary or specially-collated values (hashes, sort keys) are not portable across backends by default — wrap encode/decode at the boundary with a backend-aware helper, not inline per call site, so a new call site cannot forget the conversion.
+* Prefer capability detection over version/backend branching: check whether the connection supports the feature you need (e.g. a specific query construct) rather than hardcoding "if Postgres, do X" — and keep an iterative fallback path for backends that lack it.
+* `INSERT ... SELECT` against a live table takes locks the caller may not expect (shared or exclusive, depending on backend and isolation level). For a read-only snapshot under concurrent write load, prefer reading into the application layer and inserting literals over relying on the database to combine both in one statement.
+* When a fix targets one backend's failure, add a regression test asserting the *other* supported backends are unaffected, not only that the failing backend now passes — a cross-backend fix that only special-cases the broken path can silently change behavior everywhere else.

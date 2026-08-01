@@ -176,3 +176,18 @@ Deprecation procedure when migrating existing classes:
 . Add a `CHANGELOG.md` entry under `Deprecated`: +
   "CSS class `pf-dateinput` deprecated; use `pf-date-input` instead. Old class will be removed in the next major release."
 . Remove the old class in the next major version bump and add a `Breaking Changes` entry to `CHANGELOG.md`
+
+*Regression tests for an escaping fix — assert both directions*
+
+A test that only checks the escaped form is present can pass for the wrong reason (e.g. the payload happened to contain no special characters that round-trip differently). A test that only checks the raw payload is absent can pass because the output was mangled some other way, not properly escaped. An escaping regression test asserts both in the same case:
+
+[source,text]
+----
+assert-output:
+  to-contain:
+    - "&lt;img src=x onerror=alert() &gt;"   // the escaped form is present
+  not-contain:
+    - "<img src=x onerror=alert() >"          // the raw payload never reached output
+----
+
+Cover every output mode/sink the value can reach independently (e.g. inline wikitext vs. a raw/API/export mode that bypasses the parser) — a sink that is parser-sanitised today is not evidence that a sibling sink bypassing the parser is also safe. When auditing a reflected-input surface (a query parameter, a pagination token, a form field echoed back into an error message), check every branch that renders that value, not just the one the report described.
