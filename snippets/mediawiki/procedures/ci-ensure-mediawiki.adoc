@@ -123,7 +123,11 @@ This script must exist and must produce a Clover XML file at
 `coverage/php/coverage.xml` (relative to the extension directory inside
 the container, which maps to `build/coverage/php/coverage.xml` on the host).
 
-Required scripts in `composer.json`:
+Required scripts in `composer.json`. Two equivalent invocation styles are in
+use across gesinn-it-pub extensions — pick the one that matches how
+`phpunit` is already invoked in the repo, or use the bash/`vendor/bin/phpunit`
+style for new setups (it is the one actually running in IDProvider,
+PageForms, and SemanticDependencyUpdater):
 
 [source,json]
 ----
@@ -144,39 +148,105 @@ Required scripts in `composer.json`:
     ],
     "phpcs": "phpcs -sp",
     "phpunit": [
-        "@putenv Composer\\Config::disableProcessTimeout",
-        "php -d memory_limit=512M ../../tests/phpunit/phpunit.php -c phpunit.xml.dist --testsuite extension-<extension-id>-unit --testdox",
-        "php -d memory_limit=512M ../../tests/phpunit/phpunit.php -c phpunit.xml.dist --testsuite extension-<extension-id>-integration --testdox"
+        "Composer\\Config::disableProcessTimeout",
+        "bash -c 'cd ${MW_INSTALL_PATH:-../..} && { [ -f tests/phpunit/generatePHPUnitConfig.php ] && { php tests/phpunit/generatePHPUnitConfig.php >/dev/null 2>&1 || true; [ -f phpunit.xml ] || printf \"%s\" \"<phpunit><!-- generatePHPUnitConfig --></phpunit>\" > phpunit.xml; } || true; } && MEDIAWIKI_HAS_INTEGRATION_TESTS=1 vendor/bin/phpunit -c extensions/<EXTENSION>/phpunit.xml.dist --bootstrap tests/phpunit/bootstrap.php --testdox'"
     ],
     "phpunit-coverage": [
-        "@putenv Composer\\Config::disableProcessTimeout",
-        "php -d memory_limit=512M ../../tests/phpunit/phpunit.php -c phpunit.xml.dist --testsuite extension-<extension-id>-unit --testdox",
-        "php -d memory_limit=512M ../../tests/phpunit/phpunit.php -c phpunit.xml.dist --testsuite extension-<extension-id>-integration --testdox --coverage-text --coverage-html coverage/php --coverage-clover coverage/php/coverage.xml"
+        "Composer\\Config::disableProcessTimeout",
+        "bash -c 'cd ${MW_INSTALL_PATH:-../..} && { [ -f tests/phpunit/generatePHPUnitConfig.php ] && { php tests/phpunit/generatePHPUnitConfig.php >/dev/null 2>&1 || true; [ -f phpunit.xml ] || printf \"%s\" \"<phpunit><!-- generatePHPUnitConfig --></phpunit>\" > phpunit.xml; } || true; } && MEDIAWIKI_HAS_INTEGRATION_TESTS=1 vendor/bin/phpunit -c extensions/<EXTENSION>/phpunit.xml.dist --bootstrap tests/phpunit/bootstrap.php --testdox --coverage-text --coverage-html extensions/<EXTENSION>/coverage/php --coverage-clover extensions/<EXTENSION>/coverage/php/coverage.xml'"
     ]
 }
 ----
 
-NOTE: Unit and integration suites must run as *separate PHP processes*.
-Running both suites in one process causes MW-internal caches (held in
-static variables that survive SMW store resets) to accumulate several
-gigabytes of RSS, which triggers the Linux OOM-killer (exit 137) before
-any test output appears. `disableProcessTimeout` prevents Composer's
-default 300 s watchdog from killing long integration runs on slow CI
-runners. Replace `<extension-id>` with the lowercase extension identifier
-used in `phpunit.xml.dist` (e.g. `page-forms`).
+The alternative, older style splits unit and integration suites into
+separate PHP processes via a direct `phpunit.php` invocation:
 
-NOTE: The coverage output path `coverage/php/` is *relative to the
-extension directory inside the container*. DCI's `docker-compose-ci.yml`
-overlay maps `./coverage` inside the container to `build/coverage/` on the
-host. The GitHub Actions step therefore finds the file at
-`build/coverage/php/coverage.xml`.
+[source,json]
+----
+"phpunit": [
+    "@putenv Composer\\Config::disableProcessTimeout",
+    "php -d memory_limit=512M ../../tests/phpunit/phpunit.php -c phpunit.xml.dist --testsuite extension-<extension-id>-unit --testdox",
+    "php -d memory_limit=512M ../../tests/phpunit/phpunit.php -c phpunit.xml.dist --testsuite extension-<extension-id>-integration --testdox"
+],
+"phpunit-coverage": [
+    "@putenv Composer\\Config::disableProcessTimeout",
+    "php -d memory_limit=512M ../../tests/phpunit/phpunit.php -c phpunit.xml.dist --testsuite extension-<extension-id>-unit --testdox",
+    "php -d memory_limit=512M ../../tests/phpunit/phpunit.php -c phpunit.xml.dist --testsuite extension-<extension-id>-integration --testdox --coverage-text --coverage-html coverage/php --coverage-clover coverage/php/coverage.xml"
+]
+----
 
-Check whether `test-coverage` and `phpunit-coverage` are present:
+NOTE: Use the split-process style only when unit and integration suites
+must run as *separate PHP processes* — e.g. when MW-internal caches (held
+in static variables that survive SMW store resets) accumulate several
+gigabytes of RSS across both suites in a single process, which triggers
+the Linux OOM-killer (exit 137) before any test output appears.
+`disableProcessTimeout` prevents Composer's default 300 s watchdog from
+killing long integration runs on slow CI runners. Replace `<extension-id>`
+with the lowercase extension identifier used in `phpunit.xml.dist` (e.g.
+`page-forms`).
+
+NOTE: The coverage output path (`coverage/php/` or
+`extensions/<EXTENSION>/coverage/php/`, matching whichever working
+directory the `phpunit` script `cd`s into) is *relative to the extension
+directory inside the container*. DCI's `docker-compose-ci.yml` overlay
+maps `./coverage` inside the container to `build/coverage/` on the host.
+The GitHub Actions step therefore finds the file at
+`build/coverage/php/coverage.xml` regardless of which style is used.
+
+Check whether `test-coverage` and `phpunit-coverage` are present — and,
+critically, whether the coverage flags actually reach `phpunit`:
 
 [source,bash]
 ----
 cat composer.json | python3 -c "import json,sys; s=json.load(sys.stdin).get('scripts',{}); print('ok' if 'test-coverage' in s and 'phpunit-coverage' in s else 'MISSING')"
 ----
+
+[IMPORTANT]
+====
+Presence of the `phpunit-coverage` key is not sufficient — it must also be
+*effective*. A recurring bug in this org's extensions is:
+
+[source,json]
+----
+"phpunit-coverage": "@phpunit --coverage-text --coverage-html ... --coverage-clover ..."
+----
+
+This looks correct but silently produces no coverage file. `@phpunit`
+resolves to a `bash -c '...'` invocation (or a plain `phpunit.php` call).
+Composer appends the extra +--coverage-*+ flags *after* the referenced
+script's own command line finishes executing — when that command is
+`bash -c '<quoted string>'`, the appended flags land after the closing
+quote as ignored positional arguments to the subshell, never reaching
+`vendor/bin/phpunit` itself. PHPUnit then runs with no coverage
+instrumentation, no `coverage.xml` is ever written, and the Codecov
+upload step in `ci.yml` silently finds nothing to upload — while the CI
+job still shows green, because `fail_ci_if_error` is not set to `true`.
+
+Detect this by checking that `phpunit-coverage` is a *self-contained*
+script (its own array of commands, each with the coverage flags baked
+into the same `bash -c '...'` string or the same bare command line as the
+`phpunit` invocation) rather than a string that references `@phpunit` and
+appends flags externally:
+
+[source,bash]
+----
+cat composer.json | python3 -c "
+import json, sys
+s = json.load(sys.stdin).get('scripts', {})
+pc = s.get('phpunit-coverage', '')
+pc_str = ' '.join(pc) if isinstance(pc, list) else str(pc)
+if '@phpunit' in pc_str and '--coverage' in pc_str:
+    print('BUG: phpunit-coverage references @phpunit and appends flags externally — they will not reach phpunit')
+else:
+    print('ok')
+"
+----
+
+If the bug is present, fix it by making `phpunit-coverage` a standalone
+script with the coverage flags inlined into the same command string that
+invokes `phpunit` (see the two styles above) — do not reference `@phpunit`
+and append flags to the outer script.
+====
 
 == Step 4: Verify package.json scripts (JS extensions)
 
@@ -650,6 +720,18 @@ test -d build && git submodule status build
 # Composer scripts present
 composer validate --no-check-publish
 cat composer.json | python3 -c "import json,sys; s=json.load(sys.stdin)['scripts']; [print(k) for k in ['test','test-coverage','phpunit','phpunit-coverage'] if k not in s and print('MISSING: '+k) is None]"
+
+# phpunit-coverage is self-contained, not a broken @phpunit reference (see Step 3)
+cat composer.json | python3 -c "
+import json, sys
+s = json.load(sys.stdin).get('scripts', {})
+pc = s.get('phpunit-coverage', '')
+pc_str = ' '.join(pc) if isinstance(pc, list) else str(pc)
+if '@phpunit' in pc_str and '--coverage' in pc_str:
+    print('BUG: phpunit-coverage references @phpunit and appends flags externally')
+else:
+    print('phpunit-coverage OK')
+"
 
 # PHPUnit test directories exist
 python3 -c "
