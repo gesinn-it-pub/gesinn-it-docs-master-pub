@@ -69,6 +69,7 @@ git checkout main            # tag 3.0.0 will be set from main
 
 . Draft the release notes:
   * Write a short introductory sentence summarising the release theme (optional but recommended for notable releases).
+  * Write each entry for the *end user* — describe the user-visible effect, not the commit message verbatim (see Changelog Convention, *Audience and tone*).
   * Ensure each entry has a commit hash link; add an issue/PR link where applicable.
   * Present the full `[X.Y.Z]` changelog section inside a fenced markdown code block for easy review.
   * Do not proceed until the user explicitly approves.

@@ -766,6 +766,30 @@ Map conventional commit types to changelog categories as follows:
 | Breaking change (`!` or `BREAKING CHANGE`) | Breaking Changes (always first) |
 | `ci`, `chore`, `test`                      | — omit from changelog           |
 
+**Audience and tone**
+
+Changelog entries are written for the **end user** of the software, not
+for developers reading the commit history. The commit hash link already
+gives access to the technical detail — the entry itself must not just
+restate the commit message verbatim.
+
+- Describe the user-visible effect or benefit, not the implementation
+  step. Ask "what changes for someone using this software?", not "what
+  did the commit do?".
+
+- Keep it short and factual — one line, imperative mood, no marketing
+  language.
+
+- Avoid internal terminology (class/function/variable names, refactor
+  mechanics) unless it is the actual subject of the change (e.g. a
+  public API rename that affects integrators).
+
+| Commit message (technical)                                        | Changelog entry (user-facing)                    |
+|--------------------------------------------------------------------|---------------------------------------------------|
+| `fix(parser): use strict equality in isEmpty() check`              | Fix incorrect handling of empty input in the parser |
+| `refactor(api): extract validateToken() into middleware`           | *(omit — no user-visible effect)*                |
+| `feat(api): add /autocomplete endpoint returning top-5 matches`    | Add autocomplete suggestions while typing        |
+
 **Rules**
 
 - Every version has an entry — no skipped releases.
@@ -895,6 +919,10 @@ rotated out of `CHANGELOG.md` into a dedicated archive file:
 
     - Write a short introductory sentence summarising the release theme
       (optional but recommended for notable releases).
+
+    - Write each entry for the **end user** — describe the user-visible
+      effect, not the commit message verbatim (see Changelog
+      Convention, **Audience and tone**).
 
     - Ensure each entry has a commit hash link; add an issue/PR link
       where applicable.
