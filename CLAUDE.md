@@ -784,11 +784,11 @@ restate the commit message verbatim.
   mechanics) unless it is the actual subject of the change (e.g. a
   public API rename that affects integrators).
 
-| Commit message (technical)                                        | Changelog entry (user-facing)                    |
-|--------------------------------------------------------------------|---------------------------------------------------|
-| `fix(parser): use strict equality in isEmpty() check`              | Fix incorrect handling of empty input in the parser |
-| `refactor(api): extract validateToken() into middleware`           | *(omit — no user-visible effect)*                |
-| `feat(api): add /autocomplete endpoint returning top-5 matches`    | Add autocomplete suggestions while typing        |
+| Commit message (technical)                                      | Changelog entry (user-facing)                       |
+|-----------------------------------------------------------------|-----------------------------------------------------|
+| `fix(parser): use strict equality in isEmpty() check`           | Fix incorrect handling of empty input in the parser |
+| `refactor(api): extract validateToken() into middleware`        | *(omit — no user-visible effect)*                   |
+| `feat(api): add /autocomplete endpoint returning top-5 matches` | Add autocomplete suggestions while typing           |
 
 **Rules**
 
@@ -921,8 +921,8 @@ rotated out of `CHANGELOG.md` into a dedicated archive file:
       (optional but recommended for notable releases).
 
     - Write each entry for the **end user** — describe the user-visible
-      effect, not the commit message verbatim (see Changelog
-      Convention, **Audience and tone**).
+      effect, not the commit message verbatim (see Changelog Convention,
+      **Audience and tone**).
 
     - Ensure each entry has a commit hash link; add an issue/PR link
       where applicable.
