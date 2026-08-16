@@ -41,7 +41,7 @@ cat composer.json 2>/dev/null | python3 -c "import json,sys; d=json.load(sys.std
 You need:
 - `PROJECT_NAME` — human-readable name (e.g. `Arrays`)
 - `PROJECT_TYPE` — `mediawiki`, `nodejs`, `ansible`, or `factory`
-- `PROJECT_ACRONYM` — short identifier derived from the project name (e.g. `SRF` for SemanticResultFormats, `gf` for gesinn-factory). Ask the user if not obvious.
+- `PROJECT_ACRONYM` — short identifier derived from the project name (e.g. `SRF` for SemanticResultFormats). Ask the user if not obvious.
 - `GITHUB_ORG_REPO` — e.g. `gesinn-it-pub/mediawiki-extensions-Arrays`
 
 If `PROJECT_TYPE` or `PROJECT_ACRONYM` cannot be determined automatically, ask the user.
