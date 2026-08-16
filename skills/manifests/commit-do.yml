@@ -2,7 +2,11 @@ skill: commit-do
 description: >
   Classify the staged changes and create a Conventional Commit. Use when asked
   to commit changes, write a commit message, or finalize a set of code changes
-  into a commit following the project's commit convention.
+  into a commit following the project's commit convention. Also use this
+  skill — instead of running `git commit` directly — any time you (the agent)
+  are about to create a commit yourself as part of a larger task, even if the
+  user never used the word "commit"; do not call `git commit` via Bash
+  without first invoking this skill.
 references:
   - universal/conventions/general.adoc
   - universal/conventions/conventional-commits.adoc
