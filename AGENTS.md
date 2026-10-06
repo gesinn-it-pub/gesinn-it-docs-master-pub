@@ -669,6 +669,19 @@ Changelog:
   change, add a corresponding entry to the `[Unreleased]` section of
   `CHANGELOG.md` — do not wait until release time.
 
+Issue linking:
+
+- If the session resolves a GitHub issue, add a footer line to the
+  commit message so GitHub closes the issue itself once the commit
+  reaches the default branch — do not close it manually
+
+- Use `Closes #123` when the commit completes all work for the issue
+
+- Use `Refs #123` when the issue is only partly addressed
+
+- If it is unclear whether all work is done, ask before choosing the
+  keyword
+
 # Versioning
 
 ## Versioning and Releases
