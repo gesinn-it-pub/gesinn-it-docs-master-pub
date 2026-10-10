@@ -7,6 +7,12 @@ They are enforced by `make ci` (lint + phpcs + eslint).
 
 * Encoding: UTF-8 without BOM
 * Line endings: Unix-style LF (not CR+LF)
+** Check the files you touch (`git ls-files --eol <file>`).
+** A violation in a file you touch is corrected in a commit of its own that changes nothing
+   but the line endings (`style: normalize line endings in <file>`), made before the actual change.
+** Files you do not touch are left as they are.
+** Generated and vendored files (e.g. bundled `dist/` directories) and files that need CR+LF
+   (e.g. `.bat`) are left as they are.
 * Indentation: tabs, not spaces
 * Maximum line length: 120 characters
 * No trailing whitespace
