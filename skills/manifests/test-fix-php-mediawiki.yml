@@ -10,6 +10,7 @@ references:
   - mediawiki/procedures/test-write-php-mediawiki.adoc
   - mediawiki/procedures/test-write-jsonscript-php-mediawiki.adoc
   - php/conventions/php.adoc
+  - mediawiki/conventions/general.adoc
   - mediawiki/conventions/php.adoc
   - mediawiki/execution/install-deps.adoc
   - mediawiki/execution/run-tests-phpunit.adoc

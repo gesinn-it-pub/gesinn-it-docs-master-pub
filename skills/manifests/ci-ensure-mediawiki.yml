@@ -9,3 +9,4 @@ description: >
   guides through Codecov activation.
 references:
   - mediawiki/procedures/ci-ensure-mediawiki.adoc
+  - universal/conventions/general.adoc
