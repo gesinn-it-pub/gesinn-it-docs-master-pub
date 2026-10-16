@@ -7,7 +7,8 @@ For each manifest in <manifests-dir>/*.yml:
   3. Write numbered reference files to <claude-skills-dir>/{name}/references/.
   4. Write a SKILL.md with frontmatter and a body that loads the references.
 
-Also mirrors output to <agents-skills-dir>/{name}/ for VS Code Copilot / other agents.
+Also mirrors output to <agents-skills-dir>/{name}/ for VS Code Copilot / other agents
+(unless --skip-agents is given).
 
 NOTE: This script is NOT run by the submodule's own CI. Skills are built exclusively
 by consumer repos — this script is provided for them to call. Do not add a skill-build
@@ -43,25 +44,40 @@ then against each --extra-snippets-dir in order. The first match wins.
 """
 
 import argparse
+import hashlib
 import os
+import re
 import subprocess
 import sys
+import tempfile
 import yaml
 
 
-def adoc_to_markdown(adoc_path, attributes=None):
-    """Convert an AsciiDoc file to Markdown via asciidoctor + pandoc."""
+# Bump when the conversion pipeline changes in a way the cache key cannot see.
+CACHE_VERSION = "1"
+INCLUDE_RE = re.compile(r"^include::([^\[\n]+)\[", re.MULTILINE)
+
+# Conversions already done in this process: (adoc_path, attributes) -> markdown.
+# The same snippet recurs in many skills and in both output trees.
+_memo = {}
+
+
+def convert_adoc(adoc_path, attributes=None):
+    """Convert an AsciiDoc file to Markdown via asciidoctor + pandoc.
+
+    Raises subprocess.CalledProcessError if any step fails.
+    """
     attr_flags = []
     for attr in (attributes or []):
         attr_flags += ["-a", attr]
-    try:
-        reduced = subprocess.run(
-            ["asciidoctor-reducer"] + attr_flags + [adoc_path],
-            capture_output=True, text=True, check=True
-        ).stdout
+    reduced = subprocess.run(
+        ["asciidoctor-reducer"] + attr_flags + [adoc_path],
+        capture_output=True, text=True, check=True
+    ).stdout
 
-        tmp_adoc = "/tmp/skill-snippet.adoc"
-        tmp_xml = "/tmp/skill-snippet.xml"
+    with tempfile.TemporaryDirectory(prefix="skill-snippet-") as tmp:
+        tmp_adoc = os.path.join(tmp, "snippet.adoc")
+        tmp_xml = os.path.join(tmp, "snippet.xml")
         with open(tmp_adoc, "w") as f:
             f.write(reduced)
 
@@ -74,11 +90,80 @@ def adoc_to_markdown(adoc_path, attributes=None):
             ["pandoc", "-f", "docbook", "-t", "gfm", tmp_xml],
             capture_output=True, text=True, check=True
         )
-        return result.stdout.strip()
+    return result.stdout.strip()
+
+
+def _hash_with_includes(adoc_path, digest, seen):
+    """Feed adoc_path and, recursively, everything it includes into digest.
+
+    Returns False if an include target cannot be resolved statically
+    (attribute reference in the path), in which case the result is not cacheable.
+    """
+    real = os.path.realpath(adoc_path)
+    if real in seen:
+        return True
+    seen.add(real)
+    try:
+        with open(adoc_path, "rb") as f:
+            raw = f.read()
+    except OSError:
+        digest.update(b"missing:" + adoc_path.encode())
+        return True
+    digest.update(raw)
+    for target in INCLUDE_RE.findall(raw.decode("utf-8", errors="replace")):
+        if "{" in target:
+            return False
+        include_path = os.path.join(os.path.dirname(adoc_path), target)
+        if not _hash_with_includes(include_path, digest, seen):
+            return False
+    return True
+
+
+def cache_key(adoc_path, attributes):
+    """Content hash of everything the conversion result depends on, or None."""
+    digest = hashlib.sha256()
+    digest.update(CACHE_VERSION.encode())
+    # Lets the caller invalidate the cache when the toolchain (image) changes.
+    digest.update(os.environ.get("SKILLS_CACHE_SALT", "").encode())
+    digest.update("\0".join(sorted(attributes or [])).encode())
+    if not _hash_with_includes(adoc_path, digest, set()):
+        return None
+    return digest.hexdigest()
+
+
+def adoc_to_markdown(adoc_path, attributes=None, cache_dir=None):
+    """Convert an AsciiDoc file to Markdown, reusing earlier results where possible."""
+    memo_key = (os.path.realpath(adoc_path), tuple(sorted(attributes or [])))
+    if memo_key in _memo:
+        return _memo[memo_key]
+
+    cache_file = None
+    if cache_dir:
+        key = cache_key(adoc_path, attributes)
+        if key:
+            cache_file = os.path.join(cache_dir, key + ".md")
+            if os.path.exists(cache_file):
+                with open(cache_file) as f:
+                    _memo[memo_key] = f.read()
+                return _memo[memo_key]
+
+    try:
+        md = convert_adoc(adoc_path, attributes)
     except subprocess.CalledProcessError as e:
+        # Failures are neither memoized nor cached, so a fix is picked up next run.
         print(f"  WARNING: conversion failed for {adoc_path}: {e.stderr.strip()}", file=sys.stderr)
         with open(adoc_path) as f:
             return f.read().strip()
+
+    _memo[memo_key] = md
+    if cache_file:
+        os.makedirs(cache_dir, exist_ok=True)
+        # Write-then-rename so a concurrent or interrupted run never sees a partial file.
+        fd, tmp_path = tempfile.mkstemp(dir=cache_dir, suffix=".tmp")
+        with os.fdopen(fd, "w") as f:
+            f.write(md)
+        os.replace(tmp_path, cache_file)
+    return md
 
 
 def platform_qualifier(skill_name, platforms):
@@ -105,7 +190,8 @@ def resolve_snippet(ref_path, snippets_dirs):
     return None
 
 
-def write_skill(manifest_path, snippets_dirs, output_base_dir, attributes=None, custom_file=None):
+def write_skill(manifest_path, snippets_dirs, output_base_dir, attributes=None, custom_file=None,
+                cache_dir=None):
     with open(manifest_path) as f:
         manifest = yaml.safe_load(f)
 
@@ -129,7 +215,7 @@ def write_skill(manifest_path, snippets_dirs, output_base_dir, attributes=None, 
             print(f"  WARNING: snippet not found in any root: {ref_path}", file=sys.stderr)
             continue
 
-        md_content = adoc_to_markdown(adoc_path, attributes)
+        md_content = adoc_to_markdown(adoc_path, attributes, cache_dir)
         if not md_content.strip():
             print(f"  Skipping {ref_path} -> rendered empty (likely excluded by attributes)", file=sys.stderr)
             continue
@@ -204,6 +290,12 @@ def main():
     parser.add_argument("--custom-file", default=None,
                         help="Path to a repo-specific 99-custom.md file. When set, every SKILL.md "
                              "gets a section instructing the agent to load ../../99-custom.md.")
+    parser.add_argument("--skip-agents", action="store_true",
+                        help="Do not write the --agents-skills-dir tree (Claude Code only).")
+    parser.add_argument("--cache-dir", default=None,
+                        help="Directory for a persistent snippet-conversion cache, keyed by the "
+                             "content of each snippet (including its includes) and the attributes. "
+                             "Disabled when not set.")
     args = parser.parse_args()
 
     if args.manifests_dirs is None:
@@ -240,8 +332,11 @@ def main():
     for manifest_path in manifests:
         skill_name = os.path.splitext(os.path.basename(manifest_path))[0]
         print(f"Building skill: {skill_name}")
-        write_skill(manifest_path, snippets_dirs, args.claude_skills_dir, args.attributes, args.custom_file)
-        write_skill(manifest_path, snippets_dirs, args.agents_skills_dir, args.attributes, args.custom_file)
+        write_skill(manifest_path, snippets_dirs, args.claude_skills_dir, args.attributes, args.custom_file,
+                    args.cache_dir)
+        if not args.skip_agents:
+            write_skill(manifest_path, snippets_dirs, args.agents_skills_dir, args.attributes,
+                        args.custom_file, args.cache_dir)
 
     scope_info = f" (scopes: {', '.join(args.scopes)})" if args.scopes else ""
     print(f"Built {len(manifests)} skills{scope_info}.")
