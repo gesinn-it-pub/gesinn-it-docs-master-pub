@@ -52,6 +52,15 @@ Every repository must have a `.eslintrc.json` at root with `"root": true`:
   _(full-DOM queries match stale or foreign nodes, break hook-lifecycle isolation, and waste performance by traversing the entire document)_
 * Prefer `$( '<div>' ).text( value )` over `$( '<div>text</div>' )` to avoid XSS
 
+*HTML sinks*
+
+* `.html( value )`, `.append( string )`, `.after( string )` and `$( '<td>' + value + '</td>' )` parse a string as HTML. Use `.text( value )` or build the element: `$( '<td>' ).text( value )`.
+* `OO.ui.HtmlSnippet` is raw HTML. Escape every part before it is put together. To highlight a match, find it in the plain text, escape the three parts (before, match, after) separately and join them.
+* Text that was read from the DOM (`.val()`, `.text()`) is text. Putting it into a sink above again is the typical way a value ends up as markup, for example in a summary line that is built from the values of input fields.
+* Do not decode entities with `$( '<div>' ).html( value ).text()`: parsing the markup starts loading images and runs their handlers, even if the element is never inserted. Decode through the content of a `<template>` element, which is inert: `template.innerHTML = value`, then `template.content.textContent`. A `DOMParser` document drops leading whitespace of the body.
+* `mw.msg()` returns text; use `mw.message( key ).escaped()` where HTML is needed.
+* When you change a file, list the sinks in it and trace each value to its source. Fix the findings in a commit of their own, made before your change.
+
 *MediaWiki APIs*
 
 * Access configuration via `mw.config.get( 'wgFoo' )`, never direct globals

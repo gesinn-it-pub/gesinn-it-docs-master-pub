@@ -32,6 +32,40 @@ Anti-patterns to avoid:
 * `'<span class="' . $class . '">' . $text . '</span>'` — no escaping, XSS risk
 * Direct use of `$_GET` / `$_POST` in HTML — use `WebRequest` first
 
+*Every value is text until it is escaped or parsed*
+
+Treat every value that does not come from the source code as untrusted text:
+template parameters and page content, request and query parameters (including form prefill values), values of semantic properties, responses of other servers, and message parameters.
+Escape at the point of output, for the context the value lands in (HTML text, attribute, URL, JavaScript, wikitext).
+Do not rely on cleaning a value when it is read: that misses the other sinks and double-escapes the ones it covers.
+
+These sinks need a reviewed source for every value that is interpolated into them:
+
+* `isHTML` return values and `ParserOutput::setText()`
+* the inner-HTML argument of `Html::rawElement()` and `Xml::tags()`
+* string concatenation of markup, including hand-built attributes
+* `OutputPage::addHTML()`
+* caption and label parameters of `Linker` helpers, which are HTML, not text
+
+Choose the fix by what the value is:
+
+* a plain name or label (a field name, a title) — `htmlspecialchars()` or `Html::element()`
+* wikitext (a template parameter value, a label that may contain links or formatting) — `Parser::recursiveTagParse()`, so that it is sanitized like any other wikitext
+* a URL — check the protocol against the allowed protocols before it becomes an `href`
+
+Anti-patterns to avoid:
+
+* returning `isHTML` and interpolating values into the string, including labels and names: nothing sanitizes the result afterwards
+* replacing only `<` and `>`: quotes stay, and the value can still leave an attribute; use full escaping or the `Html` class
+* building attributes by hand with single quotes (`name='$name'`): the `Html` class does the quoting
+* treating a clean taint-analysis run as evidence: it misses values from sources it cannot type, such as parser frame arguments; send a payload through the output and look at it
+
+*Check the file you are changing*
+
+When you change a file, list every sink in it (see above) and trace each interpolated value back to its source.
+Fix what you find in a commit of its own, made before the change you came for, so that it can be reviewed, backported and released on its own.
+New code does not add a sink without a reviewed source for each of its values.
+
 *`isHTML` return values — every branch must resolve to safe HTML*
 
 Parser functions, tag hooks, and result printers can return `[ $text, 'isHTML' => true ]` (or set `$parser->getOutput()`/`ParserOutput::setText()` equivalents) to tell MediaWiki the string is already-final HTML.
@@ -191,3 +225,6 @@ assert-output:
 ----
 
 Cover every output mode/sink the value can reach independently (e.g. inline wikitext vs. a raw/API/export mode that bypasses the parser) — a sink that is parser-sanitised today is not evidence that a sibling sink bypassing the parser is also safe. When auditing a reflected-input surface (a query parameter, a pagination token, a form field echoed back into an error message), check every branch that renders that value, not just the one the report described.
+
+For every sink that the value can reach, add a case with a payload that has an element with an event handler, a quote and angle brackets (for example `<img src=x onerror=alert()>` and `"><svg onload=alert()>`), and use each argument, label and parameter that is rendered, not only the first one.
+If the function is restricted to a namespace, run the test in that namespace; otherwise it ends in the error branch and proves nothing.
