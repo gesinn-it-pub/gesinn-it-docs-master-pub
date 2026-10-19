@@ -5,3 +5,4 @@ description: >
 references:
   - nodejs/execution/run-npm.adoc
   - nodejs/execution/run-tests-mocha.adoc
+  - nodejs/execution/run-tests-node.adoc

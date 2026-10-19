@@ -1,0 +1,40 @@
+ifdef::node-test[]
+'''
+
+*Execution — Run Tests (node:test) · Node.js*
+
+Run the full test suite:
+
+[source,console]
+----
+npm test
+----
+
+One file, or tests by name:
+
+[source,console]
+----
+node --test tests/crawl.test.js
+node --test --test-name-pattern="pattern"
+----
+
+Coverage (built in, no c8):
+
+[source,console]
+----
+npm run test:coverage
+----
+
+`package.json`:
+
+[source,json]
+----
+"scripts": {
+  "test": "node --test \"tests/**/*.test.js\"",
+  "test:coverage": "node --test --experimental-test-coverage \"tests/**/*.test.js\""
+},
+"engines": { "node": ">=22.0.0" }
+----
+
+Quote the glob: the shell must not expand it.
+endif::node-test[]

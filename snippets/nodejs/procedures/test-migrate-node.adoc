@@ -1,0 +1,50 @@
+ifdef::node-test[]
+'''
+
+*Procedure — Migrate Tests to node:test · Node.js*
+
+Behaviour-preserving. Apply the `code:refactor` safety net: green before, green after, same number of tests.
+
+. Record the baseline: run the suite, note the number of tests and assertions per file.
+. Migrate one file at a time. Keep every test name and every assertion; change only the API.
+. Run the file with `node --test <file>`. Count must equal the baseline. A test that passes with fewer assertions is a regression.
+. When all files are migrated: remove the old runner and its dependencies, set the `test` and `test:coverage` scripts, set `engines`, run `npm ci`, run the full suite and lint.
+. Never fix production code in the same step. A bug found on the way is reported, then fixed through the `code:fix` procedure.
+
+*QUnit*
+
+[cols="1,1"]
+|===
+| QUnit | node:test
+
+| `QUnit.module('m')` | `+describe('m', () => { ... })+`
+| `+QUnit.test('n', assert => ...)+` | `+test('n', () => ...)+`
+| `assert.true(x)` / `assert.false(x)` | `assert.equal(x, true)` / `assert.equal(x, false)`
+| `assert.ok(x)` / `assert.notOk(x)` | `assert.ok(x)` / `assert.ok(!x)`
+| `assert.equal(a, b)` (loose `==`) | `assert.equal(a, b)` (strict). If the types differ the test fails: fix the expectation, do not loosen.
+| `assert.strictEqual` / `notStrictEqual` | `assert.strictEqual` / `assert.notStrictEqual`
+| `assert.deepEqual` | `assert.deepEqual`
+| `assert.propEqual(o, e)` (ignores prototypes) | `+assert.deepEqual({ ...o }, e)+`
+| `assert.throws(fn, /re/)` | `assert.throws(fn, /re/)`
+| `assert.rejects(p, /re/)` | `await assert.rejects(p, /re/)`
+| `assert.expect(n)` | `t.plan(n)` or delete
+| `assert.async()` / `done()` | `async` test function
+| `hooks.beforeEach` / `afterEach` | `beforeEach` / `afterEach` inside `describe`
+| `assert.step` / `verifySteps` | `mock.fn()` and `fn.mock.calls`
+|===
+
+*Mocha and chai*
+
+[cols="1,1"]
+|===
+| Mocha / chai | node:test
+
+| `describe`, `it`, `before`, `after` | `describe`, `it`, `before`, `after` (same names, import from `node:test`)
+| `expect(a).to.equal(b)` | `assert.equal(a, b)`
+| `expect(a).to.deep.equal(b)` | `assert.deepEqual(a, b)`
+| `expect(fn).to.throw(/re/)` | `assert.throws(fn, /re/)`
+| `chai-as-promised` | `await assert.rejects(p)`
+| `sinon.stub()` / `spy()` | `mock.fn()` / `mock.method()`
+| `this.timeout(n)` | `+test('n', { timeout: n }, ...)+`
+|===
+endif::node-test[]

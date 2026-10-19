@@ -1,3 +1,4 @@
+ifndef::node-test[]
 '''
 
 *Execution — Run Tests (Mocha) · Node.js*
@@ -22,3 +23,4 @@ Run with coverage (via https://github.com/bcoe/c8[c8]):
 ----
 npm run test:coverage
 ----
+endif::node-test[]

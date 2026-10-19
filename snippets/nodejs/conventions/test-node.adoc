@@ -1,0 +1,24 @@
+ifdef::node-test[]
+'''
+
+*Coding Conventions — Tests (node:test) · Node.js*
+
+No test dependencies: runner, assertions, mocks and coverage come from Node. Do not add Mocha, Jest, chai, sinon or c8.
+
+[source,js]
+----
+const { describe, test, beforeEach, afterEach, mock } = require('node:test');
+const assert = require('node:assert/strict');
+----
+
+* `node:assert/strict`: `assert.equal` is `===`, `assert.deepEqual` is `deepStrictEqual`.
+* Files: `tests/<module>.test.js`, mirroring the path under `src/`. One `describe` per unit, optional.
+* One behaviour per `test`; the name is a sentence stating the behaviour, not the function name.
+* Async: `async` test function, `await assert.rejects(...)`. Never leave a promise unawaited.
+* Tests are independent: no order, no shared mutable state. Set up in `beforeEach`, clean up in `afterEach`/`after`.
+* Mocks: `mock.fn()`, `mock.method(obj, 'name')`, `mock.timers.enable()`. Use the test context (`test('x', (t) => t.mock.fn())`) so mocks restore themselves.
+* Prefer injecting a dependency over patching a module. Do not patch `Module._load`.
+* Unit tests touch no network, browser, container or real clock. Temp files: `fs.mkdtemp(path.join(os.tmpdir(), 'x-'))`, removed in `after`.
+* Each file runs in its own process; do not rely on state from another file.
+* Test the specification, never the current output of the code (see the `test:write` procedure).
+endif::node-test[]
