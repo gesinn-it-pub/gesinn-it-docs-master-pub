@@ -191,6 +191,22 @@ Every test file contains these top-level keys:
 * `in-sequence: true` — enforces the order of entries in `to-contain`
 * `to-be-valid-html: true` — validates HTML well-formedness (parser-html only)
 
+*Escaping and sanitization cases*
+
+Use a `parser` test and put the payload into every rendered argument and label of the function under test.
+Assert in both directions in one case: `to-contain` with the escaped form, `not-contain` with the raw element and the handler attribute.
+
+[source,json]
+----
+"assert-output": {
+	"to-contain": [ "&lt;img src=x onerror=alert()&gt;" ],
+	"not-contain": [ "<img src", "<script", "onerror=\"" ]
+}
+----
+
+A function that is restricted to a namespace needs `"namespace"` on the test as well as on the setup page; otherwise the test ends in the error branch.
+Check that the case is red against the unfixed code before you fix it.
+
 *Run a specific file*
 
 [source,console]

@@ -74,6 +74,14 @@ $input = $xpath->query( '//input[@name="wpFoo"]' )->item( 0 );
 $this->assertNotNull( $input );
 ----
 
+*Testing escaping and sanitization*
+
+For a parser function, tag hook or special page that outputs a value, send a payload through every argument, label and parameter that is rendered, not only the first one, and assert in both directions: the escaped form is present, and the raw payload is not.
+Use an element with an event handler, a quote and angle brackets, for example `<img src=x onerror=alert()>` and `"><svg onload=alert()>`.
+A function that returns `isHTML` skips the sanitizer, so for it a raw payload in the output is the defect, not a test artifact.
+If the function only runs in a namespace (for example the template namespace), run the test on a page in that namespace; otherwise the error branch is tested.
+Do not use a clean static-analysis run as a substitute for this test.
+
 *Testing HookRunner classes with HookRunnerTestBase*
 
 If the extension has a `HookRunner` class (a class that implements hook interfaces and delegates to `HookContainer::run()`), add a unit test that extends `HookRunnerTestBase`. This test automatically verifies that every hook method delegates correctly — right hook name, right argument signature.

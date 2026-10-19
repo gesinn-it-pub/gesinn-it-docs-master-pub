@@ -78,6 +78,17 @@ calendar date that will eventually be in the past or, worse, still render
 but exercise a different branch (a different day-of-week, a different
 month boundary) than the one intended.
 
+*Tests for an escaping fix*
+
+jsdom does not run event handlers or load images, so a payload such as `<img src=x onerror=alert()>` cannot "fire" in the Node-based runner.
+Assert on what the sink produced instead, and in both directions:
+
+* no element was created from the value (`$el.find( 'img' ).length === 0`), and the text of the element equals the payload
+* for an `OO.ui.HtmlSnippet` label: the escaped form is in `toString()` and the raw form is not
+* where a call to an unsafe API is the defect (for example `.html()` with the value), spy on it and assert that it is not called with the value
+
+Put the payload into every source that feeds the sink, and check that the test is red against the unfixed code before you fix it.
+
 *Running tests*
 
 See the *Execution — Run Tests (QUnit) · MediaWiki* reference file loaded by this skill.
