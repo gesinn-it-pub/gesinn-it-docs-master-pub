@@ -419,7 +419,7 @@ Invalid combinations (e.g. `code:write:php:nodejs`) are not instantiated.
 
 | `test:write:php:mediawiki` | Write PHPUnit / MediaWiki test-case tests
 | `test:write:js:mediawiki`  | Write QUnit tests for a MediaWiki extension
-| `test:write:js:nodejs`     | Write Mocha or node:test tests for a Node.js application
+| `test:write:js:nodejs`     | Write Mocha / Jest tests for a Node.js application
 | `test:fix:php:mediawiki`   | Repair failing PHPUnit tests in a MediaWiki extension
 | `test:fix:js:mediawiki`    | Repair failing QUnit tests in a MediaWiki extension
 | `test:fix:js:nodejs`       | Repair failing JS tests in a Node.js application
