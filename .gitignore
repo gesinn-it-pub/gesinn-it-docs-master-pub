@@ -7,3 +7,6 @@ ai-agent-logbook-issue6-pageForms.md
 !.claude/skills/migrate-docs-v2/
 !.claude/skills/init-docsmp/
 .agents/skills/
+
+# Python bytecode cache (from running scripts/test_build_skills.py)
+__pycache__/
