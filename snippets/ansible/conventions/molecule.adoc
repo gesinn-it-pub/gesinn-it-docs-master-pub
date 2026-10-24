@@ -19,19 +19,38 @@ molecule/<scenario-name>/
 
 *Scenario naming*
 
-* Lowercase with hyphens; name describes the tested configuration variant: `with-ofelia`, `without-tls`
-* One scenario per distinct configuration; avoid a catch-all `default` scenario
+* A role with a single configuration has one scenario named `default`
+* A role with several configuration variants has one scenario per variant, named for the variant:
+  `with-ofelia`, `without-tls`. Do not keep a catch-all `default` next to them
+* Run a scenario with `molecule test -s <scenario-name>`; `make molecule` runs every scenario
+
+*Test sequence*
+
+* `molecule test` runs syntax → converge → idempotence → verify. Never remove `idempotence` from the sequence
+* The idempotence step fails when a second converge reports `changed`. Fix the task (`creates:`, `changed_when:`,
+  a proper module) — do not mask it with `changed_when: false` on a task that really changes something
 
 *Driver*
 
-* Use the `default` driver with `ansible_connection: local` — no VM overhead in CI
+* Default: the `default` driver with `ansible_connection: local`, which needs no VM or container in CI
 * Set `ANSIBLE_ROLES_PATH` so the role under test is resolvable by name
+* The local driver applies the role to the machine that runs the test. It proves syntax, module arguments,
+  templating, idempotence and the files the role writes. It does *not* prove that packages install, services
+  start or containers run on a real target
+* Anything that must not run on the test machine (service restarts, `docker compose`, package installs) is
+  stubbed or tagged `molecule_skip`. List each stub in `converge.yml` with a comment saying what it replaces
+  and what is therefore untested
+* A role whose purpose is a real system change (packages, services, systemd, users) needs at least one scenario
+  on a real target — a container driver with a systemd-capable image per supported OS in `meta/main.yml`
 
 *Verifier*
 
 * Use the Ansible verifier (`verifier: name: ansible`) with `ansible.builtin.assert`
 * Write assertions that verify observable outcomes (files exist, config contains expected values), not internal role variables
 * Name each assertion task clearly: `Assert Traefik version is correct`
+* An assertion is only trustworthy once it has failed: break the behaviour it checks (or the converge input) and
+  confirm `molecule verify` goes red before relying on it
+* Assert both branches of every `when:` the role exposes, in separate scenarios if the inputs conflict
 
 *Skipping tasks in Molecule context*
 
@@ -40,6 +59,7 @@ molecule/<scenario-name>/
 
 *CI matrix*
 
-* Run all scenarios in a matrix; add a version axis for externally-versioned dependencies (e.g. `traefik_version`)
+* Run every scenario against the `ansible-core` floor and the latest release (see the GitHub Actions conventions)
+* Add a version axis for externally-versioned dependencies (e.g. `traefik_version`) when behaviour differs per version
 * Use `fail-fast: false` so all matrix cells are reported even if one fails
 * Pin the `community-ansible-dev-tools` image version for reproducibility

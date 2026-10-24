@@ -18,6 +18,8 @@ include::../../snippets/ansible/conventions/ansible.adoc[]
 
 include::../../snippets/ansible/conventions/molecule.adoc[]
 
+include::../../snippets/ansible/conventions/ci.adoc[]
+
 ifdef::with_docker[]
 include::../../snippets/universal/conventions/docker.adoc[]
 endif::[]

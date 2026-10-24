@@ -1,0 +1,57 @@
+'''
+
+*Coding Conventions — GitHub Actions · Ansible*
+
+Applies to the workflows of an Ansible role repo. The procedure that creates or repairs them is `ci:ensure`.
+
+*Layout*
+
+* One workflow, `.github/workflows/ci.yml`, named `CI`, with the jobs `lint` and `molecule`
+* Every job runs `make lint` or `make molecule` — the same targets a developer runs locally. No lint or test
+  logic lives in the workflow YAML; the workflow only provides the runner, the matrix and the inputs
+* No workflow commits to the repo it runs in. Generated documentation is built outside CI
+
+*Triggers*
+
+* `push` on the default branch only, `pull_request`, and `workflow_dispatch`
+* `schedule` (weekly): a role's inputs change without a commit — new `ansible-core`, collection and image
+  releases. A scheduled run finds the break before the next feature PR does
+* `paths-ignore` for +**/*.adoc+ so documentation-only changes do not run the suite
+* Do not trigger on `push` for every branch next to `pull_request` — a PR branch would run twice
+
+*Hardening*
+
+* `permissions: contents: read` at workflow level; widen per job only for a step that needs it
+* `concurrency: { group: "${{ github.workflow }}-${{ github.ref }}", cancel-in-progress: true }`
+* `timeout-minutes` on every job
+* +actions/*+ actions by major tag (`actions/checkout@v5`); every other third-party action by full commit SHA with
+  the version in a trailing comment
+* No secrets are needed to lint and test a role. A step that wants one is a design smell
+
+*ansible-core matrix*
+
+* The `molecule` job runs a matrix with `fail-fast: false` and two legs: the *floor* and *latest* (the newest GA line)
+* The floor is the oldest `ansible-core` line that a project consuming the role actually runs (look at the
+  consumer's base image or requirements, for example a Dockerfile `FROM` line) — not the oldest line upstream still maintains.
+  `min_ansible_version` equals the floor. If the floor is already EOL upstream
+  (https://docs.ansible.com/projects/ansible/latest/reference_appendices/release_and_maintenance.html[release and maintenance page]),
+  say so in the PR that touches the matrix: the fix is to upgrade the consumer, then raise the floor
+* The matrix value reaches the Makefile as `ANSIBLE_CORE` (`make molecule ANSIBLE_CORE=2.18`); the Makefile installs
+  that line into the test container. An empty `ANSIBLE_CORE` uses the version bundled in the image
+* Older `ansible-core` lines do not run on the newest Python: molecule refuses `ansible-core` < 2.20 on Python 3.14.
+  The Makefile therefore keeps a second pinned image (`ANSIBLE_DEV_TOOLS_IMAGE_PY313`) for the floor leg. Drop it
+  when the floor reaches a line that runs on the Python of the main image
+* `lint` runs once, on the latest leg: lint findings depend on the linter version, not on the managed `ansible-core`
+* Add a third, `continue-on-error: true` leg for the upcoming `ansible-core` pre-release only when the role must be
+  ready before the release lands
+* When the floor is raised: change the matrix, `min_ansible_version` in `meta/main.yml` and any compatibility
+  statement in the README in one commit; this is a breaking change for the role
+
+*Tool image*
+
+* The Makefile holds `ANSIBLE_DEV_TOOLS_IMAGE` (latest leg) and, while a floor leg needs it,
+  `ANSIBLE_DEV_TOOLS_IMAGE_PY313` (floor leg), each a pinned tag of `ghcr.io/ansible/community-ansible-dev-tools`.
+  Never `latest`. Look up the published tags on the registry; they do not follow a release cadence you can guess
+* In a repo onboarded to Renovate, a regex manager on the Makefile bumps the tag and
+  `helpers:pinGitHubActionDigests` keeps the action SHAs current; a bump is accepted when `make ci` is green on both
+  matrix legs. Without Renovate, the tag is bumped by hand in the `dep:update` procedure

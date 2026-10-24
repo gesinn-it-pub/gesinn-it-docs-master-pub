@@ -2,7 +2,8 @@
 
 *Coding Conventions — Ansible Roles*
 
-Tooling: https://ansible-lint.readthedocs.io/[ansible-lint].
+Tooling: https://ansible.readthedocs.io/projects/lint/[ansible-lint]. New roles target the `production` profile.
+A weaker profile (`basic`, `moderate`, `safety`, `shared`) is a transitional state, and every rule left out of the profile is listed in `.ansible-lint` with a comment saying why.
 
 *Role structure*
 
@@ -17,9 +18,13 @@ handlers/main.yml
 templates/           # Jinja2 templates (.j2)
 files/               # static files
 meta/main.yml        # role metadata + version comment
+molecule/            # test scenarios (see the Molecule conventions)
+requirements.yml     # collections and roles the role depends on
+.ansible-lint        # lint profile and justified exceptions
+Makefile             # `make lint`, `make molecule`, `make ci` — the only entry points CI uses
 ----
 
-*Version tracking in meta/main.yml*
+*meta/main.yml*
 
 `galaxy_info.version` is not a valid schema field and causes `ansible-lint` violations.
 Track the version as a comment at the top of `meta/main.yml`:
@@ -32,21 +37,53 @@ dependencies: []
 
 galaxy_info:
   role_name: my_role
+  namespace: gesinn
   author: gesinn-it
+  description: One sentence that says what the role manages.
+  license: MIT
+  min_ansible_version: "2.18"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - noble
 ----
+
+* `min_ansible_version` is the oldest `ansible-core` line that the CI matrix actually runs (the floor, see the GitHub
+  Actions conventions). A value that no CI leg exercises is a promise nobody checks — raise or lower it together
+  with the matrix, never on its own.
+* `platforms` lists only the operating systems and releases the role is tested on or deliberately supports.
+  Remove an entry when the release is EOL.
+* Raising `min_ansible_version`, dropping a `platforms` entry or removing a variable is a breaking change (MAJOR).
 
 *Variable naming*
 
-* All role variables prefixed with the role name: `manage_traefik_port`, not `port`
+* All role variables prefixed with the role name: `manage_traefik_port`, not `port`. This includes `register:`
+  and `set_fact:` results (`ansible-lint` rule `var-naming[no-role-prefix]`).
 * `defaults/main.yml`: user-overridable settings
 * `vars/main.yml`: role-internal constants not intended for override
+* A deliberate exception (for example UPPERCASE input parameters kept for backward compatibility) is only valid
+  when the repo's project notes name the variables and give the rationale. Only then may the matching rule
+  (`var-naming[pattern]`) be added to `skip_list` in `.ansible-lint`, with a comment that points at those notes.
 
 *Task conventions*
 
 * Every task must have a descriptive `name:` (written as a sentence)
 * Use FQCN for all modules: `ansible.builtin.copy`, not `copy`
+* Prefer a purpose-built module over `ansible.builtin.command` / `ansible.builtin.shell`. If a command is
+  unavoidable, make it idempotent with `creates:` / `removes:` or `changed_when:` and `failed_when:`; use
+  `ansible.builtin.shell` only when a shell feature (pipe, redirect) is needed
 * Tasks must be idempotent; add `changed_when: false` for read-only tasks
-* Split related tasks into separate files, included via `ansible.builtin.include_tasks`
+* Conditionals (`when:`, `that:`, `failed_when:`, `changed_when:`) are Jinja expressions already — no `{{ }}` inside
+  them. Build a string with the `~` operator: `that: "('traefik:' ~ version) in compose"`. Embedded delimiters make
+  the result depend on the `ansible-core` version (an 'unsafe conditional' error on older lines)
+* Never use `ignore_errors: true`; express the accepted failure with `failed_when:` or a `block:` / `rescue:`
+* Quote file modes as strings (`mode: "0644"`) and set `mode`, `owner` and `group` explicitly on files holding
+  configuration or secrets
+* Use `loop:` instead of +with_*+; give `loop_control: loop_var:` a role-prefixed name when the loop wraps
+  `include_tasks`
+* Tasks that cannot run in check mode say so (`check_mode: false` only on read-only tasks that later tasks need)
+* Split related tasks into separate files, included via `ansible.builtin.include_tasks`. Use `import_tasks` for
+  static structure and `include_tasks` only when the file name or the condition is known at run time
 
 *Handlers*
 
@@ -56,8 +93,13 @@ galaxy_info:
 *Dependencies (requirements.yml)*
 
 * List role dependencies without version pins — consumer projects are the single source of truth for versions
+* Collections that the role uses by FQCN are listed in `requirements.yml`, so `ansible-lint` and Molecule resolve
+  them. A lower bound (`version: ">=x.y.z"`) is allowed when the role needs a feature from that release
+* Do not hide an unresolved collection with `warn_list` / `skip_list` entries — declare it
 
 *Security*
 
 * No plaintext secrets in variable files or templates — use Ansible Vault or environment injection
+* Tasks that handle secrets set `no_log: true`
 * Use `become: true` at task level, not play level, to minimise privilege escalation scope
+* Shell commands never interpolate role variables unquoted — pass them through the `quote` filter
