@@ -24,6 +24,19 @@ requirements.yml     # collections and roles the role depends on
 Makefile             # `make lint`, `make molecule`, `make ci` — the only entry points CI uses
 ----
 
+*File names*
+
+* All file and directory names a role adds are lowercase kebab-case: `ensure-traefik.yml`, `restart-ofelia.yml`,
+  `docker-compose.yml.j2`. No uppercase letters, underscores or camelCase — `fix-python-externally-managed.yml`,
+  not `fix-python-EXTERNALLY_MANAGED.yml`; `maint-run-jobs.yml`, not `maint-runJobs.yml`
+* A product, tool or setting that appears in a file name is written in lowercase too, even if the product spells
+  it differently
+* Names that Ansible or Galaxy prescribe (`main.yml`, `meta/`, `defaults/`) and conventional top-level files
+  (`README`, `LICENSE`, `Makefile`) are exempt
+* A file that consumers call with `tasks_from:` is part of the role's interface. Renaming it is a breaking change
+  (MAJOR): rename it in a major release, or add the new name and keep the old file as a deprecated wrapper that
+  imports the new one until the next major release
+
 *meta/main.yml*
 
 `galaxy_info.version` is not a valid schema field and causes `ansible-lint` violations.
