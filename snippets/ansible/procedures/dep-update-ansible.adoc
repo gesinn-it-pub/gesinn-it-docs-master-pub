@@ -22,7 +22,7 @@ checks after each one.
 . *GitHub Actions* — +actions/*+ major tags and the commit SHAs of third-party actions in `.github/workflows/`.
   Check the action's release notes for a changed default or a removed input before bumping.
 
-Where Renovate is configured, the Makefile image tag needs a regex manager and the workflows need
-`helpers:pinGitHubActionDigests`; if either is missing, add it rather than updating by hand.
+Dependabot (gesinn-it-pub) only opens pull requests for the GitHub Actions. Merge those after CI is green; everything
+else in this procedure is manual. If a role has no `.github/dependabot.yml` for the `github-actions` ecosystem, add it.
 
 Finish with `make ci` on both matrix legs and report which dependencies changed and whether any leg needed a code change.

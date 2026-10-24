@@ -52,6 +52,7 @@ Applies to the workflows of an Ansible role repo. The procedure that creates or 
 * The Makefile holds `ANSIBLE_DEV_TOOLS_IMAGE` (latest leg) and, while a floor leg needs it,
   `ANSIBLE_DEV_TOOLS_IMAGE_PY313` (floor leg), each a pinned tag of `ghcr.io/ansible/community-ansible-dev-tools`.
   Never `latest`. Look up the published tags on the registry; they do not follow a release cadence you can guess
-* In a repo onboarded to Renovate, a regex manager on the Makefile bumps the tag and
-  `helpers:pinGitHubActionDigests` keeps the action SHAs current; a bump is accepted when `make ci` is green on both
-  matrix legs. Without Renovate, the tag is bumped by hand in the `dep:update` procedure
+* Repos in gesinn-it-pub use Dependabot, not Renovate. `.github/dependabot.yml` covers the `github-actions`
+  ecosystem (weekly, commit prefix `ci(github)`). Dependabot reads neither the Makefile nor `requirements.yml`, so the
+  tool image tag, the `ansible-core` matrix and the collections are updated by hand in the `dep:update` procedure;
+  the weekly scheduled CI run is the early warning. A bump is accepted when `make ci` is green on both matrix legs
