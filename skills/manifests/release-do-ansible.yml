@@ -1,0 +1,12 @@
+skill: release-do-ansible
+description: >
+  Prepare and execute a versioned release of an Ansible role consumed from a
+  Git tag. Use when asked to release a role, bump its version or tag it; use
+  this instead of the generic release skill in Ansible role repos.
+references:
+  - universal/conventions/semver.adoc
+  - universal/conventions/conventional-commits.adoc
+  - universal/conventions/changelog.adoc
+  - universal/procedures/release.adoc
+  - ansible/procedures/release-ansible.adoc
+  - ansible/execution/run-pre-commit.adoc

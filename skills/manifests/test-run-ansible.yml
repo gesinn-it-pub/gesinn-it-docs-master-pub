@@ -1,0 +1,11 @@
+skill: test-run-ansible
+description: >
+  Run the Molecule scenarios of an Ansible role, on the bundled ansible-core
+  or on a pinned line such as the matrix floor, and report the result. Use
+  when asked to run role tests, verify a role change, or reproduce a CI
+  failure locally.
+references:
+  - ansible/conventions/molecule.adoc
+  - ansible/execution/run-molecule.adoc
+  - ansible/execution/run-lint.adoc
+  - ansible/execution/run-pre-commit.adoc

@@ -1,0 +1,9 @@
+skill: lint-run-ansible
+description: >
+  Run ansible-lint for an Ansible role and report violations. Use when asked
+  to check style, run static analysis, or verify linting passes before
+  committing.
+references:
+  - ansible/conventions/ansible.adoc
+  - ansible/execution/run-lint.adoc
+  - ansible/execution/run-pre-commit.adoc

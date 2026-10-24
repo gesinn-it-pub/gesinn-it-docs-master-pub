@@ -1,0 +1,28 @@
+'''
+
+*Execution — Run Molecule · Ansible*
+
+Run every Molecule scenario (syntax → converge → idempotence → verify) in the pinned tool image:
+
+[source,console]
+----
+make molecule
+----
+
+Run one scenario:
+
+[source,console]
+----
+make molecule SCENARIO=with-ofelia
+----
+
+Run against a specific `ansible-core` line instead of the version bundled in the image — this is how a matrix leg
+is reproduced locally:
+
+[source,console]
+----
+make molecule ANSIBLE_CORE=2.18
+----
+
+When a scenario fails, read the failing task first, then the recap at the end of the output. A failure in the
+`idempotence` step means a task reported `changed` on the second run: fix that task rather than the test.

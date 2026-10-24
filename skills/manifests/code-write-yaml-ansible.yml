@@ -1,0 +1,17 @@
+skill: code-write-yaml-ansible
+description: >
+  Implement new functionality in an Ansible role — a task, handler, template,
+  variable or role option. Use when asked to add a feature to a role, extend a
+  task file, or introduce a new role variable. Works test-first through a
+  Molecule scenario and runs lint and Molecule before finishing.
+references:
+  - universal/procedures/code-write.adoc
+  - ansible/conventions/general.adoc
+  - ansible/conventions/yaml.adoc
+  - ansible/conventions/ansible.adoc
+  - ansible/conventions/molecule.adoc
+  - universal/procedures/test-write.adoc
+  - ansible/procedures/test-write-yaml-ansible.adoc
+  - ansible/execution/run-molecule.adoc
+  - ansible/execution/run-lint.adoc
+  - ansible/execution/run-pre-commit.adoc

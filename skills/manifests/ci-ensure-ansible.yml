@@ -1,0 +1,13 @@
+skill: ci-ensure-ansible
+description: >
+  Ensure an Ansible role repo has a reproducible GitHub Actions CI — one
+  ci.yml that runs make lint and make molecule against the ansible-core floor
+  and latest, a Makefile with a pinned tool image, and matching meta/main.yml.
+  Use when asked to set up, repair, harden or review CI for a role, or when a
+  role's min_ansible_version is not backed by a CI leg.
+references:
+  - ansible/conventions/ci.adoc
+  - ansible/conventions/molecule.adoc
+  - ansible/procedures/ci-ensure-ansible.adoc
+  - ansible/execution/run-molecule.adoc
+  - ansible/execution/run-lint.adoc

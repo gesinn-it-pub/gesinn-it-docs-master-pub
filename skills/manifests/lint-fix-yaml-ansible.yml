@@ -1,0 +1,11 @@
+skill: lint-fix-yaml-ansible
+description: >
+  Fix ansible-lint and YAML style violations in an Ansible role. Use when
+  asked to fix lint findings, move a role to a stricter ansible-lint profile,
+  or clean up .ansible-lint exceptions.
+references:
+  - ansible/conventions/general.adoc
+  - ansible/conventions/yaml.adoc
+  - ansible/conventions/ansible.adoc
+  - ansible/execution/run-lint.adoc
+  - ansible/execution/run-pre-commit.adoc

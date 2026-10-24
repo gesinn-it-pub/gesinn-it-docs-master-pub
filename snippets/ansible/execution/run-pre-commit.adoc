@@ -1,0 +1,23 @@
+'''
+
+*Execution — Pre-Commit Gate · Ansible*
+
+**Do not commit until the pre-commit gate exits with code 0. If it fails, fix all violations before proceeding.**
+
+Run the pre-commit gate before every commit:
+
+[source,console]
+----
+make ci
+----
+
+`make ci` runs `make lint` followed by `make molecule` against the `ansible-core` version bundled in the tool image.
+When the change touches code that depends on the `ansible-core` version (new module arguments, filters, keywords),
+also run the floor leg:
+
+[source,console]
+----
+make molecule ANSIBLE_CORE=<floor>
+----
+
+`<floor>` is the lowest `ansible-core` line in the CI matrix (it equals `min_ansible_version` in `meta/main.yml`).

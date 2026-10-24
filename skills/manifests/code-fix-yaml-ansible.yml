@@ -1,0 +1,16 @@
+skill: code-fix-yaml-ansible
+description: >
+  Fix a bug in an Ansible role — a failing task, wrong template output, broken
+  idempotence or a handler that does not fire. Use when asked to fix a role
+  defect; reproduces it in a Molecule scenario first.
+references:
+  - universal/procedures/code-fix.adoc
+  - ansible/conventions/general.adoc
+  - ansible/conventions/yaml.adoc
+  - ansible/conventions/ansible.adoc
+  - ansible/conventions/molecule.adoc
+  - universal/procedures/test-write.adoc
+  - ansible/procedures/test-write-yaml-ansible.adoc
+  - ansible/execution/run-molecule.adoc
+  - ansible/execution/run-lint.adoc
+  - ansible/execution/run-pre-commit.adoc

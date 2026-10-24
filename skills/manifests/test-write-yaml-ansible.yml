@@ -1,0 +1,15 @@
+skill: test-write-yaml-ansible
+description: >
+  Write Molecule scenarios and assertions for an Ansible role. Use when asked
+  to add tests to a role, cover a role option or branch, or raise confidence
+  in a role before changing it.
+references:
+  - universal/procedures/test-write.adoc
+  - ansible/procedures/test-write-yaml-ansible.adoc
+  - ansible/conventions/general.adoc
+  - ansible/conventions/yaml.adoc
+  - ansible/conventions/ansible.adoc
+  - ansible/conventions/molecule.adoc
+  - ansible/execution/run-molecule.adoc
+  - ansible/execution/run-lint.adoc
+  - ansible/execution/run-pre-commit.adoc

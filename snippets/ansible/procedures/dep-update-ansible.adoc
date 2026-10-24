@@ -1,0 +1,28 @@
+'''
+
+*Procedure — dep:update · Ansible*
+
+A role has four kinds of dependency. Update them in separate commits (`chore(deps): …`), in this order, and run the
+checks after each one.
+
+. *Tool image* — the tag of `ghcr.io/ansible/community-ansible-dev-tools` in the Makefile
+  (`ANSIBLE_DEV_TOOLS_IMAGE`). Look up the published tags on the registry; do not guess a version from the pattern.
+  The floor leg uses the second pinned image (`ANSIBLE_DEV_TOOLS_IMAGE_PY313`) — leave it alone unless the floor
+  line changes. Run `make ci`. A newer `ansible-lint` can report new violations: fix them, or add a justified entry to
+  `.ansible-lint`. Remove `skip_list` entries the new version no longer needs.
+. *ansible-core matrix* — the *latest* leg follows the line bundled in the tool image; the *floor* follows what
+  the consuming projects run. Check both: the newest GA line on the upstream release and maintenance page, and the
+  `ansible-core` version in each consumer's base image. Raise the floor only when every consumer has moved; if a
+  consumer still runs an EOL line, report it instead of raising. Run `make molecule ANSIBLE_CORE=<floor>` and
+  `make molecule` for the legs. When the floor changes, update `min_ansible_version` in `meta/main.yml` and the README
+  compatibility statement in the same commit; this is a breaking change (MAJOR).
+. *Collections and roles* in `requirements.yml` — see which have a newer release, read their changelogs for removed
+  or renamed modules and parameters, then run `make ci` on both matrix legs. Keep role dependencies unpinned as
+  required by the conventions; raise a collection lower bound only when the role needs the newer feature.
+. *GitHub Actions* — +actions/*+ major tags and the commit SHAs of third-party actions in `.github/workflows/`.
+  Check the action's release notes for a changed default or a removed input before bumping.
+
+Where Renovate is configured, the Makefile image tag needs a regex manager and the workflows need
+`helpers:pinGitHubActionDigests`; if either is missing, add it rather than updating by hand.
+
+Finish with `make ci` on both matrix legs and report which dependencies changed and whether any leg needed a code change.

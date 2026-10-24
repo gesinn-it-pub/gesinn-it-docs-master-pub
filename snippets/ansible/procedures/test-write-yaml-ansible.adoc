@@ -1,0 +1,23 @@
+'''
+
+*Procedure — test:write · Ansible*
+
+Delta over the universal `test:write` procedure. In a role, the test is a Molecule scenario: `converge.yml` applies
+the role with specific inputs, `verify.yml` asserts the outcome.
+
+. Take the specification from the issue, the README variable table or `defaults/main.yml` — never from what the
+  tasks currently do.
+. Write the assertion in `verify.yml` first, as an `ansible.builtin.assert` on an observable outcome: a file exists
+  with the expected mode and content, a rendered config contains the expected line, a command's output matches.
+  Do not assert on role variables.
+. Add or adjust the inputs in `converge.yml`. Put conflicting inputs (both branches of a `when:`) into separate
+  scenarios, each named for the variant.
+. Run `make molecule SCENARIO=<name>`. The new assertion must fail for the reason the specification gives — a
+  verify step that was never seen red proves nothing. If it passes before the role is changed, the assertion is too
+  weak or the behaviour already exists: tighten it or stop.
+. Implement the task or template change until converge, idempotence and verify are green.
+. Check the stubs in `converge.yml` (`/bin/true`, skipped templates, `molecule_skip` tags). If the behaviour under
+  test sits behind a stub, the test cannot see it: move the behaviour to a scenario on a real target or state in the
+  commit that this part remains untested.
+. If the role must support more than one `ansible-core` line, run the new scenario against the floor too
+  (`make molecule ANSIBLE_CORE=<floor>`).

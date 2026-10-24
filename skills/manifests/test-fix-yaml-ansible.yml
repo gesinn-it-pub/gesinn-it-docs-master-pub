@@ -1,0 +1,17 @@
+skill: test-fix-yaml-ansible
+description: >
+  Repair a failing or incorrect Molecule scenario in an Ansible role — a
+  verify assertion that fails for the wrong reason, a scenario that breaks on
+  an older ansible-core, or a stub that hides behaviour. Use when a role test
+  is red and the role itself may be correct.
+references:
+  - universal/procedures/code-fix.adoc
+  - universal/procedures/test-write.adoc
+  - ansible/procedures/test-write-yaml-ansible.adoc
+  - ansible/conventions/general.adoc
+  - ansible/conventions/yaml.adoc
+  - ansible/conventions/ansible.adoc
+  - ansible/conventions/molecule.adoc
+  - ansible/execution/run-molecule.adoc
+  - ansible/execution/run-lint.adoc
+  - ansible/execution/run-pre-commit.adoc

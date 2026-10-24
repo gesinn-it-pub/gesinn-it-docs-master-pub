@@ -1,0 +1,194 @@
+'''
+
+*Procedure — ci:ensure · Ansible*
+
+Ensures that an Ansible role repo has a working, reproducible GitHub Actions CI whose steps are the same `make`
+targets a developer runs locally, tested against the `ansible-core` floor and the latest release. The rules behind it
+are the GitHub Actions and Molecule conventions.
+
+Run this procedure in two phases:
+
+. *Assess* — run all detection commands (Gather facts + Steps 1–5), collect findings, present a status summary and
+  wait for explicit approval.
+. *Apply* — only after the user confirms, make the changes, run the checks of Step 6 and leave the changes uncommitted
+  for review.
+
+Never write files or run mutating commands before the user has approved the plan.
+
+== Gather facts
+
+[source,bash]
+----
+# Repo slug and default branch
+git remote get-url origin | sed 's|.*github.com[:/]\(.*\)\.git|\1|'
+git remote show origin | grep 'HEAD branch' | awk '{print $NF}'
+
+# Role name as the molecule scenarios refer to it, and the declared floor
+basename "$(git rev-parse --show-toplevel)"
+grep -n "min_ansible_version\|# version:" meta/main.yml
+
+# Scenarios, lint config, existing workflows
+ls molecule/*/molecule.yml
+cat .ansible-lint
+ls .github/workflows/
+----
+
+Determine the *floor*: the `ansible-core` line the projects that consume this role run. Look in the consumer's
+base image or requirements (for example the `FROM` line of its Dockerfile). The role's own
+`min_ansible_version` is a claim, not evidence. If the floor is EOL upstream, note it in the summary.
+
+== Step 1: Makefile
+
+The Makefile is the only place that knows how lint and Molecule are invoked. It must provide `lint`, `molecule` and
+`ci`, pin the tool image, accept `ANSIBLE_CORE` and `SCENARIO`, and print the `ansible-core` version it runs.
+Look up the published tags of `ghcr.io/ansible/community-ansible-dev-tools` on the registry. Use the newest for the
+main image, and the newest whose Python still hosts the floor line for `ANSIBLE_DEV_TOOLS_IMAGE_PY313` (molecule refuses
+`ansible-core` < 2.20 on Python 3.14; check with `docker run --rm <image> python3 --version`).
+
+[source,makefile]
+----
+ROLE_NAME                     := <ROLE_REPO>
+# Latest leg: runs the ansible-core bundled in this image (Python 3.14).
+ANSIBLE_DEV_TOOLS_IMAGE       ?= ghcr.io/ansible/community-ansible-dev-tools:26.7.2
+# Floor leg: molecule refuses ansible-core < 2.20 on Python 3.14, so a pinned
+# ANSIBLE_CORE uses this older image (Python 3.13). Drop it once the floor
+# line runs on the Python of the image above.
+ANSIBLE_DEV_TOOLS_IMAGE_PY313 ?= ghcr.io/ansible/community-ansible-dev-tools:26.4.0
+
+# Empty: use the ansible-core bundled in the image. Set to a release line
+# (e.g. 2.18) to install that line into the container first — this is how a
+# CI matrix leg is reproduced locally.
+ANSIBLE_CORE ?=
+# Empty: run every scenario.
+SCENARIO     ?=
+
+core-pin := $(if $(ANSIBLE_CORE),pip install -q --no-warn-script-location --user ansible-core~=$(ANSIBLE_CORE).0 && export PATH=\$$HOME/.local/bin:\$$PATH &&,)
+galaxy   := if [ -f requirements.yml ]; then ansible-galaxy collection install -r requirements.yml; fi
+mol-args := $(if $(SCENARIO),-s $(SCENARIO),--all)
+core-image := $(if $(ANSIBLE_CORE),$(ANSIBLE_DEV_TOOLS_IMAGE_PY313),$(ANSIBLE_DEV_TOOLS_IMAGE))
+
+docker-run := docker run --rm \
+	-v "$(CURDIR):/workspace:ro" \
+	-w /workspace \
+	$(ANSIBLE_DEV_TOOLS_IMAGE)
+
+# molecule needs write access (scenario cache, tmp files)
+docker-run-rw := docker run --rm \
+	-v "$(CURDIR):/workspace" \
+	-w /workspace \
+	$(core-image)
+
+.PHONY: lint molecule ci
+
+lint:
+	$(docker-run) bash -c "$(galaxy) && ansible-lint"
+
+molecule:
+	$(docker-run-rw) bash -c "$(core-pin) ansible --version | head -n 1 \
+		 && $(galaxy) \
+		 && mkdir -p /tmp/roles \
+		 && ln -s /workspace /tmp/roles/$(ROLE_NAME) \
+		 && ANSIBLE_ROLES_PATH=/tmp/roles molecule test $(mol-args)"
+
+ci: lint molecule
+----
+
+Role-specific inputs (for example `TRAEFIK_VERSION`) are passed to the container with `-e` in `docker-run-rw`. Replace
+`<ROLE_REPO>` with the repository directory name — the scenarios call the role by that name.
+
+== Step 2: Workflow
+
+Replace separate `lint.yml` / `molecule.yml` workflows by one `.github/workflows/ci.yml`. Adjust the branch name and the
+floor leg; everything else stays:
+
+[source,yaml]
+----
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**/*.adoc'
+  pull_request:
+    paths-ignore:
+      - '**/*.adoc'
+  schedule:
+    - cron: '17 4 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Run lint
+        run: make lint
+
+  molecule:
+    name: molecule (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # floor: the ansible-core line the consuming projects run
+          - name: ansible-core 2.18
+            ansible_core: '2.18'
+          # latest: the ansible-core bundled in the pinned tool image
+          - name: ansible-core latest
+            ansible_core: ''
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Run molecule
+        run: make molecule ANSIBLE_CORE=${{ matrix.ansible_core }}
+----
+
+Remove the superseded workflow files. Check that no other workflow writes to the repo (a docs-building workflow that
+commits back is replaced by the external documentation build).
+
+== Step 3: `meta/main.yml`
+
+`min_ansible_version` equals the floor. `platforms` lists only releases the role is tested on or deliberately
+supports.
+
+== Step 4: `.ansible-lint`
+
+Run `ansible-lint --profile production` once. Zero findings: set `profile: production`. Findings: keep the current
+profile and put a comment at the top of `.ansible-lint` that names the findings and why they are not fixed yet. Do not
+fix `no-changed-when`, `risky-shell-pipe` or file-permission findings as a side effect of this procedure — they change
+what handlers get notified and need their own change and test.
+
+Remove `warn_list` / `skip_list` entries that only hide a collection the role uses: declare the collection in
+`requirements.yml` instead.
+
+== Step 5: Scenarios against the floor
+
+Run every scenario at the floor (`make molecule ANSIBLE_CORE=<floor>`). A failure that the latest leg does not show is
+either a role bug or a test that depends on newer `ansible-core` behaviour (typically `{{ }}` inside `that:` / `when:`);
+fix the cause, not the matrix.
+
+== Step 6: Verify
+
+. `make ci` is green.
+. `make molecule ANSIBLE_CORE=<floor>` is green; the first output line names the floor line.
+. `python3 -c "import yaml; yaml.safe_load(open('.github/workflows/ci.yml'))"` parses the workflow.
+. Present `git diff` and `git status` and stop; the user commits.
+. After the first push, check that every job of the workflow ran and that both matrix legs appear.

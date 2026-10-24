@@ -1,0 +1,25 @@
+'''
+
+*Procedure — release:do · Ansible*
+
+Delta over the universal `release:do` procedure for a role that consumer projects install from a Git tag
+(`requirements.yml` with `src: git+https://…` and `version: <tag>`).
+
+. Decide the SemVer increment from the effect on consumers, not from the commit types alone. These are MAJOR:
+  removing or renaming a variable, changing a default so that existing consumers get different behaviour,
+  raising `min_ansible_version`, dropping a `platforms` entry, removing a task file that consumers call with
+  `tasks_from`.
+. Run `make ci`, and `make molecule ANSIBLE_CORE=<floor>` when the changes since the last tag touch
+  `ansible-core`-dependent code.
+. Set the `# version:` comment at the top of `meta/main.yml` to the new version. It must equal the tag; there is no
+  other place that records it.
+. Write the changelog entry (or the GitHub release notes, where the repo keeps no changelog file) from the consumer's point of view: which variables, defaults or supported versions
+  changed, and what a consumer has to do about it.
+. Commit, tag with the bare version number (`1.2.3`, no `v`) and push the tag — consumers reference exactly that
+  string.
+. Verify the tag resolves for a consumer:
++
+[source,console]
+----
+ansible-galaxy role install git+https://github.com/<org>/<repo>.git,<tag> --roles-path "$(mktemp -d)"
+----

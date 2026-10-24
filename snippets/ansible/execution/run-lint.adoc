@@ -1,0 +1,16 @@
+'''
+
+*Execution — Run Lint · Ansible*
+
+Run `ansible-lint` in the pinned tool image:
+
+[source,console]
+----
+make lint
+----
+
+The target mounts the repo read-only, installs the collections from `requirements.yml` and runs `ansible-lint`
+with the repo's `.ansible-lint`. It exits non-zero on any violation.
+
+Fix a violation at its cause. Add a rule to `skip_list` / `warn_list` only for a documented, deliberate exception,
+with a comment in `.ansible-lint` that names the reason.

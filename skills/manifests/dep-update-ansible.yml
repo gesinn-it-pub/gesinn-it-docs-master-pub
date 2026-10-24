@@ -1,0 +1,12 @@
+skill: dep-update-ansible
+description: >
+  Update the dependencies of an Ansible role — the ansible-dev-tools image,
+  the ansible-core matrix legs, collections and roles in requirements.yml, and
+  GitHub Actions. Use when asked to upgrade tooling, raise or review the
+  ansible-core floor, or apply dependency updates.
+references:
+  - ansible/conventions/ci.adoc
+  - ansible/procedures/dep-update-ansible.adoc
+  - ansible/execution/run-molecule.adoc
+  - ansible/execution/run-lint.adoc
+  - ansible/execution/run-pre-commit.adoc
