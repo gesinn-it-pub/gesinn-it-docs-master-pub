@@ -118,6 +118,23 @@ class TestPlatformQualifier(unittest.TestCase):
         self.assertEqual(matched, ["test-write-php-mediawiki", "commit-do"])
 
 
+class TestFilterByScope(unittest.TestCase):
+
+    def test_specific_variant_replaces_generic_skill(self):
+        names = ["release-do", "release-do-ansible", "commit-do", "test-run-ansible"]
+        self.assertEqual(
+            build_skills.filter_by_scope(names, {"ansible"}, DEFAULT_PLATFORMS),
+            ["release-do-ansible", "commit-do", "test-run-ansible"],
+        )
+
+    def test_generic_skill_kept_when_variant_belongs_to_other_scope(self):
+        names = ["release-do", "release-do-ansible"]
+        self.assertEqual(
+            build_skills.filter_by_scope(names, {"mediawiki"}, DEFAULT_PLATFORMS),
+            ["release-do"],
+        )
+
+
 class TestPlatformsListCoversRealManifests(unittest.TestCase):
     """Fails if a new platform qualifier is introduced in manifests without
     updating build-skills.py's --platforms default — the exact way the

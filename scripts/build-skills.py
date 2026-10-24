@@ -181,6 +181,22 @@ def platform_qualifier(skill_name, platforms):
     return None
 
 
+def filter_by_scope(names, scopes, platforms):
+    """Return the skill names to build for the given scopes.
+
+    Skills with a platform qualifier are kept only if it is in scopes. Skills
+    without one are universal and kept — unless a kept platform-specific skill
+    extends them ("release-do" vs. "release-do-ansible"): the specific variant
+    replaces the generic one, so both would be redundant and ambiguous.
+    """
+    scoped = [n for n in names
+              if (q := platform_qualifier(n, platforms)) is None or q in scopes]
+    specific = [n for n in scoped if platform_qualifier(n, platforms) is not None]
+    return [n for n in scoped
+            if platform_qualifier(n, platforms) is not None
+            or not any(sp.startswith(n + "-") for sp in specific)]
+
+
 def resolve_snippet(ref_path, snippets_dirs):
     """Find the first existing snippet file across all snippet roots."""
     for snippets_dir in snippets_dirs:
@@ -320,10 +336,9 @@ def main():
         platforms = [p.strip() for p in args.platforms.split(",") if p.strip()]
         def manifest_skill_name(manifest_path):
             return os.path.splitext(os.path.basename(manifest_path))[0]
-        def matches_scope(manifest_path):
-            qualifier = platform_qualifier(manifest_skill_name(manifest_path), platforms)
-            return qualifier is None or qualifier in args.scopes
-        manifests = [f for f in manifests if matches_scope(f)]
+        keep = set(filter_by_scope(
+            [manifest_skill_name(f) for f in manifests], set(args.scopes), platforms))
+        manifests = [f for f in manifests if manifest_skill_name(f) in keep]
 
     if not manifests:
         print(f"No manifest files found matching scopes '{', '.join(args.scopes)}'.")
