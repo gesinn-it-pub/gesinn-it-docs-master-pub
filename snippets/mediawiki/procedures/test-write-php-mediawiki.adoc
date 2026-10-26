@@ -292,4 +292,4 @@ When a test starts failing after upgrading the platform, framework, or a depende
 
 *Running tests*
 
-See the *Execution — Install Dependencies · MediaWiki* and *Execution — Run Tests (PHPUnit) · MediaWiki* reference files loaded by this skill.
+Installing the dependencies and running the tests are described in *Execution — Install Dependencies · MediaWiki* and *Execution — Run Tests (PHPUnit) · MediaWiki*.

@@ -48,7 +48,7 @@ Guidelines:
 * Use the commit body to explain *why*, not only *what*
 * Scopes should be short, lowercase identifiers (e.g. `api`, `parser`, `smw`, `mediawiki`, `docker`)
 * Use `chore` only for repository maintenance tasks that do not affect runtime behavior, dependencies, CI configuration, or tests
-* Do *not* add a `Co-Authored-By:` trailer or any agent attribution line to the commit message
+* Do *not* add `Co-Authored-By:` trailers or similar attribution lines to the commit message
 
 Changelog:
 
@@ -56,7 +56,7 @@ Changelog:
 
 Issue linking:
 
-* If the session resolves a GitHub issue, add a footer line to the commit message so GitHub closes the issue itself once the commit reaches the default branch — do not close it manually
+* If the commit resolves a GitHub issue, add a footer line to the commit message so GitHub closes the issue itself once the commit reaches the default branch — do not close it manually
 * Use `Closes #123` when the commit completes all work for the issue
 * Use `Refs #123` when the issue is only partly addressed
 * If it is unclear whether all work is done, ask before choosing the keyword

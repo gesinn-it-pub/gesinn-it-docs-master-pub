@@ -91,4 +91,4 @@ Put the payload into every source that feeds the sink, and check that the test i
 
 *Running tests*
 
-See the *Execution — Run Tests (QUnit) · MediaWiki* reference file loaded by this skill.
+Running the tests is described in *Execution — Run Tests (QUnit) · MediaWiki*.
