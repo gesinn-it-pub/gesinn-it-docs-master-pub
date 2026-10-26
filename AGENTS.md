@@ -151,40 +151,51 @@ instantiated.
 | `code:refactor:php:mediawiki` | Refactor PHP code in a MediaWiki extension                      |
 | `code:refactor:js:mediawiki`  | Refactor JavaScript code in a MediaWiki extension               |
 | `code:refactor:js:nodejs`     | Refactor JavaScript code in a Node.js application               |
+| `code:write:yaml:ansible`     | Implement new functionality in an Ansible role                  |
+| `code:fix:yaml:ansible`       | Fix a bug in an Ansible role                                    |
+| `code:refactor:yaml:ansible`  | Refactor an Ansible role without changing behaviour             |
 
 ### `test` domain
 
-| Qualified name             | Description                                           |
-|----------------------------|-------------------------------------------------------|
-| `test:write:php:mediawiki` | Write PHPUnit / MediaWiki test-case tests             |
-| `test:write:js:mediawiki`  | Write QUnit tests for a MediaWiki extension           |
-| `test:write:js:nodejs`     | Write Mocha / Jest tests for a Node.js application    |
-| `test:fix:php:mediawiki`   | Repair failing PHPUnit tests in a MediaWiki extension |
-| `test:fix:js:mediawiki`    | Repair failing QUnit tests in a MediaWiki extension   |
-| `test:fix:js:nodejs`       | Repair failing JS tests in a Node.js application      |
-| `test:run:mediawiki`       | Run the full test suite for a MediaWiki extension     |
-| `test:run:nodejs`          | Run the full test suite for a Node.js application     |
+| Qualified name             | Description                                                 |
+|----------------------------|-------------------------------------------------------------|
+| `test:write:php:mediawiki` | Write PHPUnit / MediaWiki test-case tests                   |
+| `test:write:js:mediawiki`  | Write QUnit tests for a MediaWiki extension                 |
+| `test:write:js:nodejs`     | Write Mocha / Jest tests for a Node.js application          |
+| `test:fix:php:mediawiki`   | Repair failing PHPUnit tests in a MediaWiki extension       |
+| `test:fix:js:mediawiki`    | Repair failing QUnit tests in a MediaWiki extension         |
+| `test:fix:js:nodejs`       | Repair failing JS tests in a Node.js application            |
+| `test:run:mediawiki`       | Run the full test suite for a MediaWiki extension           |
+| `test:run:nodejs`          | Run the full test suite for a Node.js application           |
+| `test:write:yaml:ansible`  | Write Molecule scenarios and assertions for an Ansible role |
+| `test:fix:yaml:ansible`    | Repair failing Molecule scenarios in an Ansible role        |
+| `test:run:ansible`         | Run the Molecule scenarios of an Ansible role               |
 
 ### `lint` domain
 
-| Qualified name           | Description                                          |
-|--------------------------|------------------------------------------------------|
-| `lint:fix:php:mediawiki` | Fix PHPCS / Phan violations in a MediaWiki extension |
-| `lint:fix:js:mediawiki`  | Fix ESLint violations in a MediaWiki extension       |
-| `lint:fix:css:mediawiki` | Fix stylelint violations in a MediaWiki extension    |
-| `lint:fix:js:nodejs`     | Fix ESLint violations in a Node.js application       |
-| `lint:run:mediawiki`     | Run all linters for a MediaWiki extension            |
-| `lint:run:nodejs`        | Run all linters for a Node.js application            |
+| Qualified name           | Description                                             |
+|--------------------------|---------------------------------------------------------|
+| `lint:fix:php:mediawiki` | Fix PHPCS / Phan violations in a MediaWiki extension    |
+| `lint:fix:js:mediawiki`  | Fix ESLint violations in a MediaWiki extension          |
+| `lint:fix:css:mediawiki` | Fix stylelint violations in a MediaWiki extension       |
+| `lint:fix:js:nodejs`     | Fix ESLint violations in a Node.js application          |
+| `lint:run:mediawiki`     | Run all linters for a MediaWiki extension               |
+| `lint:run:nodejs`        | Run all linters for a Node.js application               |
+| `lint:fix:yaml:ansible`  | Fix ansible-lint and YAML violations in an Ansible role |
+| `lint:run:ansible`       | Run ansible-lint for an Ansible role                    |
 
 ### Language-agnostic tasks
 
-| Qualified name         | Description                                                 |
-|------------------------|-------------------------------------------------------------|
-| `doc:write`            | Write or update documentation                               |
-| `dep:update:mediawiki` | Update Composer dependencies in a MediaWiki extension       |
-| `dep:update:nodejs`    | Update npm dependencies in a Node.js application            |
-| `commit:do`            | Classify changes, compose and execute a Conventional Commit |
-| `release:do`           | Prepare and execute a versioned release                     |
+| Qualified name         | Description                                                                                                        |
+|------------------------|--------------------------------------------------------------------------------------------------------------------|
+| `doc:write`            | Write or update documentation                                                                                      |
+| `dep:update:mediawiki` | Update Composer dependencies in a MediaWiki extension                                                              |
+| `dep:update:nodejs`    | Update npm dependencies in a Node.js application                                                                   |
+| `dep:update:ansible`   | Update tool image, ansible-core matrix, collections and actions of an Ansible role                                 |
+| `ci:ensure:ansible`    | Ensure a reproducible GitHub Actions CI (lint + Molecule on the ansible-core floor and latest) for an Ansible role |
+| `release:do:ansible`   | Prepare and execute a versioned release of an Ansible role consumed from a Git tag                                 |
+| `commit:do`            | Classify changes, compose and execute a Conventional Commit                                                        |
+| `release:do`           | Prepare and execute a versioned release                                                                            |
 
 ## Conventional Commits Mapping
 
@@ -660,8 +671,8 @@ Guidelines:
 - Use `chore` only for repository maintenance tasks that do not affect
   runtime behavior, dependencies, CI configuration, or tests
 
-- Do **not** add a `Co-Authored-By:` trailer or any agent attribution
-  line to the commit message
+- Do **not** add `Co-Authored-By:` trailers or similar attribution lines
+  to the commit message
 
 Changelog:
 
@@ -671,9 +682,9 @@ Changelog:
 
 Issue linking:
 
-- If the session resolves a GitHub issue, add a footer line to the
-  commit message so GitHub closes the issue itself once the commit
-  reaches the default branch — do not close it manually
+- If the commit resolves a GitHub issue, add a footer line to the commit
+  message so GitHub closes the issue itself once the commit reaches the
+  default branch — do not close it manually
 
 - Use `Closes #123` when the commit completes all work for the issue
 

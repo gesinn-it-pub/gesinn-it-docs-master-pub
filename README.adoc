@@ -409,6 +409,9 @@ Invalid combinations (e.g. `code:write:php:nodejs`) are not instantiated.
 | `code:refactor:php:mediawiki` | Refactor PHP code in a MediaWiki extension
 | `code:refactor:js:mediawiki`  | Refactor JavaScript code in a MediaWiki extension
 | `code:refactor:js:nodejs`     | Refactor JavaScript code in a Node.js application
+| `code:write:yaml:ansible`     | Implement new functionality in an Ansible role
+| `code:fix:yaml:ansible`       | Fix a bug in an Ansible role
+| `code:refactor:yaml:ansible`  | Refactor an Ansible role without changing behaviour
 |===
 
 ==== `test` domain
@@ -425,6 +428,9 @@ Invalid combinations (e.g. `code:write:php:nodejs`) are not instantiated.
 | `test:fix:js:nodejs`       | Repair failing JS tests in a Node.js application
 | `test:run:mediawiki`       | Run the full test suite for a MediaWiki extension
 | `test:run:nodejs`          | Run the full test suite for a Node.js application
+| `test:write:yaml:ansible`  | Write Molecule scenarios and assertions for an Ansible role
+| `test:fix:yaml:ansible`    | Repair failing Molecule scenarios in an Ansible role
+| `test:run:ansible`         | Run the Molecule scenarios of an Ansible role
 |===
 
 ==== `lint` domain
@@ -439,6 +445,8 @@ Invalid combinations (e.g. `code:write:php:nodejs`) are not instantiated.
 | `lint:fix:js:nodejs`      | Fix ESLint violations in a Node.js application
 | `lint:run:mediawiki`      | Run all linters for a MediaWiki extension
 | `lint:run:nodejs`         | Run all linters for a Node.js application
+| `lint:fix:yaml:ansible`   | Fix ansible-lint and YAML violations in an Ansible role
+| `lint:run:ansible`        | Run ansible-lint for an Ansible role
 |===
 
 ==== Language-agnostic tasks
@@ -450,6 +458,9 @@ Invalid combinations (e.g. `code:write:php:nodejs`) are not instantiated.
 | `doc:write`            | Write or update documentation
 | `dep:update:mediawiki` | Update Composer dependencies in a MediaWiki extension
 | `dep:update:nodejs`    | Update npm dependencies in a Node.js application
+| `dep:update:ansible`   | Update tool image, ansible-core matrix, collections and actions of an Ansible role
+| `ci:ensure:ansible`    | Ensure a reproducible GitHub Actions CI (lint + Molecule on the ansible-core floor and latest) for an Ansible role
+| `release:do:ansible`   | Prepare and execute a versioned release of an Ansible role consumed from a Git tag
 | `commit:do`            | Classify changes, compose and execute a Conventional Commit
 | `release:do`           | Prepare and execute a versioned release
 |===
