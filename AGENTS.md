@@ -29,22 +29,22 @@ Every task is identified by a qualified name of up to four dimensions:
 
     {domain}:{action}[:{language}][:{platform}]
 
-| Dimension  | Required    | Description                                                                            |
-|------------|-------------|----------------------------------------------------------------------------------------|
-| `domain`   | Yes         | Subject area of the task (`code`, `test`, `lint`, …)                                   |
-| `action`   | Yes         | Verb describing what is done (`write`, `fix`, `run`, …)                                |
-| `language` | Conditional | Programming language (`php`, `js`, `css`, …) — omitted for language-agnostic tasks     |
+| Dimension | Required | Description |
+|----|----|----|
+| `domain` | Yes | Subject area of the task (`code`, `test`, `lint`, …) |
+| `action` | Yes | Verb describing what is done (`write`, `fix`, `run`, …) |
+| `language` | Conditional | Programming language (`php`, `js`, `css`, …) — omitted for language-agnostic tasks |
 | `platform` | Conditional | Framework or platform (`mediawiki`, `nodejs`, `ansible`) — omitted for universal tasks |
 
 ## Notation Conventions
 
 Two parallel notations with a trivial bijective mapping:
 
-| Context                                          | Separator | Example                    |
-|--------------------------------------------------|-----------|----------------------------|
-| Conceptual (documentation, matrices, discussion) | `:`       | `test:write:php:mediawiki` |
-| File system (file names, folder names)           | `-`       | `test-write-php-mediawiki` |
-| Skill `name` field (SKILL.md frontmatter)        | `-`       | `test-write-php-mediawiki` |
+| Context | Separator | Example |
+|----|----|----|
+| Conceptual (documentation, matrices, discussion) | `:` | `test:write:php:mediawiki` |
+| File system (file names, folder names) | `-` | `test-write-php-mediawiki` |
+| Skill `name` field (SKILL.md frontmatter) | `-` | `test-write-php-mediawiki` |
 
 Mapping rule: `:` ↔ `-` — bijective, lossless.
 
@@ -56,14 +56,14 @@ and folder names on Windows.
 
 ### Action Vocabulary
 
-| Action     | Meaning                                                              | Applicable domains     |
-|------------|----------------------------------------------------------------------|------------------------|
-| `write`    | Author something new                                                 | `code`, `test`, `doc`  |
-| `fix`      | Correct something existing                                           | `code`, `test`, `lint` |
-| `refactor` | Restructure without changing behaviour                               | `code`                 |
-| `run`      | Execute and report result                                            | `test`, `lint`         |
-| `update`   | Upgrade to a newer version — pipeline with optional downstream steps | `dep`                  |
-| `do`       | Full cycle: prepare → human review gate → execute                    | `commit`, `release`    |
+| Action | Meaning | Applicable domains |
+|----|----|----|
+| `write` | Author something new | `code`, `test`, `doc` |
+| `fix` | Correct something existing | `code`, `test`, `lint` |
+| `refactor` | Restructure without changing behaviour | `code` |
+| `run` | Execute and report result | `test`, `lint` |
+| `update` | Upgrade to a newer version — pipeline with optional downstream steps | `dep` |
+| `do` | Full cycle: prepare → human review gate → execute | `commit`, `release` |
 
 ### Domain × Action Matrix
 
@@ -112,14 +112,14 @@ write changelog, bump version, await human approval, execute.
 
 ## Language Qualifiers
 
-| Qualifier | Language          | Active platforms                                                             |
-|-----------|-------------------|------------------------------------------------------------------------------|
-| `php`     | PHP               | `mediawiki`                                                                  |
-| `js`      | JavaScript        | `mediawiki`, `nodejs`                                                        |
-| `css`     | CSS / LESS        | `mediawiki`                                                                  |
-| `ts`      | TypeScript        | *(reserved — not yet active)*                                                |
-| `yaml`    | YAML              | `ansible`                                                                    |
-| *(none)*  | Language-agnostic | `test:run`, `lint:run`, `commit:do`, `release:do`, `dep:update`, `doc:write` |
+| Qualifier | Language | Active platforms |
+|----|----|----|
+| `php` | PHP | `mediawiki` |
+| `js` | JavaScript | `mediawiki`, `nodejs` |
+| `css` | CSS / LESS | `mediawiki` |
+| `ts` | TypeScript | *(reserved — not yet active)* |
+| `yaml` | YAML | `ansible` |
+| *(none)* | Language-agnostic | `test:run`, `lint:run`, `commit:do`, `release:do`, `dep:update`, `doc:write` |
 
 ## Platform Qualifiers
 
@@ -138,64 +138,64 @@ instantiated.
 
 ### `code` domain
 
-| Qualified name                | Description                                                     |
-|-------------------------------|-----------------------------------------------------------------|
-| `code:write:php:mediawiki`    | Implement new PHP functionality in a MediaWiki extension        |
-| `code:write:js:mediawiki`     | Implement new JavaScript functionality in a MediaWiki extension |
-| `code:write:css:mediawiki`    | Implement new CSS/LESS styling in a MediaWiki extension         |
-| `code:write:js:nodejs`        | Implement new JavaScript functionality in a Node.js application |
-| `code:fix:php:mediawiki`      | Fix a PHP bug in a MediaWiki extension                          |
-| `code:fix:js:mediawiki`       | Fix a JavaScript bug in a MediaWiki extension                   |
-| `code:fix:css:mediawiki`      | Fix a CSS/LESS issue in a MediaWiki extension                   |
-| `code:fix:js:nodejs`          | Fix a JavaScript bug in a Node.js application                   |
-| `code:refactor:php:mediawiki` | Refactor PHP code in a MediaWiki extension                      |
-| `code:refactor:js:mediawiki`  | Refactor JavaScript code in a MediaWiki extension               |
-| `code:refactor:js:nodejs`     | Refactor JavaScript code in a Node.js application               |
-| `code:write:yaml:ansible`     | Implement new functionality in an Ansible role                  |
-| `code:fix:yaml:ansible`       | Fix a bug in an Ansible role                                    |
-| `code:refactor:yaml:ansible`  | Refactor an Ansible role without changing behaviour             |
+| Qualified name | Description |
+|----|----|
+| `code:write:php:mediawiki` | Implement new PHP functionality in a MediaWiki extension |
+| `code:write:js:mediawiki` | Implement new JavaScript functionality in a MediaWiki extension |
+| `code:write:css:mediawiki` | Implement new CSS/LESS styling in a MediaWiki extension |
+| `code:write:js:nodejs` | Implement new JavaScript functionality in a Node.js application |
+| `code:fix:php:mediawiki` | Fix a PHP bug in a MediaWiki extension |
+| `code:fix:js:mediawiki` | Fix a JavaScript bug in a MediaWiki extension |
+| `code:fix:css:mediawiki` | Fix a CSS/LESS issue in a MediaWiki extension |
+| `code:fix:js:nodejs` | Fix a JavaScript bug in a Node.js application |
+| `code:refactor:php:mediawiki` | Refactor PHP code in a MediaWiki extension |
+| `code:refactor:js:mediawiki` | Refactor JavaScript code in a MediaWiki extension |
+| `code:refactor:js:nodejs` | Refactor JavaScript code in a Node.js application |
+| `code:write:yaml:ansible` | Implement new functionality in an Ansible role |
+| `code:fix:yaml:ansible` | Fix a bug in an Ansible role |
+| `code:refactor:yaml:ansible` | Refactor an Ansible role without changing behaviour |
 
 ### `test` domain
 
-| Qualified name             | Description                                                 |
-|----------------------------|-------------------------------------------------------------|
-| `test:write:php:mediawiki` | Write PHPUnit / MediaWiki test-case tests                   |
-| `test:write:js:mediawiki`  | Write QUnit tests for a MediaWiki extension                 |
-| `test:write:js:nodejs`     | Write Mocha / Jest tests for a Node.js application          |
-| `test:fix:php:mediawiki`   | Repair failing PHPUnit tests in a MediaWiki extension       |
-| `test:fix:js:mediawiki`    | Repair failing QUnit tests in a MediaWiki extension         |
-| `test:fix:js:nodejs`       | Repair failing JS tests in a Node.js application            |
-| `test:run:mediawiki`       | Run the full test suite for a MediaWiki extension           |
-| `test:run:nodejs`          | Run the full test suite for a Node.js application           |
-| `test:write:yaml:ansible`  | Write Molecule scenarios and assertions for an Ansible role |
-| `test:fix:yaml:ansible`    | Repair failing Molecule scenarios in an Ansible role        |
-| `test:run:ansible`         | Run the Molecule scenarios of an Ansible role               |
+| Qualified name | Description |
+|----|----|
+| `test:write:php:mediawiki` | Write PHPUnit / MediaWiki test-case tests |
+| `test:write:js:mediawiki` | Write QUnit tests for a MediaWiki extension |
+| `test:write:js:nodejs` | Write Mocha / Jest tests for a Node.js application |
+| `test:fix:php:mediawiki` | Repair failing PHPUnit tests in a MediaWiki extension |
+| `test:fix:js:mediawiki` | Repair failing QUnit tests in a MediaWiki extension |
+| `test:fix:js:nodejs` | Repair failing JS tests in a Node.js application |
+| `test:run:mediawiki` | Run the full test suite for a MediaWiki extension |
+| `test:run:nodejs` | Run the full test suite for a Node.js application |
+| `test:write:yaml:ansible` | Write Molecule scenarios and assertions for an Ansible role |
+| `test:fix:yaml:ansible` | Repair failing Molecule scenarios in an Ansible role |
+| `test:run:ansible` | Run the Molecule scenarios of an Ansible role |
 
 ### `lint` domain
 
-| Qualified name           | Description                                             |
-|--------------------------|---------------------------------------------------------|
-| `lint:fix:php:mediawiki` | Fix PHPCS / Phan violations in a MediaWiki extension    |
-| `lint:fix:js:mediawiki`  | Fix ESLint violations in a MediaWiki extension          |
-| `lint:fix:css:mediawiki` | Fix stylelint violations in a MediaWiki extension       |
-| `lint:fix:js:nodejs`     | Fix ESLint violations in a Node.js application          |
-| `lint:run:mediawiki`     | Run all linters for a MediaWiki extension               |
-| `lint:run:nodejs`        | Run all linters for a Node.js application               |
-| `lint:fix:yaml:ansible`  | Fix ansible-lint and YAML violations in an Ansible role |
-| `lint:run:ansible`       | Run ansible-lint for an Ansible role                    |
+| Qualified name | Description |
+|----|----|
+| `lint:fix:php:mediawiki` | Fix PHPCS / Phan violations in a MediaWiki extension |
+| `lint:fix:js:mediawiki` | Fix ESLint violations in a MediaWiki extension |
+| `lint:fix:css:mediawiki` | Fix stylelint violations in a MediaWiki extension |
+| `lint:fix:js:nodejs` | Fix ESLint violations in a Node.js application |
+| `lint:run:mediawiki` | Run all linters for a MediaWiki extension |
+| `lint:run:nodejs` | Run all linters for a Node.js application |
+| `lint:fix:yaml:ansible` | Fix ansible-lint and YAML violations in an Ansible role |
+| `lint:run:ansible` | Run ansible-lint for an Ansible role |
 
 ### Language-agnostic tasks
 
-| Qualified name         | Description                                                                                                        |
-|------------------------|--------------------------------------------------------------------------------------------------------------------|
-| `doc:write`            | Write or update documentation                                                                                      |
-| `dep:update:mediawiki` | Update Composer dependencies in a MediaWiki extension                                                              |
-| `dep:update:nodejs`    | Update npm dependencies in a Node.js application                                                                   |
-| `dep:update:ansible`   | Update tool image, ansible-core matrix, collections and actions of an Ansible role                                 |
-| `ci:ensure:ansible`    | Ensure a reproducible GitHub Actions CI (lint + Molecule on the ansible-core floor and latest) for an Ansible role |
-| `release:do:ansible`   | Prepare and execute a versioned release of an Ansible role consumed from a Git tag                                 |
-| `commit:do`            | Classify changes, compose and execute a Conventional Commit                                                        |
-| `release:do`           | Prepare and execute a versioned release                                                                            |
+| Qualified name | Description |
+|----|----|
+| `doc:write` | Write or update documentation |
+| `dep:update:mediawiki` | Update Composer dependencies in a MediaWiki extension |
+| `dep:update:nodejs` | Update npm dependencies in a Node.js application |
+| `dep:update:ansible` | Update tool image, ansible-core matrix, collections and actions of an Ansible role |
+| `ci:ensure:ansible` | Ensure a reproducible GitHub Actions CI (lint + Molecule on the ansible-core floor and latest) for an Ansible role |
+| `release:do:ansible` | Prepare and execute a versioned release of an Ansible role consumed from a Git tag |
+| `commit:do` | Classify changes, compose and execute a Conventional Commit |
+| `release:do` | Prepare and execute a versioned release |
 
 ## Conventional Commits Mapping
 
@@ -203,17 +203,17 @@ Task identifiers and Conventional Commits types serve different purposes
 in separate namespaces. The mapping is applied operationally in the
 `commit:do` skill.
 
-| Task (agent instruction namespace) | CC type (commit message namespace)             |
-|------------------------------------|------------------------------------------------|
-| `code:write`                       | `feat`                                         |
-| `code:fix`                         | `fix`                                          |
-| `code:refactor`                    | `refactor`                                     |
-| `test:write`                       | `test`                                         |
-| `test:fix`                         | `test`                                         |
-| `lint:fix`                         | `style` or `fix` (depending on violation type) |
-| `doc:write`                        | `docs`                                         |
-| `dep:update`                       | `chore(deps)`                                  |
-| `release:do`                       | `chore(release)`                               |
+| Task (agent instruction namespace) | CC type (commit message namespace) |
+|----|----|
+| `code:write` | `feat` |
+| `code:fix` | `fix` |
+| `code:refactor` | `refactor` |
+| `test:write` | `test` |
+| `test:fix` | `test` |
+| `lint:fix` | `style` or `fix` (depending on violation type) |
+| `doc:write` | `docs` |
+| `dep:update` | `chore(deps)` |
+| `release:do` | `chore(release)` |
 
 ## Snippet Folder Structure (Canonical)
 
@@ -266,25 +266,25 @@ pattern:
 
     *{Category} — {Content} [· {Scope}]*
 
-| Placeholder  | Meaning                                                                                       | Values                                                                  |
-|--------------|-----------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|
-| `{Category}` | The type of content in this snippet                                                           | `Coding Conventions`, `Procedure`, `Execution`, `Static Analysis`       |
-| `{Content}`  | The subject — the task name (`code:write`), the technology (`PHP`), or the topic (`Baseline`) | Free text, title-cased                                                  |
-| `· {Scope}`  | Optional scope qualifier, prefixed with the middle dot `·` (U+00B7)                           | Language (`PHP`, `Node.js`), platform (`MediaWiki`, `Ansible`), or both |
+| Placeholder | Meaning | Values |
+|----|----|----|
+| `{Category}` | The type of content in this snippet | `Coding Conventions`, `Procedure`, `Execution`, `Static Analysis` |
+| `{Content}` | The subject — the task name (`code:write`), the technology (`PHP`), or the topic (`Baseline`) | Free text, title-cased |
+| `· {Scope}` | Optional scope qualifier, prefixed with the middle dot `·` (U+00B7) | Language (`PHP`, `Node.js`), platform (`MediaWiki`, `Ansible`), or both |
 
 The `·` scope qualifier is omitted when the snippet is universal (no
 language or platform restriction).
 
 Examples:
 
-| Title                                           | Snippet                                                             |
-|-------------------------------------------------|---------------------------------------------------------------------|
-| \*Coding Conventions — Baseline\*               | `universal/conventions/general.adoc` — no scope qualifier           |
-| \*Coding Conventions — PHP · MediaWiki\*        | `mediawiki/conventions/php.adoc` — MW delta over the base PHP layer |
-| \*Procedure — code:write\*                      | `universal/procedures/code-write.adoc` — universal, no qualifier    |
-| \*Procedure — test:write · PHP\*                | `php/procedures/test-write-php.adoc` — PHP-scoped procedure         |
-| \*Execution — Run Tests (PHPUnit) · MediaWiki\* | `mediawiki/execution/run-tests-phpunit.adoc`                        |
-| \*Static Analysis — Phan · PHP\*                | `php/conventions/phan.adoc`                                         |
+| Title | Snippet |
+|----|----|
+| \*Coding Conventions — Baseline\* | `universal/conventions/general.adoc` — no scope qualifier |
+| \*Coding Conventions — PHP · MediaWiki\* | `mediawiki/conventions/php.adoc` — MW delta over the base PHP layer |
+| \*Procedure — code:write\* | `universal/procedures/code-write.adoc` — universal, no qualifier |
+| \*Procedure — test:write · PHP\* | `php/procedures/test-write-php.adoc` — PHP-scoped procedure |
+| \*Execution — Run Tests (PHPUnit) · MediaWiki\* | `mediawiki/execution/run-tests-phpunit.adoc` |
+| \*Static Analysis — Phan · PHP\* | `php/conventions/phan.adoc` |
 
 ## Skill Structure
 
@@ -351,20 +351,20 @@ references:
 
 ## Existing File Migration
 
-| Current path                                         | Canonical path                                                                                      | Action                                             |
-|------------------------------------------------------|-----------------------------------------------------------------------------------------------------|----------------------------------------------------|
-| `snippets/universal/coding-procedure.adoc`           | `universal/procedures/code-write.adoc` + `code-fix.adoc` + `code-refactor.adoc` + `test-write.adoc` | Split                                              |
-| `snippets/mediawiki/test-first-approach.adoc`        | `mediawiki/procedures/test-write-php-mediawiki.adoc`                                                | Rename + extend                                    |
-| `snippets/mediawiki/coding-conventions-general.adoc` | `mediawiki/conventions/general.adoc`                                                                | Rename                                             |
-| `snippets/mediawiki/coding-conventions-php.adoc`     | PHP layer → `php/conventions/php.adoc`; MW delta → `mediawiki/conventions/php.adoc`                 | Split + move                                       |
-| `snippets/mediawiki/coding-conventions-js.adoc`      | `mediawiki/conventions/js.adoc`                                                                     | Rename                                             |
-| `snippets/mediawiki/coding-conventions-css.adoc`     | `mediawiki/conventions/css.adoc`                                                                    | Rename                                             |
-| `snippets/mediawiki/coding-conventions-phan.adoc`    | `php/conventions/phan.adoc`                                                                         | Move + rename (Phan is PHP-layer, not MW-specific) |
-| `snippets/mediawiki/ci-phpunit.adoc`                 | `mediawiki/execution/run-tests-phpunit.adoc`                                                        | Rename                                             |
-| `snippets/mediawiki/ci-npm.adoc`                     | `mediawiki/execution/run-tests-npm.adoc`                                                            | Rename                                             |
-| `snippets/mediawiki/ci-phan.adoc`                    | `mediawiki/execution/run-phan.adoc`                                                                 | Rename                                             |
-| `snippets/mediawiki/ci-pre-commit.adoc`              | `mediawiki/execution/run-pre-commit.adoc`                                                           | Rename                                             |
-| `snippets/mediawiki/ci-install.adoc`                 | `mediawiki/execution/install-deps.adoc`                                                             | Rename                                             |
+| Current path | Canonical path | Action |
+|----|----|----|
+| `snippets/universal/coding-procedure.adoc` | `universal/procedures/code-write.adoc` + `code-fix.adoc` + `code-refactor.adoc` + `test-write.adoc` | Split |
+| `snippets/mediawiki/test-first-approach.adoc` | `mediawiki/procedures/test-write-php-mediawiki.adoc` | Rename + extend |
+| `snippets/mediawiki/coding-conventions-general.adoc` | `mediawiki/conventions/general.adoc` | Rename |
+| `snippets/mediawiki/coding-conventions-php.adoc` | PHP layer → `php/conventions/php.adoc`; MW delta → `mediawiki/conventions/php.adoc` | Split + move |
+| `snippets/mediawiki/coding-conventions-js.adoc` | `mediawiki/conventions/js.adoc` | Rename |
+| `snippets/mediawiki/coding-conventions-css.adoc` | `mediawiki/conventions/css.adoc` | Rename |
+| `snippets/mediawiki/coding-conventions-phan.adoc` | `php/conventions/phan.adoc` | Move + rename (Phan is PHP-layer, not MW-specific) |
+| `snippets/mediawiki/ci-phpunit.adoc` | `mediawiki/execution/run-tests-phpunit.adoc` | Rename |
+| `snippets/mediawiki/ci-npm.adoc` | `mediawiki/execution/run-tests-npm.adoc` | Rename |
+| `snippets/mediawiki/ci-phan.adoc` | `mediawiki/execution/run-phan.adoc` | Rename |
+| `snippets/mediawiki/ci-pre-commit.adoc` | `mediawiki/execution/run-pre-commit.adoc` | Rename |
+| `snippets/mediawiki/ci-install.adoc` | `mediawiki/execution/install-deps.adoc` | Rename |
 
 ## Agent Skills Format Reference
 
@@ -384,22 +384,22 @@ clients.
 
 Skills load in three stages — full instructions only when needed:
 
-| Stage      | Context cost                | What is loaded                                                                      |
-|------------|-----------------------------|-------------------------------------------------------------------------------------|
-| Discovery  | ~100 tokens per skill       | `name` + `description` only — at startup, for all available skills                  |
-| Activation | \< 5 000 tokens recommended | Full `SKILL.md` body — when task matches the description                            |
-| Execution  | On demand                   | Files in `references/`, `scripts/`, `assets/` — when the skill body references them |
+| Stage | Context cost | What is loaded |
+|----|----|----|
+| Discovery | ~100 tokens per skill | `name` + `description` only — at startup, for all available skills |
+| Activation | \< 5 000 tokens recommended | Full `SKILL.md` body — when task matches the description |
+| Execution | On demand | Files in `references/`, `scripts/`, `assets/` — when the skill body references them |
 
 ### `SKILL.md` Frontmatter Fields
 
-| Field           | Required | Description                                                                                        |
-|-----------------|----------|----------------------------------------------------------------------------------------------------|
-| `name`          | Yes      | Max 64 chars. Lowercase letters, numbers, hyphens only. Must match folder name.                    |
-| `description`   | Yes      | Max 1 024 chars. Describes what the skill does and **when to use it**. Primary activation trigger. |
-| `license`       | No       | License name or reference to a bundled license file.                                               |
-| `compatibility` | No       | Max 500 chars. Environment requirements (OS, installed tools, network access).                     |
-| `metadata`      | No       | Arbitrary key-value mapping for additional metadata.                                               |
-| `allowed-tools` | No       | Space-separated pre-approved tools the skill may use. *(Experimental)*                             |
+| Field | Required | Description |
+|----|----|----|
+| `name` | Yes | Max 64 chars. Lowercase letters, numbers, hyphens only. Must match folder name. |
+| `description` | Yes | Max 1 024 chars. Describes what the skill does and **when to use it**. Primary activation trigger. |
+| `license` | No | License name or reference to a bundled license file. |
+| `compatibility` | No | Max 500 chars. Environment requirements (OS, installed tools, network access). |
+| `metadata` | No | Arbitrary key-value mapping for additional metadata. |
+| `allowed-tools` | No | Space-separated pre-approved tools the skill may use. *(Experimental)* |
 
 ### Key Design Principles
 
@@ -541,21 +541,29 @@ and closes regardless of surrounding formatting spans, including
 backtick monospace. When \*\* appears inside a backtick span it leaks
 out, producing interleaved `<emphasis>` and `<literal>` DocBook tags.
 
-<div class="formalpara-title">
+<div class="formalpara">
 
-**Wrong — causes invalid DocBook**
+<div class="title">
+
+Wrong — causes invalid DocBook
 
 </div>
 
     CI runs on every push to `snippets/**`.
 
-<div class="formalpara-title">
+</div>
 
-**Correct — use inline passthrough**
+<div class="formalpara">
+
+<div class="title">
+
+Correct — use inline passthrough
 
 </div>
 
     CI runs on every push to +snippets/**+.
+
+</div>
 
 ### No `*` as first or last character inside a backtick span
 
@@ -563,23 +571,31 @@ A single asterisk at the very start or end of a backtick span may be
 parsed as a constrained bold delimiter, producing the same interleaved
 DocBook output.
 
-<div class="formalpara-title">
+<div class="formalpara">
 
-**Wrong — asterisk at start or end of backtick span**
+<div class="title">
+
+Wrong — asterisk at start or end of backtick span
 
 </div>
 
     Exclude `*.log` files.
     Multiple `assert*` calls are fine.
 
-<div class="formalpara-title">
+</div>
 
-**Correct — use inline passthrough**
+<div class="formalpara">
+
+<div class="title">
+
+Correct — use inline passthrough
 
 </div>
 
     Exclude +*.log+ files.
     Multiple +assert*+ calls are fine.
+
+</div>
 
 ### Rule of thumb
 
@@ -780,15 +796,15 @@ Adds autocomplete support and fixes parser edge cases. Removes the deprecated
 
 Map conventional commit types to changelog categories as follows:
 
-| Commit type                                | Changelog category              |
-|--------------------------------------------|---------------------------------|
-| `feat`                                     | Added                           |
-| `fix`                                      | Fixed                           |
-| `deps`                                     | Changed                         |
-| `refactor`                                 | Changed                         |
-| `docs`                                     | Changed                         |
+| Commit type | Changelog category |
+|----|----|
+| `feat` | Added |
+| `fix` | Fixed |
+| `deps` | Changed |
+| `refactor` | Changed |
+| `docs` | Changed |
 | Breaking change (`!` or `BREAKING CHANGE`) | Breaking Changes (always first) |
-| `ci`, `chore`, `test`                      | — omit from changelog           |
+| `ci`, `chore`, `test` | — omit from changelog |
 
 **Audience and tone**
 
@@ -808,11 +824,11 @@ restate the commit message verbatim.
   mechanics) unless it is the actual subject of the change (e.g. a
   public API rename that affects integrators).
 
-| Commit message (technical)                                      | Changelog entry (user-facing)                       |
-|-----------------------------------------------------------------|-----------------------------------------------------|
-| `fix(parser): use strict equality in isEmpty() check`           | Fix incorrect handling of empty input in the parser |
-| `refactor(api): extract validateToken() into middleware`        | *(omit — no user-visible effect)*                   |
-| `feat(api): add /autocomplete endpoint returning top-5 matches` | Add autocomplete suggestions while typing           |
+| Commit message (technical) | Changelog entry (user-facing) |
+|----|----|
+| `fix(parser): use strict equality in isEmpty() check` | Fix incorrect handling of empty input in the parser |
+| `refactor(api): extract validateToken() into middleware` | *(omit — no user-visible effect)* |
+| `feat(api): add /autocomplete endpoint returning top-5 matches` | Add autocomplete suggestions while typing |
 
 **Rules**
 
