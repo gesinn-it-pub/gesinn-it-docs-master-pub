@@ -158,6 +158,17 @@ PageForms, and SemanticDependencyUpdater):
 }
 ----
 
+`minus-x check .` is part of the standard lint step and must run as part of
+`composer test` and `composer test-coverage`. It takes well under a second.
+Defining a standalone `minus-x` script is not enough: if nothing in `test`
+calls it, CI never checks the file modes. Repos that group their checks in an
+`analyze` script (for example `@lint`, `@phpcs`, `@phan`) keep that layout and
+add `@minus-x` to it, next to `@lint`. If minus-x fails, fix the file modes
+rather than dropping the check.
+
+The minus-x version is limited by the PHP version of the oldest CI leg: 2.x
+requires PHP 8.2 or newer, so keep 1.1.x as long as a leg runs PHP 8.1.
+
 The alternative, older style splits unit and integration suites into
 separate PHP processes via a direct `phpunit.php` invocation:
 
